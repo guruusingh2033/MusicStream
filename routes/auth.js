@@ -1,5 +1,6 @@
 var auth = require('../utils/auth');
 var user = require('../models/user');
+const authcheck = require('../middleware/authcheck');
 
 // Routes for authentication (signup, login, logout)
 module.exports = function(app) {
@@ -30,6 +31,8 @@ module.exports = function(app) {
   //   failureFlash: true // Allow flash messages
   // }));
   app.post('/login', user.login);
+
+  app.get('/getUser', authcheck, user.listUsers);
 
   // app.get('/logout', function(req, res, next) {
 

@@ -1,5 +1,7 @@
 var bcrypt = require('bcrypt-nodejs');
 var uuidV4 = require('uuid/v4');
+const jwt = require('jsonwebtoken');
+require('dotenv/config');
 
 var db     = require('./db');
 
@@ -128,7 +130,7 @@ var getUser = (req, res)=>{
 
           db.query('SELECT * FROM tblUsers WHERE name = ?', [req.body.name], function (err, rows) {
             if (err) return res.send(err);
-            return res.status(201).json({ Message:"Signup Sucessfull", User: rows[0].Name });
+            return res.status(201).json({ message:"Signup Sucessfull", user: rows[0].Name });
           });
         }
       );
@@ -167,25 +169,33 @@ var login = function (req, res) {
       return res.status(500).send(err);
 
     if (!rows.length)
-      return res.status(401).json({ Message:'Invalid Username Password.'});
+      return res.status(401).json({ message:'Invalid Username Password.'});
 
-    if (!validPassword(req.body.password, rows[0].Password))
-      return res.status(401).json({ Message: 'Invalid Username Password.'});
+      // if valid password User successfully logged in, return username with token
+    if (validPassword(req.body.password, rows[0].Password)){
+      const id = rows[0].tblUsers_ID; 
+      const password = rows[0].Password;
+      const tokenStore = jwt.sign(
+                                    { id:id, password:password }, 
+                                    process.env.JWT_SECRET_KEY,    //secret key
+                                    { expiresIn:'1h' } 
+                                  );
 
-    // User successfully logged in, return user
-    return res.status(200).json({ Message: "Login Sucessfull", User: rows[0].Name });
+      return res.status(200).json({ message: "Login Sucessfull", user: rows[0].Name, token: tokenStore });
+    }
+    return res.status(401).json({ message: 'Invalid Username Password.'});   
+    
   });
 };
 
-
 // List all users
 // callback(err, users)
-var listUsers = function(callback) {
+var listUsers = (req,res)=> {
   db.query('SELECT * FROM tblUsers', [], function(err, rows) {
     if (err)
-      return callback(err);
+      return res.status(400).json(err);
 
-    return callback(null, rows);
+    return res.status(200).json(rows);
   });
 };
 
@@ -199,3 +209,4 @@ exports.signup = signup;
 exports.login = login;
 exports.listUsers = listUsers;
 exports.deleteUser = deleteUser;
+
