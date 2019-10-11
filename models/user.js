@@ -6,7 +6,6 @@ var db     = require('./db');
 // Set up User class
 var User = function(user) {
   var that = Object.create(User.prototype);
-
   that.id       = user.id;
   that.email    = user.email;
   that.password = user.password;
@@ -105,10 +104,10 @@ var getUser = (req, res)=>{
   // Check if there's already a user with that email
    db.query('SELECT * FROM tblUsers WHERE Name = ?', [req.body.name], function (err, rows) {
     if (err)
-      return res.send(err);
+      return res.status(500).send(err);
 
     if (rows.length) {
-      return res.send({message: 'An account with that email address already exists.'});
+      return res.status(400).send({message: 'An account with that email address already exists.'});
     } else {
 
       var newUser = {
@@ -122,16 +121,14 @@ var getUser = (req, res)=>{
           if (err) {
             if (err.code === 'ER_DUP_ENTRY') {
               // If we somehow generated a duplicate user id, try again
-              return res.send(req.body);
+              return res.status(400).send(err);
             }
-            return res.send(err);
+            return res.status(500).send(err);
           }
 
           db.query('SELECT * FROM tblUsers WHERE name = ?', [req.body.name], function (err, rows) {
             if (err) return res.send(err);
-              console.log(rows);
-
-            return res.send({ User: rows[0] });
+            return res.status(201).json({ Message:"Signup Sucessfull", User: rows[0].Name });
           });
         }
       );
@@ -141,24 +138,45 @@ var getUser = (req, res)=>{
 
 // Log in a user
 // callback(err, user)
-var login = function(req, email, password, callback) {
+// var login = function(req, email, password, callback) {
+//   // Check that the user logging in exists
+//   // db.query('SELECT * FROM tblUsers WHERE Name = ?', [email], function(err, rows) {
+//   db.query('SELECT * FROM tblUsers WHERE Name = ?', [email], function (err, rows) {
+//     console.log(rows);
+//     if (err)
+//       return callback(err);
+
+//     if (!rows.length)
+//       return callback(null, false, req.flash('loginMessage', 'No user found.'));
+
+//     if (!validPassword(password, rows[0].password))
+//       return callback(null, false, req.flash('loginMessage', 'Wrong password.'));
+
+//     // User successfully logged in, return user
+//     return callback(null, new User(rows[0]));
+//   });
+// };
+
+
+var login = function (req, res) {
   // Check that the user logging in exists
   // db.query('SELECT * FROM tblUsers WHERE Name = ?', [email], function(err, rows) {
-  db.query('SELECT * FROM tblUsers WHERE Name = ?', [email], function (err, rows) {
+  db.query('SELECT * FROM tblUsers WHERE Name = ?', [req.body.name], function (err, rows) {
     console.log(rows);
     if (err)
-      return callback(err);
+      return res.status(500).send(err);
 
     if (!rows.length)
-      return callback(null, false, req.flash('loginMessage', 'No user found.'));
+      return res.status(401).json({ Message:'Invalid Username Password.'});
 
-    if (!validPassword(password, rows[0].password))
-      return callback(null, false, req.flash('loginMessage', 'Wrong password.'));
+    if (!validPassword(req.body.password, rows[0].Password))
+      return res.status(401).json({ Message: 'Invalid Username Password.'});
 
     // User successfully logged in, return user
-    return callback(null, new User(rows[0]));
+    return res.status(200).json({ Message: "Login Sucessfull", User: rows[0].Name });
   });
 };
+
 
 // List all users
 // callback(err, users)

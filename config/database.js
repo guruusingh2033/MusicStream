@@ -3,7 +3,8 @@ module.exports = {
   'connection': {
     'host': '212.71.250.201',
     'user': 'a572016d_ShyamMusictest',
-    'password': 'shyam@123'
+    'password': 'shyam@123',
+    'port': '3306',
   },
   'database': 'a572016d_ShyamMusic_test'
 };

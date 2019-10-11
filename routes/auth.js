@@ -18,17 +18,18 @@ module.exports = function(app) {
 
   app.post('/signup', user.signup);
 
-  app.get('/login', auth.alreadyLoggedIn, function(req, res, next) {
+  // app.get('/login', auth.alreadyLoggedIn, function(req, res, next) {
 
-    res.render('login', { message: req.flash('loginMessage') });
+  //   res.render('login', { message: req.flash('loginMessage') });
 
-  });
+  // });  
 
   // app.post('/login', passport.authenticate('local-login', {
   //   successRedirect: '/profile',
   //   failureRedirect: '/login',
   //   failureFlash: true // Allow flash messages
   // }));
+  app.post('/login', user.login);
 
   // app.get('/logout', function(req, res, next) {
 
