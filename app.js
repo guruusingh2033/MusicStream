@@ -9,7 +9,6 @@ var passport     = require('passport');
 var path         = require('path');
 var session      = require('express-session');
 
-var user         = require('../nodejs-mysql-starter-kit/models/user');
 
 var app = express();
 
@@ -28,7 +27,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.post('/signup', user.signup);
 
 // Set up passport strategies and message passing
 require('./config/passport')(passport);
