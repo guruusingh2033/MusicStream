@@ -10,9 +10,11 @@ var signup = function (req, res) {
   // Check if there's already a user with that email
   db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
     if (err)
-      return res.status(500).send([0, err]);
+      return res.status(500).json({ success: 0 })
+      // return res.status(500).send([0, err]);
     if (rows.length) {
-      return res.status(400).send([0,'An account with that email address already exists.']);
+      return res.status(400).json({ success: 0 })
+      // return res.status(400).send([0,'An account with that email address already exists.']);
     } else {
 
       // copy image in parmanent folder (registrationImages)
@@ -100,15 +102,17 @@ var createUser = (req, res) => {
       if (err) {
         if (err.code === 'ER_DUP_ENTRY') {
           // If we somehow generated a duplicate user id, try again
-          return res.status(400).send([0, err]);
+          return res.status(400).json({ success: 0 })
+          // return res.status(400).json({ message: 'Signup Failed', error: 'duplicate entry ' + err});
         }
-        return res.status(500).send([0, err]);
+        return res.status(500).json({ success: 0 })
+        // return res.status(500).json({ message: 'Signup Failed', error: 'error while inserting data into DB ' + err });
       }
 
       // Return Crearte user Sucessfull message and user name 
       db.query('SELECT * FROM tblUsers WHERE email = ?', [newUser.email], function (err, rows) {
         if (err) return res.send([0, err]);
-        return res.status(201).send([1, rows[0].Email]);
+        return res.status(201).json({ success: rows[0] });
       });
 
     }
@@ -140,11 +144,14 @@ var login = function (req, res) {
   db.query('SELECT * FROM  tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
 
     if (err)
-      return res.status(500).send([0, err]);
+      return res.status(500).json({ success: 0 })
+      // return res.status(500).send({ message: 'Invalid Username Password', error: 'Error while checking email from DB '+ err });
 
     // if user not found return Invalid Username
     if (rows.length == 0)
-      return res.status(401).send([0, 'Invalid Username Password']);
+      return res.status(401).json({ success: 0 });
+      // return res.status(401).send({ message: 'Invalid Username Password'});
+
 
 
     // if valid password User successfully logged in, return username with token
@@ -153,9 +160,11 @@ var login = function (req, res) {
       // const tokenStore = generateToken(rows);
 
       //return res.status(200).send([1, rows[0].Email, tokenStore]);
-      return res.status(200).send([1, rows[0].Email]);
+      return res.status(200).json({ success: rows[0] });
+      // return res.status(200).send({ message: 'Login Success', data: rows[0]});
     }
-    return res.status(401).send([0, 'Invalid Username Password']);
+    return res.status(401).json({ success: 0 });
+    // return res.status(401).send({ message: 'Invalid Username Password', error: 'Error while checking email from DB ' + err });
 
   });
 };
@@ -178,21 +187,25 @@ const generateToken = (rows) =>{
 };
 
 // 
-var forgetPassword = (req,res)=>{
+var forgetPassword = async (req,res)=>{
   db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
 
     if (err)
-      return res.status(500).send([0, err]);
+      return res.status(500).json({ success: 0 })
+      // return res.status(500).send([0, err]);
 
     // if user not found return Invalid Username
     if (rows.length == 0)
-      return res.status(401).send([0, 'Email not registered.']);
+      return res.status(401).json({ success: 0 })
+      // return res.status(401).send([0, 'Email not registered.']);
 
     // if Email valid return password
     if (req.body.email === rows[0].Email) {      
-      return res.status(200).send([1, rows[0].Password]);
+      return res.status(401).json({ success: rows[0] })
+      // return res.status(200).send([1, rows[0].Password]);
     }
-    return res.status(401).send([0, 'Email not registered.']);
+    return res.status(401).json({ success: 0 });
+    // return res.status(401).send([0, 'Email not registered.']);
 
   });
 }
@@ -217,9 +230,10 @@ var allUsers = (req, res) => {
 var singleUser = (req, res) => {
   const id = req.params.id; // get id from url
   db.query('SELECT * FROM tblUsers WHERE tblUsers_ID = ?', [id], function (err, rows) {
-    if (err) return res.status(400).json(err);
+    if (err) return res.status(400).json({ success: 0 }) // return res.status(400).json(err);
 
-    return res.status(200).json(rows);
+    return res.status(200).json({ success: rows })
+    // return res.status(200).json(rows);
   });
 };
 // Delete a user
@@ -246,12 +260,14 @@ let filePath;
 var imageUpload = function (req, res, next) {
   if (!req.file) {
     console.log("No file received");
-    return res.send([0]);
+    return res.status(400).json({ success: 0 })
+    // return res.send([0]);
 
   } else {
     console.log('file received');
     filePath = 'tempFile/' + filenameStore;
-    return res.send([1, filePath])
+    return res.status(200).json({ success: filePath })
+    // return res.send([1, filePath])
   }
 };
 
