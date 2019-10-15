@@ -1,8 +1,8 @@
-var bcrypt = require('bcrypt-nodejs');
 var uuidV4 = require('uuid/v4');
 const jwt = require('jsonwebtoken');
 var db     = require('./db');
 const multer = require('multer');
+var md5 = require('md5');
 require('dotenv/config');
 
 
@@ -13,7 +13,7 @@ var signup = function (req, res) {
       return res.status(500).json({ success: 0 })
       // return res.status(500).send([0, err]);
     if (rows.length) {
-      return res.status(400).json({ success: 0 })
+      return res.status(400).json({ success: 'An account with this email address already exists.' })
       // return res.status(400).send([0,'An account with that email address already exists.']);
     } else {
 
@@ -83,7 +83,7 @@ var createUser = (req, res) => {
     id: generateUserId(),
     name: req.body.name,
     email: req.body.email,
-    password: hashPassword(req.body.password),
+    password: md5(req.body.password),
     phone_no: req.body.phone_no,
     image: req.body.image,
     type: req.body.type,
@@ -102,7 +102,7 @@ var createUser = (req, res) => {
       if (err) {
         if (err.code === 'ER_DUP_ENTRY') {
           // If we somehow generated a duplicate user id, try again
-          return res.status(400).json({ success: 0 })
+          return res.status(400).json({ success: 'duplicate entry' })
           // return res.status(400).json({ message: 'Signup Failed', error: 'duplicate entry ' + err});
         }
         return res.status(500).json({ success: 0 })
@@ -131,11 +131,13 @@ var createUser = (req, res) => {
 var generateUserId = function () {
   return uuidV4();
 };
+
 // used in signup function 
 // Hash and salt the password with bcrypt
-var hashPassword = function (password) {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-};
+// var hashPassword = function (password) {
+//   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+// };
+// Note : used MD5 instead bcrypt algo
 
 
 
@@ -152,10 +154,10 @@ var login = function (req, res) {
       return res.status(401).json({ success: 0 });
       // return res.status(401).send({ message: 'Invalid Username Password'});
 
-
-
     // if valid password User successfully logged in, return username with token
-    if (validPassword(req.body.password, rows[0].Password)) {
+    if (md5(req.body.password) === rows[0].Password) {
+
+      // validPassword(req.body.password, rows[0].Password)
       // function for generating token with JWT
       // const tokenStore = generateToken(rows);
 
@@ -170,24 +172,27 @@ var login = function (req, res) {
 };
 // used in login function 
 // Check if password is correct
-var validPassword = function (password, savedPassword) {
-  return bcrypt.compareSync(password, savedPassword);
-};
+// var validPassword = function (password, savedPassword) {
+//   return bcrypt.compareSync(password, savedPassword);
+// };
+// Note :  used MD5 instead bcrypt algo
+
 // used in login function 
 // generating token
-const generateToken = (rows) =>{
-  const id = rows[0].ID;
-  const password = rows[0].Password;
-  // generating token
-  return tokenStore = jwt.sign(
-                                { id: id, password: password },
-                                process.env.JWT_SECRET_KEY,    //secret key
-                                { expiresIn: '1h' }
-                              );
-};
+// const generateToken = (rows) =>{
+//   const id = rows[0].ID;
+//   const password = rows[0].Password;
+//   // generating token
+//   return tokenStore = jwt.sign(
+//                                 { id: id, password: password },
+//                                 process.env.JWT_SECRET_KEY,    //secret key
+//                                 { expiresIn: '1h' }
+//                               );
+// };
+// Note : no need yet of token
 
-// 
-var forgetPassword = async (req,res)=>{
+// check email from db, if email exists return user detail
+var forgetPassword = (req,res)=> {
   db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
 
     if (err)
@@ -209,8 +214,6 @@ var forgetPassword = async (req,res)=>{
 
   });
 }
-
-
 
 
 
