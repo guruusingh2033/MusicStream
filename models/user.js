@@ -137,20 +137,25 @@ var hashPassword = function (password) {
 
 var login = function (req, res) {
   // Check that the user logging in exists
-  db.query('SELECT * FROM a572016d_ShyamMusicStreaming.tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
+  db.query('SELECT * FROM  tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
 
     if (err)
       return res.status(500).send([0, err]);
 
     // if user not found return Invalid Username
     if (rows.length == 0)
-      return res.status(401).send([0, 'Email not registered.']);
+      return res.status(401).send([0, 'Invalid Username Password']);
+
 
     // if valid password User successfully logged in, return username with token
     if (validPassword(req.body.password, rows[0].Password)) {
+      // function for generating token with JWT
+      // const tokenStore = generateToken(rows);
+
+      //return res.status(200).send([1, rows[0].Email, tokenStore]);
       return res.status(200).send([1, rows[0].Email]);
     }
-    return res.status(401).send([0, 'Email not registered.']);
+    return res.status(401).send([0, 'Invalid Username Password']);
 
   });
 };
@@ -172,29 +177,25 @@ const generateToken = (rows) =>{
                               );
 };
 
-//
-// var forgetPassword = (req,res)=>{
-//   db.query('SELECT * FROM tblUsers WHERE email = ? OR phoneno = ?', [req.body.email, req.body.email], function (err, rows) {
+// 
+var forgetPassword = (req,res)=>{
+  db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
 
-//     if (err)
-//       return res.status(500).send([0, err]);
+    if (err)
+      return res.status(500).send([0, err]);
 
-//     // if user not found return Invalid Username
-//     if (!rows.length)
-//       return res.status(401).send([0, 'Invalid Username Password.']);
+    // if user not found return Invalid Username
+    if (rows.length == 0)
+      return res.status(401).send([0, 'Email not registered.']);
 
-//     // if valid password User successfully logged in, return username with token
-//     if (validPassword(req.body.password, rows[0].Password)) {
+    // if Email valid return password
+    if (req.body.email === rows[0].Email) {      
+      return res.status(200).send([1, rows[0].Password]);
+    }
+    return res.status(401).send([0, 'Email not registered.']);
 
-//       // function for generating token with JWT
-//       const tokenStore = generateToken(rows);
-
-//       return res.status(200).send([1, rows[0].Name, tokenStore]);
-//     }
-//     return res.status(401).send([0, 'Invalid Username Password.']);
-
-//   });
-// }
+  });
+}
 
 
 
@@ -260,7 +261,7 @@ var imageUpload = function (req, res, next) {
 
 exports.signup = signup;
 exports.login = login;
-// exports.forgetPassword = forgetPassword;
+exports.forgetPassword = forgetPassword;
 exports.allUsers = allUsers;
 exports.singleUser = singleUser;
 exports.deleteUser = deleteUser;
