@@ -12,7 +12,7 @@ module.exports = function(passport) {
   });
 
   passport.deserializeUser(function(id, done) {
-    db.query('SELECT * FROM tblUsers WHERE tblUsers_ID = ?', [id], function(err, rows) {
+    db.query('SELECT * FROM tblUsers WHERE ID = ?', [id], function(err, rows) {
       console.log(rows);
       done(err, rows[0]);
     });

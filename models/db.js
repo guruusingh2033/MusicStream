@@ -1,5 +1,4 @@
 var mysql = require('mysql');
-
 var dbconfig = require('../config/database');
 
 // Database setup
