@@ -9,8 +9,8 @@ require('dotenv/config');
 var signup = function (req, res) {
   // Check if there's already a user with that email
   db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
-    if (err)
-      return res.status(500).json([ { success: 0 } ])
+    // if (err)
+    //   return res.status(500).json([ { success: 0 } ])
       // return res.status(500).send([0, err]);
     if (rows.length) {
       return res.status(200).json([ { success: 'An account with this email address already exists.' } ])

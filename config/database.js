@@ -4,7 +4,6 @@ module.exports = {
     'host': '212.71.250.201',
     'user': 'a572016d_ShyamMusicUser',
     'password': 'shyam@123',
-    'port': '3306',
   },
   'database': 'a572016d_ShyamMusicStreaming'
 };
