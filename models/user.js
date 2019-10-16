@@ -231,7 +231,7 @@ var allUsers = (req, res) => {
 // get single users
 // callback(err, users)
 var singleUser = (req, res) => {
-  const id = req.params.id; // get id from url
+  const id = req.body.id; // get id from body
   db.query('SELECT * FROM tblUsers WHERE tblUsers_ID = ?', [id], function (err, rows) {
     if (err) return res.status(400).json({ success: 0 }) // return res.status(400).json(err);
 
