@@ -91,7 +91,7 @@ var createUser = (req, res) => {
     status: req.body.status
   };
 
-  if (req.body.image) newUser = req.body.image.replace('tempFile/', '');
+  if (req.body.image) newUser.image = req.body.image.replace('tempFile/', '');
 
   
 
