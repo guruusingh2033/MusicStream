@@ -25,6 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/images/')));
 
 
 
@@ -75,3 +76,5 @@ app.use(function(err, req, res) {
 });
 
 module.exports = app;
+
+

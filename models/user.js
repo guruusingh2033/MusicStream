@@ -32,8 +32,8 @@ var signup = function (req, res) {
 function fileCopy(req) { //
   if (req.body.image && filePath == req.body.image  ) {
     const fs = require('fs');
-    let source = '../images/registrationImages/tempFile/' + req.body.image.replace('tempFile/', '');
-    let destination = '../images/registrationImages/' + req.body.image.replace('tempFile/', '');
+    let source = '../test/images/registrationImages/tempFile/' + req.body.image.replace('tempFile/', '');
+    let destination = '../test/images/registrationImages/' + req.body.image.replace('tempFile/', '');
     // Copy dsingle file of folder
     fs.copyFile(source, destination, (err) => {
       if (err) throw err;
@@ -49,7 +49,7 @@ function fileCopy(req) { //
 function deleteFile() {
   const fs = require('fs');
   const path = require('path');
-  const directory = '../images/registrationImages/tempFile';
+  const directory = '../test/images/registrationImages/tempFile';
   fs.readdir(directory, (err, files) => {
     if (err) throw err;
     for (const file of files) {
@@ -250,7 +250,7 @@ var deleteUser = function (req, callback) {
 let filenameStore;
 var storage = multer.diskStorage({
   destination: (req, image, cb) => {
-    cb(null, '../images/registrationImages/tempFile')
+    cb(null, '../test/images/registrationImages/tempFile')
   },
   filename: function (req, image, cb) {
     filenameStore = Date.now() + '_' + image.originalname;
