@@ -26,13 +26,14 @@ var signup = function (req, res) {
   });
 };
 
+// require('../MusicStream/images/registrationImages/tempFile/')
 // fucntion used in signup function
 // copy file temporary folder to original folder
 function fileCopy(req) { //
   if (req.body.image && filePath == req.body.image  ) {
     const fs = require('fs');
-    let source = '../MusicStream/images/registrationImages/tempFile/' + req.body.image.replace('tempFile/', '');
-    let destination = '../MusicStream/images/registrationImages/' + req.body.image.replace('tempFile/', '');
+    let source = '../images/registrationImages/tempFile/' + req.body.image.replace('tempFile/', '');
+    let destination = '../images/registrationImages/' + req.body.image.replace('tempFile/', '');
     // Copy dsingle file of folder
     fs.copyFile(source, destination, (err) => {
       if (err) throw err;
@@ -48,7 +49,7 @@ function fileCopy(req) { //
 function deleteFile() {
   const fs = require('fs');
   const path = require('path');
-  const directory = '../MusicStream/images/registrationImages/tempFile';
+  const directory = '../images/registrationImages/tempFile';
   fs.readdir(directory, (err, files) => {
     if (err) throw err;
     for (const file of files) {
@@ -249,7 +250,7 @@ var deleteUser = function (req, callback) {
 let filenameStore;
 var storage = multer.diskStorage({
   destination: (req, image, cb) => {
-    cb(null, '../MusicStream/images/registrationImages/tempFile')
+    cb(null, '../images/registrationImages/tempFile')
   },
   filename: function (req, image, cb) {
     filenameStore = Date.now() + '_' + image.originalname;

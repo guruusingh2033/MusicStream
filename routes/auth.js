@@ -36,7 +36,7 @@ module.exports = function(app) {
   app.post('/login', user.login);
   app.post('/forgetPassword', user.forgetPassword);
   app.get('/user',  user.allUsers);
-  app.get('/profile', user.singleUser);
+  app.post('/profile', user.singleUser);
   app.delete('/user/:id', authcheck, user.deleteUser);
   // app.put('/User/', authcheck, user.updateUser);
 
