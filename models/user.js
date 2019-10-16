@@ -10,7 +10,7 @@ var signup = function (req, res) {
   // Check if there's already a user with that email
   db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
     if (err)
-      return res.status(500).json([{ success: err,error:'1' } ])
+      return res.status(500).json([ { success: 0 } ])
       // return res.status(500).send([0, err]);
     if (rows.length) {
       return res.status(200).json([ { success: 'An account with this email address already exists.' } ])
@@ -107,8 +107,7 @@ var createUser = (req, res) => {
           return res.status(200).json([ { success: 'duplicate entry' } ] )
           // return res.status(400).json({ message: 'Signup Failed', error: 'duplicate entry ' + err});
         }
-        else if (err.code != 'ER_DUP_ENTRY')
-          return res.status(500).json([{ success: err, error: '2' } ])
+        return res.status(500).json([ { success: 0 } ])
         // return res.status(500).json({ message: 'Signup Failed', error: 'error while inserting data into DB ' + err });
       }
 
