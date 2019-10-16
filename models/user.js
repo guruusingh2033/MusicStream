@@ -13,7 +13,7 @@ var signup = function (req, res) {
       return res.status(500).json([ { success: 0 } ])
       // return res.status(500).send([0, err]);
     if (rows.length) {
-      return res.status(400).json([ { success: 'An account with this email address already exists.' } ])
+      return res.status(200).json([ { success: 'An account with this email address already exists.' } ])
       // return res.status(400).send([0,'An account with that email address already exists.']);
     } else {
 
@@ -104,7 +104,7 @@ var createUser = (req, res) => {
       if (err) {
         if (err.code === 'ER_DUP_ENTRY') {
           // If we somehow generated a duplicate user id, try again
-          return res.status(400).json([ { success: 'duplicate entry' } ] )
+          return res.status(200).json([ { success: 'duplicate entry' } ] )
           // return res.status(400).json({ message: 'Signup Failed', error: 'duplicate entry ' + err});
         }
         return res.status(500).json([ { success: 0 } ])
@@ -234,8 +234,12 @@ var allUsers = (req, res) => {
 // callback(err, users)
 var singleUser = (req, res) => {
   const id = req.body.id; // get id from body
+  if (!id) return res.status(200).json([{ success: 'Invalid Id' }])
+
   db.query('SELECT * FROM tblUsers WHERE tblUsers_ID = ?', [id], function (err, rows) {
     if (err) return res.status(400).json([ { success: 0 } ]) // return res.status(400).json(err);
+
+    if (rows.length === 0) return res.status(200).json([{ success: 'Id does not exists' }])
 
     return res.status(200).json(rows)
     // return res.status(200).json(rows);
@@ -265,7 +269,7 @@ let filePath;
 var imageUpload = function (req, res, next) {
   if (!req.file) {
     console.log("No file received");
-    return res.status(400).json([ { success: 0 } ])
+    return res.status(200).json([ { success: 0 } ])
     // return res.send([0]);
 
   } else {
