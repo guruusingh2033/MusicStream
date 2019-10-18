@@ -66,20 +66,6 @@ function deleteFile() {
 
 // creating user in DB
 var createUser = (req, res) => {
-
-  // if (req.body.type == 3) {
-  //   req.check('image', 'image is required').notEmpty();   
-  // } else {
-  //   validation(req);
-  // }
-
-  // let errors = req.validationErrors();
-
-  // if (errors) {
-  //   res.status(400).json({message:'Validation Error'});
-  // }
-
-
   // Set values of user
   var newUser = {
     id: generateUserId(),
@@ -92,9 +78,7 @@ var createUser = (req, res) => {
     status: req.body.status
   };
 
-  if (req.body.image) newUser.image = req.body.image.replace('tempFile/', '');
-
-  
+  if (req.body.image) newUser.image = req.body.image.replace('tempFile/', '');  
 
   // Inserting user details in DB
   db.query('INSERT INTO tblUsers ( tblUsers_ID, name, password, email, Userimage, Usertype, status, MobileNo ) values (?,?,?,?,?,?,?,?)',
@@ -107,13 +91,14 @@ var createUser = (req, res) => {
           return res.status(200).json([ { success: 'duplicate entry' } ] )
           // return res.status(400).json({ message: 'Signup Failed', error: 'duplicate entry ' + err});
         }
-        return res.status(500).json([ { success: 0 } ])
+        return res.status(200).json([ { success: 'Fail to signup' } ])
         // return res.status(500).json({ message: 'Signup Failed', error: 'error while inserting data into DB ' + err });
       }
 
       // Return Crearte user Sucessfull message and user name 
       db.query('SELECT * FROM tblUsers WHERE email = ?', [newUser.email], function (err, rows) {
-        if (err) return res.send([0, err]);         
+        if (err) return res.send([0, err]);      
+        rows[0].success = "Successfully registered";
         return res.status(201).json([ rows[0] ]);
       });
 
@@ -122,11 +107,6 @@ var createUser = (req, res) => {
 
 };
 
-// var validation = function(req){
-//   req.check('email', 'Email is required').notEmpty();
-//   req.check('email', 'Email is not valid').isEmail();
-//   req.check('password', 'Password is required').notEmpty();
-// }
 
 // used in signup function 
 // Gets a random id for this user
@@ -148,12 +128,12 @@ var login = function (req, res) {
   db.query('SELECT * FROM  tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
 
     if (err)
-      return res.status(500).json([ { success: 0 } ])
+      return res.status(200).json([ { success: 'Fail to loggedin'} ])
       // return res.status(500).send({ message: 'Invalid Username Password', error: 'Error while checking email from DB '+ err });
 
     // if user not found return Invalid Username
     if (rows.length == 0)
-      return res.status(401).json([ { success: 0 } ]);
+      return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' } ]);
       // return res.status(401).send({ message: 'Invalid Username Password'});
 
     // if valid password User successfully logged in, return username with token
@@ -164,10 +144,11 @@ var login = function (req, res) {
       // const tokenStore = generateToken(rows);
 
       //return res.status(200).send([1, rows[0].Email, tokenStore]);
+      rows[0].success='Successfully loggedin';
       return res.status(200).json([ rows[0] ]);
       // return res.status(200).send({ message: 'Login Success', data: rows[0]});
     }
-    return res.status(401).json([ { success: 0 } ]);
+    return res.status(200).json([{ success: 'Fail to loggedin, Password invalid' } ]);
     // return res.status(401).send({ message: 'Invalid Username Password', error: 'Error while checking email from DB ' + err });
 
   });
@@ -197,21 +178,22 @@ var login = function (req, res) {
 var forgetPassword = (req,res)=> {
   db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
 
-    if (err)
-      return res.status(500).json([ { success: 0 } ])
+    // if (err)
+    //   return res.status(500).json([ { success: 'Fail forget password' } ])
       // return res.status(500).send([0, err]);
 
     // if user not found return Invalid Username
     if (rows.length == 0)
-      return res.status(401).json([ { success: 0 } ])
+      return res.status(200).json([ { success: 'Email not registered' } ])
       // return res.status(401).send([0, 'Email not registered.']);
 
     // if Email valid return password
-    if (req.body.email === rows[0].Email) {      
-      return res.status(401).json([ rows[0] ])
+    if (req.body.email === rows[0].Email) {   
+      rows[0].success = 'Successfully done forgetPassword';
+      return res.status(200).json([ rows[0] ])
       // return res.status(200).send([1, rows[0].Password]);
     }
-    return res.status(401).json([ { success: 0 } ]);
+    return res.status(200).json([{ success: 'Fail to forgetPassword' } ]);
     // return res.status(401).send([0, 'Email not registered.']);
 
   });
@@ -224,8 +206,9 @@ var forgetPassword = (req,res)=> {
 // callback(err, users)
 var allUsers = (req, res) => {
   db.query('SELECT * FROM tblUsers', [], function (err, rows) {    
-    if (err)  return res.status(400).json([ err ]);
+    if (err)  return res.status(200).json([ { success: 'Fail to get all users' } ]);    
 
+    rows[0].success = 'Successfully get all users';
     return res.status(200).json(rows);
   });
 };
@@ -237,10 +220,11 @@ var singleUser = (req, res) => {
   if (!id) return res.status(200).json([{ success: 'Invalid Id' }])
 
   db.query('SELECT * FROM tblUsers WHERE tblUsers_ID = ?', [id], function (err, rows) {
-    if (err) return res.status(400).json([ { success: 0 } ]) // return res.status(400).json(err);
+    if (err) return res.status(200).json([{ success: 'Fail to get single user' } ]) // return res.status(400).json(err);
 
     if (rows.length === 0) return res.status(200).json([{ success: 'Id does not exists' }])
 
+    rows[0].success = 'Successfully get single user';
     return res.status(200).json(rows)
     // return res.status(200).json(rows);
   });
@@ -269,19 +253,16 @@ let filePath;
 var imageUpload = function (req, res, next) {
   if (!req.file) {
     console.log("No file received");
-    return res.status(200).json([ { success: 0 } ])
+    return res.status(200).json([{ success: 'Fail to upload image, No image received' } ])
     // return res.send([0]);
 
   } else {
     console.log('file received');
     filePath = 'tempFile/' + filenameStore;
-    return res.status(200).json([ filePath ])
+    return res.status(200).json([{ filePath: filePath, success: 'Successfully uploaded image' } ])
     // return res.send([1, filePath])
   }
 };
-
-
-
 
 
 exports.signup = signup;
