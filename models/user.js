@@ -273,38 +273,38 @@ var artistValidation = async (req, res, next) => {
   }
 };
 
-var sendEmail = async (data) =>{
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    service: "Gmail", // comment this for test
-    auth: {
-      user: process.env.GMAIL_USER, // generated ethereal user
-      pass: process.env.GMAIL_PASSWORD // generated ethereal password
-    }
-  });
+// var sendEmail = async (data) =>{
+//   // create reusable transporter object using the default SMTP transport
+//   let transporter = nodemailer.createTransport({
+//     service: "Gmail", // comment this for test
+//     auth: {
+//       user: process.env.GMAIL_USER, // generated ethereal user
+//       pass: process.env.GMAIL_PASSWORD // generated ethereal password
+//     }
+//   });
 
-  messageBody = '<h2>There is details of created new artist </h2>' 
-    + '<br>Name           ::: ' + data.Name
-    + '<br>Email          ::: ' + data.Email
-    + '<br>Phone No.      ::: ' + data.MobileNo
-    + '<br>Description    ::: ' + data.Description;
+//   messageBody = '<h2>There is details of created new artist </h2>' 
+//     + '<br>Name           ::: ' + data.Name
+//     + '<br>Email          ::: ' + data.Email
+//     + '<br>Phone No.      ::: ' + data.MobileNo
+//     + '<br>Description    ::: ' + data.Description;
 
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: '<test@example.com>', // sender address
-    to: 'test1@gmail.com, test2@gmail.com', // list of receivers
-    subject: 'New Artist Created ✔', // Subject line
-    text:  'Detail of Created New Artist ', // plain text body
-    html: messageBody,// html body
-  });
+//   // send mail with defined transport object
+//   let info = await transporter.sendMail({
+//     from: '<test@example.com>', // sender address
+//     to: 'test1@gmail.com, test2@gmail.com', // list of receivers
+//     subject: 'New Artist Created ✔', // Subject line
+//     text:  'Detail of Created New Artist ', // plain text body
+//     html: messageBody,// html body
+//   });
 
-  console.log('Message sent: %s', info.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+//   console.log('Message sent: %s', info.messageId);
+//   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-  // Preview only available when sending through an Ethereal account
-  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-}
+//   // Preview only available when sending through an Ethereal account
+//   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+//     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+// }
 
 
 exports.signup = signup;
@@ -318,7 +318,6 @@ exports.uploadMulter = uploadMulter;
 exports.signUpvalidation = signUpvalidation;
 exports.artist = artist;
 exports.artistValidation = artistValidation;
-// exports.sendEmail = sendEmail;
 // exports.imageValidation = imageValidation;
 // exports.updateUser = updateUser;
 
