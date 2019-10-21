@@ -1,35 +1,69 @@
-var uuidV4 = require('uuid/v4');
-const jwt = require('jsonwebtoken');
+// var uuidV4 = require('uuid/v4');
+// const jwt = require('jsonwebtoken');
 var db     = require('./db');
 const multer = require('multer');
 var md5 = require('md5');
 require('dotenv/config');
+const { Validator } = require('node-input-validator');
 
 
 var signup = function (req, res) {
-  // Check if there's already a user with that email
-  db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
-    // if (err)
-    //   return res.status(500).json([ { success: 0 } ])
-      // return res.status(500).send([0, err]);
-    if (rows.length) {
-      return res.status(200).json([ { success: 'An account with this email address already exists.' } ])
-      // return res.status(400).send([0,'An account with that email address already exists.']);
-    } else {
-
-      // copy image in parmanent folder (registrationImages)
-      fileCopy(req);
-
-      // function for creating user in DB
-      createUser(req, res);       
-    }
-  });
+  // function for creating user in DB
+  createUser(req, res);  
 };
 
-// require('../MusicStream/images/registrationImages/tempFile/')
-const imagePath = '../test/images/registrationImages/';
-// fucntion used in signup function
-// copy file temporary folder to original folder
+// creating user in DB
+var createUser = (req, res) => {
+  // Set values of user
+  var newUser = setUserValue(req);
+  // Inserting user details in DB
+  db.query('INSERT INTO tblUsers (name, password, email, Userimage, Usertype, status, MobileNo ) values (?,?,?,?,?,?,?)',
+    [newUser.name, newUser.password, newUser.email, newUser.image, newUser.type, newUser.status, newUser.phone_no],
+    function (err) {
+      if (err) {
+        // Check for dupicate email
+        if (err.code === 'ER_DUP_ENTRY') 
+          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+        else
+          return res.status(200).json([{ success: 'Fail to signup' }])        
+      }
+      else{
+        /* copy last uploaded image in permanent folder(registrationImages) and 
+         remove images from temporary folder(tempFile) */
+        fileCopy(req)
+        // Successfully created user, now return user detail
+        retriveUser(newUser.email, res)        
+      }
+    }
+  );
+};
+
+// function used in createUser and createArtist method
+// getting value from request.body and setting in object
+var setUserValue = (req) => {
+  let newUser = {
+    // id: generateUserId(),
+    name: req.body.name,
+    email: req.body.email,    
+    phone_no: req.body.phone_no,
+    image: req.body.image,
+    type: req.body.type,
+    status: req.body.status,
+    username : req.body.username,
+    description : req.body.description
+  };
+  if (req.body.password)
+    newUser.password = md5(req.body.password);
+  // removing 'tempfile' for getting only image name
+  if (req.body.image) 
+    newUser.image = req.body.image.replace('tempFile/', '');
+  return (newUser);
+}
+
+//imagepath used in multer, fileCopy and deleteFile Function
+const imagePath = '../MusicStream/images/registrationImages/'; //for dev replace 'test' with 'MusicStream'
+// function used in signup function
+// copy file from temporary folder(tempFile) to parmanent folder(registrationImages)
 function fileCopy(req) { //
   if (req.body.image && filePath == req.body.image  ) {
     const fs = require('fs');
@@ -39,16 +73,16 @@ function fileCopy(req) { //
     fs.copyFile(source, destination, (err) => {
       if (err) throw err;
       console.log('Success Copy file');
-      deleteFile();
+      // delete file from temperaory folder 
+      deleteFile(fs);
     });
   }
   else { console.log('image path not match with uploaded path'); }
 }
 
-// fucntion used in fileCopy function
+// function used in fileCopy function
 // delete file from temperaory folder 
-function deleteFile() {
-  const fs = require('fs');
+function deleteFile(fs) {
   const path = require('path');
   const directory = imagePath + 'tempFile';
   fs.readdir(directory, (err, files) => {
@@ -62,171 +96,64 @@ function deleteFile() {
     }
   });
 }
-
-
-// creating user in DB
-var createUser = (req, res) => {
-  // Set values of user
-  var newUser = {
-    id: generateUserId(),
-    name: req.body.name,
-    email: req.body.email,
-    password: md5(req.body.password),
-    phone_no: req.body.phone_no,
-    image: req.body.image,
-    type: req.body.type,
-    status: req.body.status
-  };
-
-  if (req.body.image) newUser.image = req.body.image.replace('tempFile/', '');  
-
-  // Inserting user details in DB
-  db.query('INSERT INTO tblUsers ( tblUsers_ID, name, password, email, Userimage, Usertype, status, MobileNo ) values (?,?,?,?,?,?,?,?)',
-    [newUser.id, newUser.name, newUser.password, newUser.email, newUser.image, newUser.type, newUser.status, newUser.phone_no],
-    function (err) {
-
-      if (err) {
-        if (err.code === 'ER_DUP_ENTRY') {
-          // If we somehow generated a duplicate user id, try again
-          return res.status(200).json([ { success: 'duplicate entry' } ] )
-          // return res.status(400).json({ message: 'Signup Failed', error: 'duplicate entry ' + err});
-        }
-        return res.status(200).json([ { success: 'Fail to signup' } ])
-        // return res.status(500).json({ message: 'Signup Failed', error: 'error while inserting data into DB ' + err });
-      }
-
-      // Return Crearte user Sucessfull message and user name 
-      db.query('SELECT * FROM tblUsers WHERE email = ?', [newUser.email], function (err, rows) {
-        if (err) return res.send([0, err]);      
-        rows[0].success = "Successfully registered";
-        return res.status(201).json([ rows[0] ]);
-      });
-
-    }
-  );
-
-};
-
-
-// used in signup function 
-// Gets a random id for this user
-var generateUserId = function () {
-  return uuidV4();
-};
-
-// used in signup function 
-// Hash and salt the password with bcrypt
-// var hashPassword = function (password) {
-//   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-// };
-// Note : used MD5 instead bcrypt algo
-
-
+// return User detail from database
+function retriveUser(email, res){
+  db.query('SELECT * FROM tblUsers WHERE email = ?', [email], function (err, rows) {
+    if (err) return res.send([{ success: 'Fail to retrive user detail' }]);
+    // if user not found return Invalid Username
+    if (rows.length == 0)
+      return res.status(200).json([{ success: 'Email not registered' }])
+    //adding success element in rows object   
+    rows[0].success = "Successfully registered";
+    return res.status(201).json([rows[0]]);
+  });
+}
 
 var login = function (req, res) {
   // Check that the user logging in exists
   db.query('SELECT * FROM  tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
-
-    if (err)
-      return res.status(200).json([ { success: 'Fail to loggedin'} ])
-      // return res.status(500).send({ message: 'Invalid Username Password', error: 'Error while checking email from DB '+ err });
-
+    if (err) return res.status(200).json([ { success: 'Fail to loggedin'} ])   
     // if user not found return Invalid Username
-    if (rows.length == 0)
-      return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' } ]);
-      // return res.status(401).send({ message: 'Invalid Username Password'});
-
+    if (rows.length == 0) return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' } ]);
     // if valid password User successfully logged in, return username with token
     if (md5(req.body.password) === rows[0].Password) {
-
-      // validPassword(req.body.password, rows[0].Password)
       // function for generating token with JWT
       // const tokenStore = generateToken(rows);
-
       //return res.status(200).send([1, rows[0].Email, tokenStore]);
       rows[0].success='Successfully loggedin';
       return res.status(200).json([ rows[0] ]);
-      // return res.status(200).send({ message: 'Login Success', data: rows[0]});
     }
     return res.status(200).json([{ success: 'Fail to loggedin, Password invalid' } ]);
-    // return res.status(401).send({ message: 'Invalid Username Password', error: 'Error while checking email from DB ' + err });
-
   });
 };
-// used in login function 
-// Check if password is correct
-// var validPassword = function (password, savedPassword) {
-//   return bcrypt.compareSync(password, savedPassword);
-// };
-// Note :  used MD5 instead bcrypt algo
-
-// used in login function 
-// generating token
-// const generateToken = (rows) =>{
-//   const id = rows[0].ID;
-//   const password = rows[0].Password;
-//   // generating token
-//   return tokenStore = jwt.sign(
-//                                 { id: id, password: password },
-//                                 process.env.JWT_SECRET_KEY,    //secret key
-//                                 { expiresIn: '1h' }
-//                               );
-// };
-// Note : no need yet of token
 
 // check email from db, if email exists return user detail
 var forgetPassword = (req,res)=> {
-  db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
-
-    // if (err)
-    //   return res.status(500).json([ { success: 'Fail forget password' } ])
-      // return res.status(500).send([0, err]);
-
-    // if user not found return Invalid Username
-    if (rows.length == 0)
-      return res.status(200).json([ { success: 'Email not registered' } ])
-      // return res.status(401).send([0, 'Email not registered.']);
-
-    // if Email valid return password
-    if (req.body.email === rows[0].Email) {   
-      rows[0].success = 'Successfully done forgetPassword';
-      return res.status(200).json([ rows[0] ])
-      // return res.status(200).send([1, rows[0].Password]);
-    }
-    return res.status(200).json([{ success: 'Fail to forgetPassword' } ]);
-    // return res.status(401).send([0, 'Email not registered.']);
-
-  });
+  retriveUser(req.body.email, res)  
 }
 
-
-
-
-// List all users
-// callback(err, users)
+// return all users from database
 var allUsers = (req, res) => {
   db.query('SELECT * FROM tblUsers', [], function (err, rows) {    
-    if (err)  return res.status(200).json([ { success: 'Fail to get all users' } ]);    
-
+    if (err)  
+      return res.status(200).json([ { success: 'Fail to get all users' } ]);    
     rows[0].success = 'Successfully get all users';
     return res.status(200).json(rows);
   });
 };
 
 // get single users
-// callback(err, users)
 var singleUser = (req, res) => {
   const id = req.body.id; // get id from body
-  if (!id) return res.status(200).json([{ success: 'Invalid Id' }])
-
+  if (!id) 
+    return res.status(200).json([{ success: 'Invalid Id' }])
   db.query('SELECT * FROM tblUsers WHERE tblUsers_ID = ?', [id], function (err, rows) {
-    if (err) return res.status(200).json([{ success: 'Fail to get single user' } ]) // return res.status(400).json(err);
-
-    if (rows.length === 0) return res.status(200).json([{ success: 'Id does not exists' }])
-
+    if (err) 
+      return res.status(200).json([{ success: 'Fail to get single user' } ]) 
+    if (rows.length === 0) 
+      return res.status(200).json([{ success: 'Id does not exists' }])
     rows[0].success = 'Successfully get single user';
     return res.status(200).json(rows)
-    // return res.status(200).json(rows);
   });
 };
 // Delete a user
@@ -236,6 +163,7 @@ var deleteUser = function (req, callback) {
   db.query('DELETE FROM tblUsers WHERE tblUsers_ID = ?', [id], callback);
 };
 
+// set destionation and file name for saving in folder using multer
 let filenameStore;
 var storage = multer.diskStorage({
   destination: (req, image, cb) => {
@@ -246,24 +174,102 @@ var storage = multer.diskStorage({
     cb(null, filenameStore);
   }
 })
-
+// uploading image on server
 var uploadMulter = multer({ storage: storage });
 
+// return response image is uploaded or not
 let filePath;
 var imageUpload = function (req, res, next) {
   if (!req.file) {
     console.log("No file received");
     return res.status(200).json([{ success: 'Fail to upload image, No image received' } ])
-    // return res.send([0]);
-
   } else {
     console.log('file received');
     filePath = 'tempFile/' + filenameStore;
     return res.status(200).json([{ filePath: filePath, success: 'Successfully uploaded image' } ])
-    // return res.send([1, filePath])
   }
 };
 
+// MiddleWare for validation
+var signUpvalidation = async (req,res,next) => {
+  let v ;
+  if(req.body.type == 3){
+    v = new Validator(req.body, {
+      image: 'required',
+      email: 'required|email',
+      password: 'required'
+    });
+  }else{
+    v = new Validator(req.body, {
+      email: 'required|email',
+      password: 'required'
+    });
+  } 
+  const matched = await v.check();
+  if (!matched) {
+    req.status = 422;
+    req.body = v.errors;
+    v.errors.success = "Validation error";
+    res.status(422).send([v.errors]);
+  }else{
+    next();
+  } 
+};
+
+// var imageValidation = async (req, image, res, next)=>{
+//   let ext = req.body.image.split('.').pop();
+//   if (ext == 'jpeg' || ext == 'jpg' || ext == 'png'  )
+//       next()      
+//     res.status(422).send([{ success:'Accept only (jpeg, png, jpg) image extensions'}]); 
+// }
+
+var artist = function (req, res) {
+  // function for creating user in DB
+  createArtist(req, res);
+};
+
+var createArtist = (req, res) => {
+  // Set values of user
+  var newUser = setUserValue(req);
+  // Inserting user details in DB
+  db.query('INSERT INTO tblUsers (name, email, Usertype, status, MobileNo, Description ) values (?,?,?,?,?,?)',
+    [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.Description],
+    function (err) {
+      if (err) {
+        // Check for dupicate email
+        if (err.code === 'ER_DUP_ENTRY')
+          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+        else
+          return res.status(200).json([{ success: 'Fail to signup' }])
+      }
+      else {
+        // Successfully created user, now return user detail
+        retriveUser(newUser.email, res)
+      }
+    }
+  );
+};
+
+var artistValidation = async (req, res, next) => {
+  let v = new Validator(req.body, {
+      email: 'required|email',
+      name: 'required',
+      phone_no: 'required|integer|min:1', 
+      description: 'required',
+      status: 'required',
+      type: 'required',
+  });
+  const matched = await v.check();
+  if (!matched) {
+    req.status = 422;
+    req.body = v.errors;
+    v.errors.success = "Validation error";
+    v.errors.phone_no.message = "Phone number invalid"; // custom validate message for phone number
+    res.status(422).send([v.errors]);
+  } else {
+    next();
+  }
+};
 
 exports.signup = signup;
 exports.login = login;
@@ -273,6 +279,10 @@ exports.singleUser = singleUser;
 exports.deleteUser = deleteUser;
 exports.imageUpload = imageUpload;
 exports.uploadMulter = uploadMulter;
+exports.signUpvalidation = signUpvalidation;
+exports.artist = artist;
+exports.artistValidation = artistValidation;
+// exports.imageValidation = imageValidation;
 // exports.updateUser = updateUser;
 
 
@@ -296,6 +306,67 @@ exports.uploadMulter = uploadMulter;
 
 
 // previes code 
+
+
+// used in login function 
+// Check if password is correct
+// var validPassword = function (password, savedPassword) {
+//   return bcrypt.compareSync(password, savedPassword);
+// };
+// Note :  used MD5 instead bcrypt algo
+
+
+// used in login function 
+// generating token
+// const generateToken = (rows) =>{
+//   const id = rows[0].ID;
+//   const password = rows[0].Password;
+//   // generating token
+//   return tokenStore = jwt.sign(
+//                                 { id: id, password: password },
+//                                 process.env.JWT_SECRET_KEY,    //secret key
+//                                 { expiresIn: '1h' }
+//                               );
+// };
+// Note : no need yet of token
+
+
+
+// used in signup function 
+// Gets a random id for this user
+// var generateUserId = function () {
+//   return uuidV4();
+// };
+// Note: this function no longer need due to Id cloumn auto-increament
+
+// used in signup function 
+// Hash and salt the password with bcrypt
+// var hashPassword = function (password) {
+//   return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+// };
+// Note : used MD5 instead bcrypt algo
+
+// for forget email
+// db.query('SELECT * FROM tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
+
+  //   // if (err)
+  //   //   return res.status(500).json([ { success: 'Fail forget password' } ])
+  //     // return res.status(500).send([0, err]);
+
+  //     // return res.status(401).send([0, 'Email not registered.']);
+
+  //   // if Email valid return password
+  //   if (req.body.email === rows[0].Email) {   
+  //     rows[0].success = 'Successfully done forgetPassword';
+  //     return res.status(200).json([ rows[0] ])
+  //     // return res.status(200).send([1, rows[0].Password]);
+  //   }
+  //   return res.status(200).json([{ success: 'Fail to forgetPassword' } ]);
+  //   // return res.status(401).send([0, 'Email not registered.']);
+
+  // });
+
+
 
 // Update a user
 // callback(err)

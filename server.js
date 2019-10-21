@@ -9,9 +9,7 @@ var passport            = require('passport');
 var path                = require('path');
 var session             = require('express-session');
 
-
 var app = express();
-
 // View engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.engine('.hbs', exphbs({extname: '.hbs'}));
@@ -25,10 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.use(express.static(path.join(__dirname, '/images/registrationImages/')));
-
-
 
 // Set up passport strategies and message passing
 require('./config/passport')(passport);
