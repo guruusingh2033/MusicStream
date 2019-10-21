@@ -4,7 +4,7 @@ const authcheck = require('../middleware/authcheck');
 
 // Routes for authentication (signup, login, logout)
 module.exports = function(app) {  
-  app.post('/signup', user.signUpvalidation, user.signup);
+  app.post('/signup', user.signUpValidation, user.signup);
   app.post('/login', user.login);
   app.post('/forgetPassword', user.forgetPassword);
   app.get('/user',  user.allUsers);

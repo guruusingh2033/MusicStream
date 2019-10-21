@@ -61,7 +61,7 @@ var setUserValue = (req) => {
 }
 
 //imagepath used in multer, fileCopy and deleteFile Function
-const imagePath = '../MusicStream/images/registrationImages/'; //for dev replace 'test' with 'MusicStream'
+const imagePath = '../test/images/registrationImages/'; //for dev replace 'test' with 'MusicStream'
 // function used in signup function
 // copy file from temporary folder(tempFile) to parmanent folder(registrationImages)
 function fileCopy(req) { //
@@ -99,7 +99,7 @@ function deleteFile(fs) {
 // return User detail from database
 function retriveUser(email, res) {
   db.query('SELECT * FROM tblUsers WHERE email = ?', [email], function (err, rows) {
-    if (err) return res.send([{ success: 'Fail to retrive user detail' }]);
+  //  if (err) return res.send([{ success: 'Fail to retrive user detail' }]);
     // if user not found return Invalid Username
     if (rows.length == 0)
       return res.status(200).json([{ success: 'Email not registered' }])
@@ -192,7 +192,7 @@ var imageUpload = function (req, res, next) {
 };
 
 // MiddleWare for validation
-var signUpvalidation = async (req, res, next) => {
+var signUpValidation = async (req, res, next) => {
   let v;
   if (req.body.type == 3) {
     v = new Validator(req.body, {
@@ -315,7 +315,7 @@ exports.singleUser = singleUser;
 exports.deleteUser = deleteUser;
 exports.imageUpload = imageUpload;
 exports.uploadMulter = uploadMulter;
-exports.signUpvalidation = signUpvalidation;
+exports.signUpValidation = signUpValidation;
 exports.artist = artist;
 exports.artistValidation = artistValidation;
 // exports.imageValidation = imageValidation;
