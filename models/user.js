@@ -105,7 +105,7 @@ function retriveUser (email, res){
       return res.status(200).json([{ success: 'Email not registered' }])
     //adding success element in rows object   
     rows[0].success = "Please wait for admin to approve. We will contact you shortly";
-    sendEmail(rows[0]); // send mail to admin
+    //sendEmail(rows[0]); // send mail to admin
     return res.status(201).json([rows[0]]);
   });
 }
