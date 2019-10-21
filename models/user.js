@@ -5,6 +5,8 @@ const multer = require('multer');
 var md5 = require('md5');
 require('dotenv/config');
 const { Validator } = require('node-input-validator');
+// const nodemailer = require('nodemailer');
+
 
 
 var signup = function (req, res) {
@@ -104,12 +106,8 @@ function retriveUser(email, res){
     if (rows.length == 0)
       return res.status(200).json([{ success: 'Email not registered' }])
     //adding success element in rows object   
-<<<<<<< HEAD
     rows[0].success = "Please wait for admin to approve. We will contact you shortly";
     //sendEmail(rows[0]); // send mail to admin
-=======
-    rows[0].success = "Successfully registered";
->>>>>>> parent of 3d5b0bd... Sending Email
     return res.status(201).json([rows[0]]);
   });
 }
@@ -277,7 +275,6 @@ var artistValidation = async (req, res, next) => {
   }
 };
 
-<<<<<<< HEAD
 // var sendEmail = async (data) =>{
 //   // create reusable transporter object using the default SMTP transport
 //   let transporter = nodemailer.createTransport({
@@ -312,8 +309,6 @@ var artistValidation = async (req, res, next) => {
 // }
 
 
-=======
->>>>>>> parent of 3d5b0bd... Sending Email
 exports.signup = signup;
 exports.login = login;
 exports.forgetPassword = forgetPassword;
