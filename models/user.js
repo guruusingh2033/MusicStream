@@ -264,7 +264,8 @@ var artistValidation = async (req, res, next) => {
     req.status = 422;
     req.body = v.errors;
     v.errors.success = "Validation error";
-    v.errors.phone_no.message = "Phone number invalid"; // custom validate message for phone number
+    if (v.errors.phone_no)
+      v.errors.phone_no.message = "Phone number invalid"; // custom validate message for phone number
     res.status(422).send([v.errors]);
   } else {
     next();
