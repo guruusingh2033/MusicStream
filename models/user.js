@@ -1,14 +1,15 @@
 // var uuidV4 = require('uuid/v4');
 // const jwt = require('jsonwebtoken');
-var db     = require('./db');
+var db = require('./db');
 const multer = require('multer');
 var md5 = require('md5');
 require('dotenv/config');
 const { Validator } = require('node-input-validator');
+// const nodemailer = require('nodemailer');
 
 var signup = function (req, res) {
   // function for creating user in DB
-  createUser(req, res);  
+  createUser(req, res);
 };
 
 // creating user in DB
@@ -21,17 +22,17 @@ var createUser = (req, res) => {
     function (err) {
       if (err) {
         // Check for dupicate email
-        if (err.code === 'ER_DUP_ENTRY') 
+        if (err.code === 'ER_DUP_ENTRY')
           return res.status(200).json([{ success: 'An account with this email address already exists.' }])
         else
-          return res.status(200).json([{ success: 'Fail to signup' }])        
+          return res.status(200).json([{ success: 'Fail to signup' }])
       }
-      else{
+      else {
         /* copy last uploaded image in permanent folder(registrationImages) and 
          remove images from temporary folder(tempFile) */
         fileCopy(req)
         // Successfully created user, now return user detail
-        retriveUser(newUser.email, res)        
+        retriveUser(newUser.email, res)
       }
     }
   );
@@ -43,28 +44,28 @@ var setUserValue = (req) => {
   let newUser = {
     // id: generateUserId(),
     name: req.body.name,
-    email: req.body.email,    
+    email: req.body.email,
     phone_no: req.body.phone_no,
     image: req.body.image,
     type: req.body.type,
     status: req.body.status,
-    username : req.body.username,
-    description : req.body.description
+    username: req.body.username,
+    description: req.body.description
   };
   if (req.body.password)
     newUser.password = md5(req.body.password);
   // removing 'tempfile' for getting only image name
-  if (req.body.image) 
+  if (req.body.image)
     newUser.image = req.body.image.replace('tempFile/', '');
   return (newUser);
 }
 
 //imagepath used in multer, fileCopy and deleteFile Function
-const imagePath = '../test/images/registrationImages/'; //for dev replace 'test' with 'MusicStream'
+const imagePath = '../MusicStream/images/registrationImages/'; //for dev replace 'test' with 'MusicStream'
 // function used in signup function
 // copy file from temporary folder(tempFile) to parmanent folder(registrationImages)
 function fileCopy(req) { //
-  if (req.body.image && filePath == req.body.image  ) {
+  if (req.body.image && filePath == req.body.image) {
     const fs = require('fs');
     let source = imagePath + req.body.image;
     let destination = imagePath + req.body.image.replace('tempFile/', '');
@@ -96,7 +97,7 @@ function deleteFile(fs) {
   });
 }
 // return User detail from database
-function retriveUser(email, res){
+function retriveUser(email, res) {
   db.query('SELECT * FROM tblUsers WHERE email = ?', [email], function (err, rows) {
     if (err) return res.send([{ success: 'Fail to retrive user detail' }]);
     // if user not found return Invalid Username
@@ -112,31 +113,31 @@ function retriveUser(email, res){
 var login = function (req, res) {
   // Check that the user logging in exists
   db.query('SELECT * FROM  tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
-    if (err) return res.status(200).json([ { success: 'Fail to loggedin'} ])   
+    if (err) return res.status(200).json([{ success: 'Fail to loggedin' }])
     // if user not found return Invalid Username
-    if (rows.length == 0) return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' } ]);
+    if (rows.length == 0) return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' }]);
     // if valid password User successfully logged in, return username with token
     if (md5(req.body.password) === rows[0].Password) {
       // function for generating token with JWT
       // const tokenStore = generateToken(rows);
       //return res.status(200).send([1, rows[0].Email, tokenStore]);
-      rows[0].success='Successfully loggedin';
-      return res.status(200).json([ rows[0] ]);
+      rows[0].success = 'Successfully loggedin';
+      return res.status(200).json([rows[0]]);
     }
-    return res.status(200).json([{ success: 'Fail to loggedin, Password invalid' } ]);
+    return res.status(200).json([{ success: 'Fail to loggedin, Password invalid' }]);
   });
 };
 
 // check email from db, if email exists return user detail
-var forgetPassword = (req,res)=> {
-  retriveUser(req.body.email, res)  
+var forgetPassword = (req, res) => {
+  retriveUser(req.body.email, res)
 }
 
 // return all users from database
 var allUsers = (req, res) => {
-  db.query('SELECT * FROM tblUsers', [], function (err, rows) {    
-    if (err)  
-      return res.status(200).json([ { success: 'Fail to get all users' } ]);    
+  db.query('SELECT * FROM tblUsers', [], function (err, rows) {
+    if (err)
+      return res.status(200).json([{ success: 'Fail to get all users' }]);
     rows[0].success = 'Successfully get all users';
     return res.status(200).json(rows);
   });
@@ -145,12 +146,12 @@ var allUsers = (req, res) => {
 // get single users
 var singleUser = (req, res) => {
   const id = req.body.id; // get id from body
-  if (!id) 
+  if (!id)
     return res.status(200).json([{ success: 'Invalid Id' }])
   db.query('SELECT * FROM tblUsers WHERE tblUsers_ID = ?', [id], function (err, rows) {
-    if (err) 
-      return res.status(200).json([{ success: 'Fail to get single user' } ]) 
-    if (rows.length === 0) 
+    if (err)
+      return res.status(200).json([{ success: 'Fail to get single user' }])
+    if (rows.length === 0)
       return res.status(200).json([{ success: 'Id does not exists' }])
     rows[0].success = 'Successfully get single user';
     return res.status(200).json(rows)
@@ -182,38 +183,38 @@ let filePath;
 var imageUpload = function (req, res, next) {
   if (!req.file) {
     console.log("No file received");
-    return res.status(200).json([{ success: 'Fail to upload image, No image received' } ])
+    return res.status(200).json([{ success: 'Fail to upload image, No image received' }])
   } else {
     console.log('file received');
     filePath = 'tempFile/' + filenameStore;
-    return res.status(200).json([{ filePath: filePath, success: 'Successfully uploaded image' } ])
+    return res.status(200).json([{ filePath: filePath, success: 'Successfully uploaded image' }])
   }
 };
 
 // MiddleWare for validation
-var signUpvalidation = async (req,res,next) => {
-  let v ;
-  if(req.body.type == 3){
+var signUpvalidation = async (req, res, next) => {
+  let v;
+  if (req.body.type == 3) {
     v = new Validator(req.body, {
       image: 'required',
       email: 'required|email',
       password: 'required'
     });
-  }else{
+  } else {
     v = new Validator(req.body, {
       email: 'required|email',
       password: 'required'
     });
-  } 
+  }
   const matched = await v.check();
   if (!matched) {
     req.status = 422;
     req.body = v.errors;
     v.errors.success = "Validation error";
     res.status(422).send([v.errors]);
-  }else{
+  } else {
     next();
-  } 
+  }
 };
 
 // var imageValidation = async (req, image, res, next)=>{
@@ -252,12 +253,12 @@ var createArtist = (req, res) => {
 
 var artistValidation = async (req, res, next) => {
   let v = new Validator(req.body, {
-      email: 'required|email',
-      name: 'required',
-      phone_no: 'required|integer|min:1', 
-      description: 'required',
-      status: 'required',
-      type: 'required',
+    email: 'required|email',
+    name: 'required',
+    phone_no: 'required|integer|min:1',
+    description: 'required',
+    status: 'required',
+    type: 'required',
   });
   const matched = await v.check();
   if (!matched) {
@@ -271,6 +272,40 @@ var artistValidation = async (req, res, next) => {
     next();
   }
 };
+
+// var sendEmail = async (data) =>{
+//   // create reusable transporter object using the default SMTP transport
+//   let transporter = nodemailer.createTransport({
+//     service: "Gmail", // comment this for test
+//     auth: {
+//       user: process.env.GMAIL_USER, // generated ethereal user
+//       pass: process.env.GMAIL_PASSWORD // generated ethereal password
+//     }
+//   });
+
+//   messageBody = '<h2>There is details of created new artist </h2>' 
+//     + '<br>Name           ::: ' + data.Name
+//     + '<br>Email          ::: ' + data.Email
+//     + '<br>Phone No.      ::: ' + data.MobileNo
+//     + '<br>Description    ::: ' + data.Description;
+
+//   // send mail with defined transport object
+//   let info = await transporter.sendMail({
+//     from: '<test@example.com>', // sender address
+//     to: 'test1@gmail.com, test2@gmail.com', // list of receivers
+//     subject: 'New Artist Created ✔', // Subject line
+//     text:  'Detail of Created New Artist ', // plain text body
+//     html: messageBody,// html body
+//   });
+
+//   console.log('Message sent: %s', info.messageId);
+//   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+//   // Preview only available when sending through an Ethereal account
+//   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+//     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+// }
+
 
 exports.signup = signup;
 exports.login = login;
@@ -453,7 +488,7 @@ exports.artistValidation = artistValidation;
 // };
 
 // var getUser = (req, res)=>{
-  
+
 // }
 
 // Check if a user exists and create them if they do not
@@ -497,8 +532,3 @@ exports.artistValidation = artistValidation;
 //     return callback(null, new User(rows[0]));
 //   });
 // };
-
-
-
-
-
