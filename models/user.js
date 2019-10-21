@@ -5,7 +5,7 @@ const multer = require('multer');
 var md5 = require('md5');
 require('dotenv/config');
 const { Validator } = require('node-input-validator');
-
+const nodemailer = require('nodemailer');
 
 var signup = function (req, res) {
   // function for creating user in DB
@@ -97,14 +97,15 @@ function deleteFile(fs) {
   });
 }
 // return User detail from database
-function retriveUser(email, res){
+function retriveUser (email, res){
   db.query('SELECT * FROM tblUsers WHERE email = ?', [email], function (err, rows) {
     if (err) return res.send([{ success: 'Fail to retrive user detail' }]);
     // if user not found return Invalid Username
     if (rows.length == 0)
       return res.status(200).json([{ success: 'Email not registered' }])
     //adding success element in rows object   
-    rows[0].success = "Successfully registered";
+    rows[0].success = "Please wait for admin to approve. We will contact you shortly";
+    sendEmail(rows[0]); // send mail to admin
     return res.status(201).json([rows[0]]);
   });
 }
@@ -233,7 +234,7 @@ var createArtist = (req, res) => {
   var newUser = setUserValue(req);
   // Inserting user details in DB
   db.query('INSERT INTO tblUsers (name, email, Usertype, status, MobileNo, Description ) values (?,?,?,?,?,?)',
-    [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.Description],
+    [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.description],
     function (err) {
       if (err) {
         // Check for dupicate email
@@ -272,6 +273,40 @@ var artistValidation = async (req, res, next) => {
   }
 };
 
+var sendEmail = async (data) =>{
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    service: "Gmail", // comment this for test
+    auth: {
+      user: process.env.GMAIL_USER, // generated ethereal user
+      pass: process.env.GMAIL_PASSWORD // generated ethereal password
+    }
+  });
+
+  messageBody = '<h2>There is details of created new artist </h2>' 
+    + '<br>Name           ::: ' + data.Name
+    + '<br>Email          ::: ' + data.Email
+    + '<br>Phone No.      ::: ' + data.MobileNo
+    + '<br>Description    ::: ' + data.Description;
+
+  // send mail with defined transport object
+  let info = await transporter.sendMail({
+    from: '<test@example.com>', // sender address
+    to: 'test1@gmail.com, test2@gmail.com', // list of receivers
+    subject: 'New Artist Created ✔', // Subject line
+    text:  'Detail of Created New Artist ', // plain text body
+    html: messageBody,// html body
+  });
+
+  console.log('Message sent: %s', info.messageId);
+  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+  // Preview only available when sending through an Ethereal account
+  console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+}
+
+
 exports.signup = signup;
 exports.login = login;
 exports.forgetPassword = forgetPassword;
@@ -283,6 +318,7 @@ exports.uploadMulter = uploadMulter;
 exports.signUpvalidation = signUpvalidation;
 exports.artist = artist;
 exports.artistValidation = artistValidation;
+// exports.sendEmail = sendEmail;
 // exports.imageValidation = imageValidation;
 // exports.updateUser = updateUser;
 

@@ -10,7 +10,7 @@ module.exports = function(app) {
   app.get('/user',  user.allUsers);
   app.post('/profile', user.singleUser);
   app.delete('/user/:id', authcheck, user.deleteUser);
-  app.post('/createartist', user.artistValidation, user.artist);
+  app.post('/createArtist', user.artistValidation, user.artist);
   // app.put('/User/', authcheck, user.updateUser);
   // user.imageValidation,
   app.post('/filePost',  user.uploadMulter.single('image'), user.imageUpload);
