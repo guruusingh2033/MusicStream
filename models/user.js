@@ -63,7 +63,7 @@ var setUserValue = (req) => {
 }
 
 //imagepath used in multer, fileCopy and deleteFile Function
-const imagePath = '../MusicStream/images/registrationImages/'; //for dev replace 'test' with 'MusicStream'
+const imagePath = '../test/images/registrationImages/'; //for dev replace 'test' with 'MusicStream'
 // function used in signup function
 // copy file from temporary folder(tempFile) to parmanent folder(registrationImages)
 function fileCopy(req) { //
