@@ -166,7 +166,7 @@ var singleUser = (req, res) => {
 
 // set destionation and file name for saving in folder using multer
 let filenameStore;
-var storage = multer.memoryStorage({
+var storage = multer.diskStorage({
   destination: (req, image, cb) => {
     cb(null, imagePath + 'tempFile')
   },
