@@ -90,7 +90,7 @@ var createSong = (req, res) => {
         [newSong.name, newSong.artistId, newSong.type, newSong.filePath, newSong.thumbnailPath],
         function (err) {
             if (err) {
-                return res.status(200).json([{ success: 'Fail to signup' }])
+                return res.status(200).json([{ success: 'Fail to insert song' }])
             }
             else {
                 /* copy last uploaded image in permanent folder(registrationImages) and 
