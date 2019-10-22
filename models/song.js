@@ -204,7 +204,7 @@ var songValidation = async (req, res, next) => {
 var allSongsArtist = (req, res) => {
     db.query('SELECT tblMedia.tblMedia_Id, tblMedia.Name, tblMedia.ArtistId, tblMedia.Type,'
     +'tblMedia.FilePath, tblMedia.ThumbnailPath, tblUsers.Name FROM tblMedia'
-    +'LEFT JOIN tblUsers ON tblUsers.tblUsers_ID = tblMedia.ArtistId', [], function (err, rows) {
+    +' LEFT JOIN tblUsers ON tblUsers.tblUsers_ID = tblMedia.ArtistId', [], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get all song with artist name' , error:err}]);
             rows[0].success = 'Successfully get all song with artist name';
