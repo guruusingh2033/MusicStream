@@ -61,7 +61,7 @@ var setUserValue = (req) => {
 }
 
 //imagepath used in multer, fileCopy and deleteFile Function
-const imagePath = '../test/images/registrationImages/'; //for dev replace 'test' with 'MusicStream'
+const imagePath = '../test/images/registrationImages/'; 
 // function used in signup function
 // copy file from temporary folder(tempFile) to parmanent folder(registrationImages)
 function fileCopy(req) { //
@@ -99,7 +99,7 @@ function deleteFile(fs) {
 // return User detail from database
 function retriveUser(email, res) {
   db.query('SELECT * FROM tblUsers WHERE email = ?', [email], function (err, rows) {
-  //  if (err) return res.send([{ success: 'Fail to retrive user detail' }]);
+   if (err) return res.send([{ success: 'Fail to retrive user detail' }]);
     // if user not found return Invalid Username
     if (rows.length == 0)
       return res.status(200).json([{ success: 'Email not registered' }])
@@ -159,14 +159,14 @@ var singleUser = (req, res) => {
 };
 // Delete a user
 // callback(err)
-var deleteUser = function (req, callback) {
-  const id = req.params.id; // get id from url
-  db.query('DELETE FROM tblUsers WHERE tblUsers_ID = ?', [id], callback);
-};
+// var deleteUser = function (req, callback) {
+//   const id = req.params.id; // get id from url
+//   db.query('DELETE FROM tblUsers WHERE tblUsers_ID = ?', [id], callback);
+// };
 
 // set destionation and file name for saving in folder using multer
 let filenameStore;
-var storage = multer.diskStorage({
+var storage = multer.memoryStorage({
   destination: (req, image, cb) => {
     cb(null, imagePath + 'tempFile')
   },
@@ -180,7 +180,7 @@ var uploadMulter = multer({ storage: storage });
 
 // return response image is uploaded or not
 let filePath;
-var imageUpload = function (req, res, next) {
+var imageUpload = function (req, res) {
   if (!req.file) {
     console.log("No file received");
     return res.status(200).json([{ success: 'Fail to upload image, No image received' }])
@@ -217,18 +217,10 @@ var signUpValidation = async (req, res, next) => {
   }
 };
 
-// var imageValidation = async (req, image, res, next)=>{
-//   let ext = req.body.image.split('.').pop();
-//   if (ext == 'jpeg' || ext == 'jpg' || ext == 'png'  )
-//       next()      
-//     res.status(422).send([{ success:'Accept only (jpeg, png, jpg) image extensions'}]); 
-// }
-
 var artist = function (req, res) {
   // function for creating user in DB
   createArtist(req, res);
 };
-
 var createArtist = (req, res) => {
   // Set values of user
   var newUser = setUserValue(req);
@@ -306,19 +298,17 @@ var artistValidation = async (req, res, next) => {
 //     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 // }
 
-
 exports.signup = signup;
 exports.login = login;
 exports.forgetPassword = forgetPassword;
 exports.allUsers = allUsers;
 exports.singleUser = singleUser;
-exports.deleteUser = deleteUser;
 exports.imageUpload = imageUpload;
 exports.uploadMulter = uploadMulter;
 exports.signUpValidation = signUpValidation;
 exports.artist = artist;
 exports.artistValidation = artistValidation;
-// exports.imageValidation = imageValidation;
+// exports.deleteUser = deleteUser;
 // exports.updateUser = updateUser;
 
 
