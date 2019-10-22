@@ -5,18 +5,22 @@ const song = require('../models/song');
 
 // Routes for authentication (signup, login, logout)
 module.exports = function(app) {  
+  // user Apis
   app.post('/signup', user.signUpValidation, user.signup);
   app.post('/login', user.login);
   app.post('/forgetPassword', user.forgetPassword);
   app.get('/user',  user.allUsers);
   app.post('/profile', user.singleUser);
-  // app.delete('/user/:id', authcheck, user.deleteUser);
   app.post('/createartist', user.artistValidation, user.artist);
   // app.put('/User/', authcheck, user.updateUser);
+  // app.delete('/user/:id', authcheck, user.deleteUser);
+
+  // song Apis
   app.post('/filePost',  user.uploadMulter.single('image'), user.imageUpload);
   app.post('/songsPost', song.songUploadMulter.single('song'), song.songUpload);
   app.post('/songsThumbImagePost', song.thumbUploadMulter.single('image'), song.thumbImageUpload);
   app.post('/songInsert', song.songValidation, song.songInsert);  
+  app.get('/allSongsArtist', song.allSongsArtist); 
 };
 
 

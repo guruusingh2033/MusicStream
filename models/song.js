@@ -86,7 +86,7 @@ var createSong = (req, res) => {
         [newSong.name, newSong.artistId, newSong.type, newSong.filePath, newSong.thumbnailPath],
         function (err) {
             if (err) {
-                return res.status(200).json([{ success: 'Fail to insert song' }])
+                return res.status(200).json([{ success: 'Fail to insert song', error:err }])
             }
             else {
                 /* copy last uploaded file in permanent folder and 
@@ -172,7 +172,7 @@ function deleteFile(fs, directory) {
 // return Song detail from database
 function retriveSong(name, res) {
     db.query('SELECT * FROM tblMedia WHERE name = ?', [name], function (err, rows) {
-        if (err) return res.send([{ success: 'Fail to retrive song detail' }]);
+        if (err) return res.send([{ success: 'Fail to retrive song detail', err: err }]);
         //adding success element in rows object   
         rows[0].success = "Song successfully inserted";
         return res.status(201).json([rows[0]]);
@@ -200,6 +200,18 @@ var songValidation = async (req, res, next) => {
     }
 };
 
+/** Code Start:: get all songs and artist **/
+var allSongsArtist = (req, res) => {
+    db.query('SELECT tblMedia.tblMedia_Id, tblMedia.Name, tblMedia.ArtistId, tblMedia.Type,'
+    +'tblMedia.FilePath, tblMedia.ThumbnailPath, tblUsers.Name FROM tblMedia'
+    +'LEFT JOIN tblUsers ON tblUsers.tblUsers_ID = tblMedia.ArtistId', [], function (err, rows) {
+        if (err)
+            return res.status(200).json([{ success: 'Fail to get all song with artist name' , error:err}]);
+            rows[0].success = 'Successfully get all song with artist name';
+        return res.status(200).json(rows);
+    });
+};
+/** Code End:: get all songs and artist **/
 
 
 exports.songValidation = songValidation;
@@ -208,3 +220,4 @@ exports.songUpload = songUpload;
 exports.songInsert = songInsert;
 exports.thumbUploadMulter = thumbUploadMulter;
 exports.thumbImageUpload = thumbImageUpload;
+exports.allSongsArtist = allSongsArtist;

@@ -25,7 +25,7 @@ var createUser = (req, res) => {
         if (err.code === 'ER_DUP_ENTRY')
           return res.status(200).json([{ success: 'An account with this email address already exists.' }])
         else
-          return res.status(200).json([{ success: 'Fail to signup' }])
+          return res.status(200).json([{ success: 'Fail to signup', error:err }])
       }
       else {
         /* copy last uploaded image in permanent folder(registrationImages) and 
@@ -99,7 +99,7 @@ function deleteFile(fs) {
 // return User detail from database
 function retriveUser(email, res) {
   db.query('SELECT * FROM tblUsers WHERE email = ?', [email], function (err, rows) {
-   if (err) return res.send([{ success: 'Fail to retrive user detail' }]);
+    if (err) return res.status(200).json([{ success: 'Fail to retrive user detail' , error:err}]);
     // if user not found return Invalid Username
     if (rows.length == 0)
       return res.status(200).json([{ success: 'Email not registered' }])
@@ -113,7 +113,7 @@ function retriveUser(email, res) {
 var login = function (req, res) {
   // Check that the user logging in exists
   db.query('SELECT * FROM  tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
-    if (err) return res.status(200).json([{ success: 'Fail to loggedin' }])
+    if (err) return res.status(200).json([{ success: 'Fail to loggedin', error:err}])
     // if user not found return Invalid Username
     if (rows.length == 0) return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' }]);
     // if valid password User successfully logged in, return username with token
@@ -137,7 +137,7 @@ var forgetPassword = (req, res) => {
 var allUsers = (req, res) => {
   db.query('SELECT * FROM tblUsers', [], function (err, rows) {
     if (err)
-      return res.status(200).json([{ success: 'Fail to get all users' }]);
+      return res.status(200).json([{ success: 'Fail to get all users', error:err }]);
     rows[0].success = 'Successfully get all users';
     return res.status(200).json(rows);
   });
@@ -150,7 +150,7 @@ var singleUser = (req, res) => {
     return res.status(200).json([{ success: 'Invalid Id' }])
   db.query('SELECT * FROM tblUsers WHERE tblUsers_ID = ?', [id], function (err, rows) {
     if (err)
-      return res.status(200).json([{ success: 'Fail to get single user' }])
+      return res.status(200).json([{ success: 'Fail to get single user', error:err }])
     if (rows.length === 0)
       return res.status(200).json([{ success: 'Id does not exists' }])
     rows[0].success = 'Successfully get single user';
@@ -233,7 +233,7 @@ var createArtist = (req, res) => {
         if (err.code === 'ER_DUP_ENTRY')
           return res.status(200).json([{ success: 'An account with this email address already exists.' }])
         else
-          return res.status(200).json([{ success: 'Fail to signup' }])
+          return res.status(200).json([{ success: 'Fail to signup', error:err}])
       }
       else {
         // Successfully created user, now return user detail
