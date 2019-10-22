@@ -2,15 +2,13 @@ const multer = require('multer');
 const { Validator } = require('node-input-validator');
 const db = require('./db');
 
-/** Used for image uploading,copy and delete  **/
+// Variabele used for image uploading, copying and deleting 
 //imagepath used in multer, fileCopy and deleteFile Function
 const imageFolderPath = '../test/songs/thumbnail_Images/';
-// for storing image name with foldername -- tempThumbImage/abc.png
-let tempImageNameStore; 
-// for storing only image name --- 1571724607849_Capture.png
-let thumbnailImageName; 
+let tempImageNameStore; // storing image name with foldername like - tempThumbImage/abc.png
+let thumbnailImageName; // storing only image name like - 1571724607849_Capture.png
 
-// Code Start:: ThumbImage Upload
+/***  Code Start:: Thumb Image Upload  ***/
 // set destionation and file name for saving in folder using multer
 var thumbStorage = multer.diskStorage({
     destination: (req, image, cb) => {
@@ -23,7 +21,6 @@ var thumbStorage = multer.diskStorage({
 })
 // uploading image on server
 var thumbUploadMulter = multer({ storage: thumbStorage });
-
 // return response image is uploaded or not
 var thumbImageUpload = function (req, res) {
     if (!req.file) {
@@ -35,16 +32,16 @@ var thumbImageUpload = function (req, res) {
         return res.status(200).json([{ filePath: tempImageNameStore, success: 'Successfully uploaded image' }])
     }
 };
-// Code End:: ThumbImage Upload
+/*** Code End:: Thumb Image Upload  ***/
 
+// Variabele used for song uploading, copying and deleting 
+// songFolderPath used in multer, fileCopy and deleteFile Function
+const songFolderPath = '../test/songs/'; 
+let songName; // for storing only song name --- 1571724607849.mp3
+let tempSongNameStore; // storing image name with folder name like - tempFile/1571724607849.mp3
 
-
-
-//songPathStore used in multer, fileCopy and deleteFile Function
-const songPathStore = '../test/songs/'; 
-
+/***  Code Start:: Song Upload  ***/
 // set destionation and file name for saving in folder using multer
-let filenameStore;
 var storage = multer.diskStorage({
     // fileFilter: (req, file, cb) => {
     //     if (file.mimetype !== 'image/png') {
@@ -53,34 +50,33 @@ var storage = multer.diskStorage({
     //     cb(null, true);
     // },
     destination: (req, song, cb) => {
-        cb(null, songPathStore + 'tempFile')
+        cb(null, songFolderPath + 'tempFile')
     },
     filename: function (req, song, cb) {
-        filenameStore = Date.now() + '_' + song.originalname;
-        cb(null, filenameStore);
+        songName = Date.now() + '_' + song.originalname;
+        cb(null, songName);
     }
 })
 // uploading song on server
 var songUploadMulter = multer({ storage: storage });
-
 // return response song is uploaded or not
-let filePathStore;
 var songUpload = function (req, res) {
     if (!req.file) {
         console.log("No file received");
         return res.status(200).json([{ success: 'Fail to upload song, No song received' }])
     } else {
         console.log('file received');
-        filePathStore = 'tempFile/' + filenameStore;
-        return res.status(200).json([{ filePath: filePathStore, success: 'Successfully uploaded song' }])
+        tempSongNameStore = 'tempFile/' + songName;
+        return res.status(200).json([{ filePath: tempSongNameStore, success: 'Successfully uploaded song' }])
     }
 };
+/***  Code End:: Song Upload  ***/
 
+/***   Code Start:: inserting song detail into DB  ***/
 var songInsert = function (req, res) {
     // function for creating Song in DB
     createSong(req, res);
 };
-
 // creating Song in DB
 var createSong = (req, res) => {
     // Set values of Song
@@ -93,8 +89,8 @@ var createSong = (req, res) => {
                 return res.status(200).json([{ success: 'Fail to insert song' }])
             }
             else {
-                /* copy last uploaded image in permanent folder(registrationImages) and 
-                 remove images from temporary folder(tempFile) */
+                /* copy last uploaded file in permanent folder and 
+                 remove images from temporary folder */
                 fileCopy(req)
                 // Successfully created Song, now return Song detail
                 retriveSong(newSong.name, res)
@@ -117,27 +113,29 @@ var setSongValue = (req) => {
 }
 
 // function used in signup function
-// copy file from temporary folder(tempFile) to parmanent folder(registrationImages)
+// copy file from temporary folder to parmanent folder
 function fileCopy(req) { 
     copySongFile(req);
     copyThumbImageFile(req);   
 }
+// copy and deleting song File
 function copySongFile(req){
-    if (req.body.filePath && filePathStore == req.body.filePath) {
+    if (req.body.filePath && tempSongNameStore == req.body.filePath) {
         const fs = require('fs');
-        let source = songPathStore + req.body.filePath;
-        let destination = songPathStore + req.body.filePath.replace('tempFile/', '');
+        let source = songFolderPath + req.body.filePath;
+        let destination = songFolderPath + req.body.filePath.replace('tempFile/', '');
         // Copy dsingle file of folder
         fs.copyFile(source, destination, (err) => {
             if (err) throw err;
             console.log('Success Song Copy file');
             // delete file from temperaory folder 
-            const directory = songPathStore + 'tempFile'; // folder path, for removing files
+            const directory = songFolderPath + 'tempFile'; // folder path, for removing files
             deleteFile(fs, directory); 
         });
     }
     else { console.log('song path not match with uploaded path'); }
 }
+// copy and deleting thumb Image File
 function copyThumbImageFile(req) {
     if (req.body.thumbnailPath && tempImageNameStore == req.body.thumbnailPath) {
         const fs = require('fs');
@@ -180,6 +178,7 @@ function retriveSong(name, res) {
         return res.status(201).json([rows[0]]);
     });
 }
+/***   Code End:: inserting song detail into DB  ***/
 
 // MiddleWare for songValidation
 var songValidation = async (req, res, next) => {
