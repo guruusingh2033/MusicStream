@@ -224,8 +224,10 @@ var singleSongsArtist = (req, res) => {
             return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
         rows[0].success = 'Successfully get single artist song';
         // concate api's baseUrl with filename for check in browser
-        rows[0].ThumbnailPath = process.env.BASE_URL + rows[0].ThumbnailPath;
-        rows[0].FilePath = process.env.BASE_URL + rows[0].FilePath;        
+        const setBaseSong = process.env.BASE_URL + rows[0].FilePath;
+        const setBaseImage = process.env.BASE_URL + rows[0].ThumbnailPath;
+        rows[0].FilePath = setBaseSong;
+        rows[0].ThumbnailPath = setBaseImage;      
         return res.status(200).json(rows);
     });
 };
