@@ -184,9 +184,9 @@ function retriveSong(name, res) {
 
 /** Code Start:: get all songs and artist **/
 var allSongsArtist = (req, res) => {
-    db.query('SELECT tblMedia.tblMedia_Id, tblMedia.Name, tblMedia.ArtistId, tblMedia.Type,'
-    +'tblMedia.FilePath, tblMedia.ThumbnailPath, tblUsers.Name FROM tblMedia'
-    +' LEFT JOIN tblUsers ON tblUsers.tblUsers_ID = tblMedia.ArtistId', [], function (err, rows) {
+    db.query('SELECT (tblUsers.Name) as artistName, tblMedia.tblMedia_Id, (tblMedia.Name) as songName, tblMedia.ArtistId,'
+        +'tblMedia.Type, tblMedia.FilePath, tblMedia.ThumbnailPath FROM tblMedia'
+        +' LEFT JOIN tblUsers ON tblUsers.tblUsers_ID = tblMedia.ArtistId', [], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get all song with artist name' , error:err}]);
         if (rows.length == 0)
