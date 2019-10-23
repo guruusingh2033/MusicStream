@@ -16,8 +16,8 @@ var createUser = (req, res) => {
   // Set values of user
   var newUser = setUserValue(req);
   // Inserting user details in DB
-  db.query('INSERT INTO tblUsers (name, password, email, Userimage, Usertype, status, MobileNo ) values (?,?,?,?,?,?,?)',
-    [newUser.name, newUser.password, newUser.email, newUser.image, newUser.type, newUser.status, newUser.phone_no],
+  db.query('INSERT INTO tblUsers (Name, Password, Email,  Usertype, Userimage, Status , MobileNo, Description, UserName) values (?,?,?,?,?,?,?,?,?)',
+    [newUser.name, newUser.password, newUser.email, newUser.type, newUser.image, newUser.status, newUser.phone_no, newUser.description, newUser.userName],
     function (err) {
       if (err) {
         // Check for dupicate email
@@ -48,8 +48,8 @@ var setUserValue = (req) => {
     image: req.body.image,
     type: req.body.type,
     status: req.body.status,
-    username: req.body.username,
-    description: req.body.description
+    description: req.body.description,
+    userName: req.body.username
   };
   if (req.body.password)
     newUser.password = md5(req.body.password);
@@ -228,6 +228,45 @@ var createArtist = (req, res) => {
 };
 
 
+// Update a user
+// callback(err)
+var updateUser = ((req, res) => {
+  // Check that the user logging in exists
+  db.query('SELECT * FROM tblUsers WHERE ID = ?', [req.body.id], function (err, rows) {
+    if (err)
+      return res.status(500).send(err);
+    // if user not found return Invalid Username
+    if (rows.length == 0)
+      return res.status(401).json({ message: 'User does not exists. !!' });
+    //setValue here for updation
+    var updateUser = setUserValue(req);
+    updateValueInDB(updateUser, res);
+    return res.status(401).json({ message: 'Invalid Username Password.' });
+
+  });
+});
+
+function updateValueInDB(req, res) {
+  // Inserting user details in DB 
+  db.query('UPDATE tblUsers SET Name=?, Password=?, Email=?,  Usertype=?, Userimage=?, Status=? , MobileNo=?, Description=?, UserName=?  values (?,?,?,?,?,?)',
+    [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.description],
+    function (err) {
+      if (err) {
+        // Check for dupicate email
+        if (err.code === 'ER_DUP_ENTRY')
+          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+        else
+          return res.status(200).json([{ success: 'Fail to signup', error: err }])
+      }
+      else {
+        // Successfully created user, now return user detail
+        retriveUser(newUser.email, res)
+      }
+    }
+  );
+}
+
+
 
 // var sendEmail = async (data) =>{
 //   // create reusable transporter object using the default SMTP transport
@@ -262,6 +301,7 @@ var createArtist = (req, res) => {
 //     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 // }
 
+
 exports.signup = signup;
 exports.login = login;
 exports.forgetPassword = forgetPassword;
@@ -271,7 +311,7 @@ exports.imageUpload = imageUpload;
 exports.uploadMulter = uploadMulter;
 exports.artist = artist;
 // exports.deleteUser = deleteUser;
-// exports.updateUser = updateUser;
+exports.updateUser = updateUser;
 
 
 
@@ -356,26 +396,6 @@ exports.artist = artist;
 
 
 
-// Update a user
-// callback(err)
-// var updateUser = ((req, res) => {
-//   // Check that the user logging in exists
-//   db.query('SELECT * FROM tblUsers WHERE ID = ?', [req.body.id], function (err, rows) {
-
-//     if (err)
-//       return res.status(500).send(err);
-
-//     // if user not found return Invalid Username
-//     if (!rows.length)
-//       return res.status(401).json({ message: 'User does not exists. !!' });
-
-//     if (rows.length) {
-//       //setValue here for updation
-//     }
-//     return res.status(401).json({ message: 'Invalid Username Password.' });
-
-//   });
-// });
 
 
 
