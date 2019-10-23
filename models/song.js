@@ -189,10 +189,12 @@ var allSongsArtist = (req, res) => {
     +' LEFT JOIN tblUsers ON tblUsers.tblUsers_ID = tblMedia.ArtistId', [], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get all song with artist name' , error:err}]);
-            rows[0].success = 'Successfully get all song with artist name';
+        if (rows.length == 0)
+            return res.status(200).json([{ success: 'Table is empty' }]);
+        rows[0].success = 'Successfully get all song with artist name';
             // concate api's baseUrl with filename for check in browser
-            setBaseUrlWithEachPath(rows);
-        return res.status(200).json(rows);
+            setBaseUrlWithEachPath(rows, res);
+        //return res.status(200).json(rows);
     });
 };
 /** Code End:: get all songs and artist **/
@@ -203,16 +205,18 @@ var singleSongsArtist = (req, res) => {
     db.query('SELECT * FROM tblMedia WHERE ArtistId = ? ', [artistId], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
+        if (rows.length == 0)
+            return res.status(200).json([{ success: 'Table is empty' }]);
         //rows[0].success = 'Successfully get single artist song';
-        // concate api's baseUrl with filename for check in browser
-        //setBaseUrlWithEachPath(rows);
-        return res.status(200).json(rows);        
+        //concate api's baseUrl with filename for check in browser
+        setBaseUrlWithEachPath(rows, res);
+        //return res.status(200).json(rows);        
     });
 };
 /** Code End:: get single songs and artist **/
 
 // concate api's baseUrl with filename for check in browser
-function setBaseUrlWithEachPath(rows) {
+function setBaseUrlWithEachPath(rows, res) {
     // this is the fastest way of loop
     let i = 0;
     let iMax = rows.length;
