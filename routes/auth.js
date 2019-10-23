@@ -2,26 +2,27 @@
 const user = require('../models/user');
 const authcheck = require('../middleware/authcheck');
 const song = require('../models/song');
+const validation = require('../middleware/allValidations/validations')
 
 // Routes for authentication (signup, login, logout)
 module.exports = function(app) {  
   // user Apis
-  app.post('/signup', user.signUpValidation, user.signup);
-  app.post('/login', user.login);
-  app.post('/forgetPassword', user.forgetPassword);
+  app.post('/signup', user.signup);
+  app.post('/filePost', user.uploadMulter.single('image'), user.imageUpload);
+  app.post('/login',  user.login);
+  app.post('/forgetPassword',  user.forgetPassword);
   app.get('/user',  user.allUsers);
-  app.post('/profile', user.singleUser);
-  app.post('/createartist', user.artistValidation, user.artist);
+  app.post('/profile',  user.singleUser);
+  app.post('/createartist',  user.artist);
   // app.put('/User/', authcheck, user.updateUser);
   // app.delete('/user/:id', authcheck, user.deleteUser);
 
   // song Apis
-  app.post('/filePost',  user.uploadMulter.single('image'), user.imageUpload);
   app.post('/songsPost', song.songUploadMulter.single('song'), song.songUpload);
   app.post('/songsThumbImagePost', song.thumbUploadMulter.single('image'), song.thumbImageUpload);
-  app.post('/songInsert', song.songValidation, song.songInsert);  
+  app.post('/songInsert',  song.songInsert);  
   app.get('/allSongsArtist', song.allSongsArtist); 
-  app.post('/singleSongsArtist', song.singleSongsArtist); 
+  app.post('/singleSongsArtist',  song.singleSongsArtist); 
 };
 
 

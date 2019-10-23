@@ -4,7 +4,6 @@ var db = require('./db');
 const multer = require('multer');
 var md5 = require('md5');
 require('dotenv/config');
-const { Validator } = require('node-input-validator');
 // const nodemailer = require('nodemailer');
 
 var signup = function (req, res) {
@@ -138,6 +137,8 @@ var allUsers = (req, res) => {
   db.query('SELECT * FROM tblUsers', [], function (err, rows) {
     if (err)
       return res.status(200).json([{ success: 'Fail to get all users', error:err }]);
+    if (rows.length == 0)
+      return res.status(200).json([{ success: 'Table is empty'}]);
     rows[0].success = 'Successfully get all users';
     return res.status(200).json(rows);
   });
@@ -167,6 +168,13 @@ var singleUser = (req, res) => {
 // set destionation and file name for saving in folder using multer
 let filenameStore;
 var storage = multer.diskStorage({
+  // accept image files only   
+  fileFilter: (req, file, cb) => {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+      return cb(new Error('Only jpg,jpeg,png,gif image files are allowed!'), false);
+    }
+    cb(null, true);
+  },
   destination: (req, image, cb) => {
     cb(null, imagePath + 'tempFile')
   },
@@ -191,31 +199,7 @@ var imageUpload = function (req, res) {
   }
 };
 
-// MiddleWare for validation
-var signUpValidation = async (req, res, next) => {
-  let v;
-  if (req.body.type == 3) {
-    v = new Validator(req.body, {
-      image: 'required',
-      email: 'required|email',
-      password: 'required'
-    });
-  } else {
-    v = new Validator(req.body, {
-      email: 'required|email',
-      password: 'required'
-    });
-  }
-  const matched = await v.check();
-  if (!matched) {
-    req.status = 422;
-    req.body = v.errors;
-    v.errors.success = "Validation error";
-    res.status(422).send([v.errors]);
-  } else {
-    next();
-  }
-};
+
 
 var artist = function (req, res) {
   // function for creating user in DB
@@ -243,27 +227,7 @@ var createArtist = (req, res) => {
   );
 };
 
-var artistValidation = async (req, res, next) => {
-  let v = new Validator(req.body, {
-    email: 'required|email',
-    name: 'required',
-    phone_no: 'required|integer|min:1',
-    description: 'required',
-    status: 'required',
-    type: 'required',
-  });
-  const matched = await v.check();
-  if (!matched) {
-    req.status = 422;
-    req.body = v.errors;
-    v.errors.success = "Validation error";
-    if (v.errors.phone_no)
-      v.errors.phone_no.message = "Phone number invalid"; // custom validate message for phone number
-    res.status(422).send([v.errors]);
-  } else {
-    next();
-  }
-};
+
 
 // var sendEmail = async (data) =>{
 //   // create reusable transporter object using the default SMTP transport
@@ -305,9 +269,7 @@ exports.allUsers = allUsers;
 exports.singleUser = singleUser;
 exports.imageUpload = imageUpload;
 exports.uploadMulter = uploadMulter;
-exports.signUpValidation = signUpValidation;
 exports.artist = artist;
-exports.artistValidation = artistValidation;
 // exports.deleteUser = deleteUser;
 // exports.updateUser = updateUser;
 

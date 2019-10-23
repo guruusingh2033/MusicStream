@@ -12,6 +12,13 @@ let thumbnailImageName; // storing only image name like - 1571724607849_Capture.
 /***  Code Start:: Thumb Image Upload  ***/
 // set destionation and file name for saving in folder using multer
 var thumbStorage = multer.diskStorage({
+    // accept image files only   
+    fileFilter: (req, file, cb) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+            return cb(new Error('Only jpg,jpeg,png,gif image files are allowed!'), false);
+        }
+        cb(null, true);
+    },
     destination: (req, image, cb) => {
         cb(null, imageFolderPath + 'tempThumbImage')
     },
@@ -44,12 +51,6 @@ let tempSongNameStore; // storing image name with folder name like - tempFile/15
 /***  Code Start:: Song Upload  ***/
 // set destionation and file name for saving in folder using multer
 var storage = multer.diskStorage({
-    // fileFilter: (req, file, cb) => {
-    //     if (file.mimetype !== 'image/png') {
-    //         return cb(null, false, new Error('I don\'t have a clue!'));
-    //     }
-    //     cb(null, true);
-    // },
     destination: (req, song, cb) => {
         cb(null, songFolderPath + 'tempFile')
     },
@@ -181,26 +182,6 @@ function retriveSong(name, res) {
 }
 /***   Code End:: inserting song detail into DB  ***/
 
-// MiddleWare for songValidation
-var songValidation = async (req, res, next) => {
-    let v = new Validator(req.body, {
-        name: 'required',
-        artistId: 'required',
-        type: 'required',
-        filePath: 'required',
-        thumbnailPath: 'required',        
-    });
-    const matched = await v.check();
-    if (!matched) {
-        req.status = 422;
-        req.body = v.errors;
-        v.errors.success = "Validation error";
-        res.status(422).send([v.errors]);
-    } else {
-        next();
-    }
-};
-
 /** Code Start:: get all songs and artist **/
 var allSongsArtist = (req, res) => {
     db.query('SELECT tblMedia.tblMedia_Id, tblMedia.Name, tblMedia.ArtistId, tblMedia.Type,'
@@ -222,9 +203,9 @@ var singleSongsArtist = (req, res) => {
     db.query('SELECT * FROM tblMedia WHERE ArtistId = ? ', [artistId], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
-        rows[0].success = 'Successfully get single artist song';
+        //rows[0].success = 'Successfully get single artist song';
         // concate api's baseUrl with filename for check in browser
-        setBaseUrlWithEachPath(rows);
+        //setBaseUrlWithEachPath(rows);
         return res.status(200).json(rows);        
     });
 };
@@ -242,7 +223,6 @@ function setBaseUrlWithEachPath(rows) {
     return res.status(200).json(rows);
 }
 
-exports.songValidation = songValidation;
 exports.songUploadMulter = songUploadMulter;
 exports.songUpload = songUpload;
 exports.songInsert = songInsert;
