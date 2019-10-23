@@ -213,6 +213,18 @@ var allSongsArtist = (req, res) => {
 };
 /** Code End:: get all songs and artist **/
 
+/** Code Start:: get single songs and artist **/
+var singleSongsArtist = (req, res) => {
+    const artistId = req.body.artistId;
+    db.query('SELECT * FROM tblMedia WHERE ArtistId = ? ', [artistId], function (err, rows) {
+        if (err)
+            return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
+        rows[0].success = 'Successfully get single artist song';
+        return res.status(200).json(rows);
+    });
+};
+/** Code End:: get single songs and artist **/
+
 
 exports.songValidation = songValidation;
 exports.songUploadMulter = songUploadMulter;
@@ -221,3 +233,4 @@ exports.songInsert = songInsert;
 exports.thumbUploadMulter = thumbUploadMulter;
 exports.thumbImageUpload = thumbImageUpload;
 exports.allSongsArtist = allSongsArtist;
+exports.singleSongsArtist = singleSongsArtist;

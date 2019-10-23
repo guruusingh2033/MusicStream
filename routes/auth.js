@@ -21,6 +21,7 @@ module.exports = function(app) {
   app.post('/songsThumbImagePost', song.thumbUploadMulter.single('image'), song.thumbImageUpload);
   app.post('/songInsert', song.songValidation, song.songInsert);  
   app.get('/allSongsArtist', song.allSongsArtist); 
+  app.get('/singleSongsArtist', song.singleSongsArtist); 
 };
 
 
