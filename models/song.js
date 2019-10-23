@@ -107,7 +107,7 @@ var setSongValue = (req) => {
         artistId: req.body.artistId,
         type: req.body.type,
         filePath: req.body.filePath.replace('tempFile/', ''),
-        thumbnailPath: req.body.thumbnailPath.replace('thumbImageTempFile/', ''),
+        thumbnailPath: req.body.thumbnailPath.replace('tempThumbImage/', ''),
     };
     return (newSong);
 }
@@ -208,6 +208,9 @@ var allSongsArtist = (req, res) => {
         if (err)
             return res.status(200).json([{ success: 'Fail to get all song with artist name' , error:err}]);
             rows[0].success = 'Successfully get all song with artist name';
+            // concate api's baseUrl with filename for check in browser
+            rows[0].ThumbnailPath = process.env.BASE_URL + rows[0].ThumbnailPath;
+            rows[0].FilePath = process.env.BASE_URL + rows[0].FilePath;  
         return res.status(200).json(rows);
     });
 };
@@ -220,11 +223,13 @@ var singleSongsArtist = (req, res) => {
         if (err)
             return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
         rows[0].success = 'Successfully get single artist song';
+        // concate api's baseUrl with filename for check in browser
+        rows[0].ThumbnailPath = process.env.BASE_URL + rows[0].ThumbnailPath;
+        rows[0].FilePath = process.env.BASE_URL + rows[0].FilePath;        
         return res.status(200).json(rows);
     });
 };
 /** Code End:: get single songs and artist **/
-
 
 exports.songValidation = songValidation;
 exports.songUploadMulter = songUploadMulter;
