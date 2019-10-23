@@ -193,8 +193,8 @@ var allSongsArtist = (req, res) => {
             return res.status(200).json([{ success: 'Table is empty' }]);
         rows[0].success = 'Successfully get all song with artist name';
             // concate api's baseUrl with filename for check in browser
-            setBaseUrlWithEachPath(rows, res);
-        //return res.status(200).json(rows);
+            // setBaseUrlWithEachPath(rows, res);
+        return res.status(200).json(rows);
     });
 };
 /** Code End:: get all songs and artist **/
@@ -207,25 +207,25 @@ var singleSongsArtist = (req, res) => {
             return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
         if (rows.length == 0)
             return res.status(200).json([{ success: 'Table is empty' }]);
-        //rows[0].success = 'Successfully get single artist song';
+        rows[0].success = 'Successfully get single artist song';
         //concate api's baseUrl with filename for check in browser
-        setBaseUrlWithEachPath(rows, res);
-        //return res.status(200).json(rows);        
+        // setBaseUrlWithEachPath(rows, res);
+        return res.status(200).json(rows);        
     });
 };
 /** Code End:: get single songs and artist **/
 
 // concate api's baseUrl with filename for check in browser
-function setBaseUrlWithEachPath(rows, res) {
-    // this is the fastest way of loop
-    let i = 0;
-    let iMax = rows.length;
-    for (; i < iMax; i++) {
-        rows[i].FilePath = process.env.BASE_URL + rows[i].FilePath;
-        rows[i].ThumbnailPath = process.env.BASE_URL + rows[i].ThumbnailPath;
-    }
-    return res.status(200).json(rows);
-}
+// function setBaseUrlWithEachPath(rows, res) {
+//     // this is the fastest way of loop
+//     let i = 0;
+//     let iMax = rows.length;
+//     for (; i < iMax; i++) {
+//         rows[i].FilePath = process.env.BASE_URL + rows[i].FilePath;
+//         rows[i].ThumbnailPath = process.env.BASE_URL + rows[i].ThumbnailPath;
+//     }
+//     return res.status(200).json(rows);
+// }
 
 exports.songUploadMulter = songUploadMulter;
 exports.songUpload = songUpload;
