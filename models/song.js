@@ -1,6 +1,7 @@
 const multer = require('multer');
 const { Validator } = require('node-input-validator');
 const db = require('./db');
+require('dotenv/config');
 
 // Variabele used for image uploading, copying and deleting 
 //imagepath used in multer, fileCopy and deleteFile Function
@@ -209,8 +210,7 @@ var allSongsArtist = (req, res) => {
             return res.status(200).json([{ success: 'Fail to get all song with artist name' , error:err}]);
             rows[0].success = 'Successfully get all song with artist name';
             // concate api's baseUrl with filename for check in browser
-            rows[0].ThumbnailPath = process.env.BASE_URL + rows[0].ThumbnailPath;
-            rows[0].FilePath = process.env.BASE_URL + rows[0].FilePath;  
+            setBaseUrlWithEachPath(rows);
         return res.status(200).json(rows);
     });
 };
@@ -224,14 +224,23 @@ var singleSongsArtist = (req, res) => {
             return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
         rows[0].success = 'Successfully get single artist song';
         // concate api's baseUrl with filename for check in browser
-        const setBaseSong = process.env.BASE_URL + rows[0].FilePath;
-        const setBaseImage = process.env.BASE_URL + rows[0].ThumbnailPath;
-        rows[0].FilePath = setBaseSong;
-        rows[0].ThumbnailPath = setBaseImage;      
-        return res.status(200).json(rows);
+        setBaseUrlWithEachPath(rows);
+        return res.status(200).json(rows);        
     });
 };
 /** Code End:: get single songs and artist **/
+
+// concate api's baseUrl with filename for check in browser
+function setBaseUrlWithEachPath(rows) {
+    // this is the fastest way of loop
+    let i = 0;
+    let iMax = rows.length;
+    for (; i < iMax; i++) {
+        rows[i].FilePath = process.env.BASE_URL + rows[i].FilePath;
+        rows[i].ThumbnailPath = process.env.BASE_URL + rows[i].ThumbnailPath;
+    }
+    return res.status(200).json(rows);
+}
 
 exports.songValidation = songValidation;
 exports.songUploadMulter = songUploadMulter;
