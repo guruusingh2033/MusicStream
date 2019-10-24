@@ -86,16 +86,18 @@ var createSong = (req, res) => {
     // Inserting Song details in DB
     db.query('CALL sp_songInsert(?,?,?,?,?)',
         [newSong.name, newSong.artistId, newSong.type, newSong.filePath, newSong.thumbnailPath],
-        function (err) {
+        function (err, rows) {
             if (err) {
                 return res.status(200).json([{ success: 'Fail to insert song', error:err }])
             }
-            else {
+            if (rows.affectedRows != 0) {
                 /* copy last uploaded file in permanent folder and 
                  remove images from temporary folder */
                 fileCopy(req)
                 // Successfully created Song, now return Song detail
                 retriveSong(newSong.name, res)
+            }else{
+                return res.status(200).json([{ success: 'No row affected in DB', error: err }])
             }
         }
     );
@@ -173,11 +175,11 @@ function deleteFile(fs, directory) {
 
 // return Song detail from database
 function retriveSong(name, res) {
-    db.query('SELECT * FROM tblMedia WHERE name = ?', [name], function (err, rows) {
+    db.query(' CALL sp_singleSong(?)', [name], function (err, rows) {
         if (err) return res.send([{ success: 'Fail to retrive song detail', err: err }]);
         //adding success element in rows object   
-        rows[0].success = "Song successfully inserted";
-        return res.status(201).json([rows[0]]);
+        rows[0][0].success = "Song successfully inserted";
+        return res.status(201).json(rows[0]);
     });
 }
 /***   Code End:: inserting song detail into DB  ***/
@@ -187,7 +189,7 @@ var allSongsArtist = (req, res) => {
     db.query('CALL sp_allSongsArtist()', [], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get all song with artist name' , error:err}]);
-        if (rows.length == 0)
+        if (rows[0].length == 0)
             return res.status(200).json([{ success: 'Table is empty' }]);
         rows[0][0].success = 'Successfully get all song with artist name';
             // concate api's baseUrl with filename for check in browser
@@ -203,8 +205,8 @@ var singleSongsArtist = (req, res) => {
     db.query("CALL sp_singleSongsArtist(?);", [artistId], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
-        if (rows.length == 0)
-            return res.status(200).json([{ success: 'Table is empty' }]);
+        if (rows[0].length == 0)
+            return res.status(200).json([{ success: 'Id doesn`t exists'}]);
         rows[0][0].success = 'Successfully get single artist song';
         //concate api's baseUrl with filename for check in browser
         // setBaseUrlWithEachPath(rows, res);
@@ -217,7 +219,7 @@ var allArtist = (req, res) => {
     db.query('CALL sp_AllArtist()', [], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get all artist', error: err }]);
-        if (rows.length == 0)
+        if (rows[0].length == 0)
             return res.status(200).json([{ success: 'Table is empty' }]);
 
         rows[0][0].success = 'Successfully get all artist';

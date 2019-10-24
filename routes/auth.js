@@ -17,7 +17,7 @@ module.exports = function(app) {
   app.put('/editProfile', validation.editProfile, user.editProfile);
   // app.delete('/user/:id', authcheck, user.deleteUser);
 
-  // song Apis
+  // song Apis // sp done
   app.post('/songsPost', song.songUploadMulter.single('song'), song.songUpload);
   app.post('/songsThumbImagePost', song.thumbUploadMulter.single('image'), song.thumbImageUpload);
   app.post('/songInsert', validation.song, song.songInsert);  
