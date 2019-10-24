@@ -46,7 +46,7 @@ var setUserValue = (req) => {
     email: req.body.email,
     phone_no: req.body.phone_no,
     image: req.body.image,
-    type: req.body.type,
+    type: parseInt(req.body.type),
     status: req.body.status,
     description: req.body.description,
     userName: req.body.username
@@ -227,44 +227,68 @@ var createArtist = (req, res) => {
   );
 };
 
-
+/** Code Start:: update user and artist */
 // Update a user
 // callback(err)
-var updateUser = ((req, res) => {
-  // Check that the user logging in exists
-  db.query('SELECT * FROM tblUsers WHERE ID = ?', [req.body.id], function (err, rows) {
-    if (err)
-      return res.status(500).send(err);
-    // if user not found return Invalid Username
-    if (rows.length == 0)
-      return res.status(401).json({ message: 'User does not exists. !!' });
-    //setValue here for updation
-    var updateUser = setUserValue(req);
-    updateValueInDB(updateUser, res);
-    return res.status(401).json({ message: 'Invalid Username Password.' });
-
-  });
+var editProfile = ((req, res) => {   
+  const userType = parseInt(req.body.type); 
+  // Condtions for updation
+  switch (userType) {
+    case 2: updateUser(req, res); break;
+    case 3: updateArtist(req, res); break;
+    default: return res.status(200).json([{ success: 'Invalid userType or ID, Fail to update' }])
+  }
 });
 
-function updateValueInDB(req, res) {
+function updateUser(req, res){
+  //setValue here for updation
+  const userFields = setUserValue(req);
+  const id = req.body.id;
   // Inserting user details in DB 
-  db.query('UPDATE tblUsers SET Name=?, Password=?, Email=?,  Usertype=?, Userimage=?, Status=? , MobileNo=?, Description=?, UserName=?  values (?,?,?,?,?,?)',
-    [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.description],
-    function (err) {
+  db.query('UPDATE tblUsers SET Name=?, Password=?, Email=?, MobileNo=? WHERE tblUsers_ID=? AND UserType=? ',
+    [userFields.name, userFields.password, userFields.email, userFields.phone_no, id, userFields.type],
+    function (err, rows) {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
           return res.status(200).json([{ success: 'An account with this email address already exists.' }])
         else
-          return res.status(200).json([{ success: 'Fail to signup', error: err }])
+          return res.status(200).json([{ success: 'Fail to update', error: err }])
       }
-      else {
-        // Successfully created user, now return user detail
-        retriveUser(newUser.email, res)
+      else if (rows.affectedRows != 0) {
+        // Successfully updated user, now return user detail
+        retriveUser(userFields.email, res)
       }
+      else
+        return res.status(200).json([{ success: 'Fail to update, Invalid UserType or ID', error: err }])
     }
   );
 }
+
+function updateArtist(req, res) {
+  //setValue here for updation
+  const artistFields = setUserValue(req);
+  const id = req.body.id;
+  // Inserting artist details in DB 
+  db.query('UPDATE tblUsers SET Name=?, Password=?, Email=?, Userimage=?, MobileNo=?, Description=?  WHERE tblUsers_ID=? AND UserType=?',
+    [artistFields.name, artistFields.password, artistFields.email, artistFields.image, artistFields.phone_no, artistFields.description, id, artistFields.type],
+    function (err, rows) {
+      if (err) {
+        // Check for dupicate email
+        if (err.code === 'ER_DUP_ENTRY')
+          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+        else
+          return res.status(200).json([{ success: 'Fail to update', error: err }])
+      }
+      else if (rows.affectedRows != 0){
+        // Successfully updated artist, now return user detail
+        retriveUser(artistFields.email, res)
+      }else
+        return res.status(200).json([{ success: 'Fail to update, Invalid UserType or ID', error: err }])
+    }
+  );
+}
+/** Code End:: update user and artist */
 
 
 
@@ -311,7 +335,7 @@ exports.imageUpload = imageUpload;
 exports.uploadMulter = uploadMulter;
 exports.artist = artist;
 // exports.deleteUser = deleteUser;
-exports.updateUser = updateUser;
+exports.editProfile = editProfile;
 
 
 

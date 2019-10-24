@@ -14,7 +14,7 @@ module.exports = function(app) {
   app.get('/user',  user.allUsers);
   app.post('/profile', validation.singleUser, user.singleUser);
   app.post('/createartist', validation.artist, user.artist);
-  // app.put('/User/', authcheck, user.updateUser);
+  app.put('/editProfile/', user.editProfile);
   // app.delete('/user/:id', authcheck, user.deleteUser);
 
   // song Apis
@@ -39,7 +39,15 @@ module.exports = function(app) {
 
 
 
-
+// SELECT
+// tblUsers.tblUsers_Id,
+//   tblUsers.Name,
+//   tblUsers.UserImage,
+//   NoOfSong.SongCount
+// from tblUsers
+// Left Join
+//   (select ArtistId, count(*) as SongCount from tblMedia  group by ArtistId) as NoOfSong
+// on tblUsers.tblUsers_Id = NoOfSong.ArtistId
 
 
 
