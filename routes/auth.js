@@ -23,6 +23,7 @@ module.exports = function(app) {
   app.post('/songInsert', validation.song, song.songInsert);  
   app.get('/allSongsArtist', song.allSongsArtist); 
   app.post('/singleSongsArtist', validation.singleSongsArtist, song.singleSongsArtist); 
+  app.get('/allArtist', song.allArtist); 
 };
 
 

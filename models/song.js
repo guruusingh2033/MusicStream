@@ -184,9 +184,7 @@ function retriveSong(name, res) {
 
 /** Code Start:: get all songs and artist **/
 var allSongsArtist = (req, res) => {
-    db.query('SELECT (tblUsers.Name) as artistName, tblMedia.tblMedia_Id, (tblMedia.Name) as songName, tblMedia.ArtistId,'
-        +'tblMedia.Type, tblMedia.FilePath, tblMedia.ThumbnailPath FROM tblMedia'
-        +' LEFT JOIN tblUsers ON tblUsers.tblUsers_ID = tblMedia.ArtistId', [], function (err, rows) {
+    db.query('CALL sp_allSongsArtist()', [], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get all song with artist name' , error:err}]);
         if (rows.length == 0)
@@ -201,8 +199,8 @@ var allSongsArtist = (req, res) => {
 
 /** Code Start:: get single songs and artist **/
 var singleSongsArtist = (req, res) => {
-    const artistId = req.body.artistId;
-    db.query('SELECT * FROM tblMedia WHERE ArtistId = ? ', [artistId], function (err, rows) {
+    const artistId = parseInt(req.body.artistId);
+    db.query("CALL sp_singleSongsArtist(?);", [artistId], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
         if (rows.length == 0)
@@ -210,9 +208,27 @@ var singleSongsArtist = (req, res) => {
         rows[0].success = 'Successfully get single artist song';
         //concate api's baseUrl with filename for check in browser
         // setBaseUrlWithEachPath(rows, res);
-        return res.status(200).json(rows);        
+        return res.status(200).json(rows[0]);        
     });
 };
+
+/** Code Start:: get all songs and artist **/
+var allArtist = (req, res) => {
+    db.query('CALL sp_AllArtist()', [], function (err, rows) {
+        if (err)
+            return res.status(200).json([{ success: 'Fail to get all artist', error: err }]);
+        if (rows.length == 0)
+            return res.status(200).json([{ success: 'Table is empty' }]);
+
+        rows[0].success = 'Successfully get all artist';
+        // concate api's baseUrl with filename for check in browser
+        // setBaseUrlWithEachPath(rows, res);
+        return res.status(200).json(rows[0]);
+    });
+};
+/** Code End:: get all songs and artist **/
+
+
 /** Code End:: get single songs and artist **/
 
 // concate api's baseUrl with filename for check in browser
@@ -234,3 +250,4 @@ exports.thumbUploadMulter = thumbUploadMulter;
 exports.thumbImageUpload = thumbImageUpload;
 exports.allSongsArtist = allSongsArtist;
 exports.singleSongsArtist = singleSongsArtist;
+exports.allArtist = allArtist;

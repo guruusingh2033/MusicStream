@@ -236,7 +236,7 @@ var editProfile = ((req, res) => {
   switch (userType) {
     case 2: updateUser(req, res); break;
     case 3: updateArtist(req, res); break;
-    default: return res.status(200).json([{ success: 'Invalid userType or ID, Fail to update' }])
+    default: return res.status(200).json([{ success: 'Invalid userType, Fail to update' }])
   }
 });
 
