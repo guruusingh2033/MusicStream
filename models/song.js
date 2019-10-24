@@ -84,7 +84,7 @@ var createSong = (req, res) => {
     // Set values of Song
     var newSong = setSongValue(req);
     // Inserting Song details in DB
-    db.query('INSERT INTO tblMedia (Name, ArtistId, Type, FilePath, ThumbnailPath ) values (?,?,?,?,?)',
+    db.query('CALL sp_songInsert(?,?,?,?,?)',
         [newSong.name, newSong.artistId, newSong.type, newSong.filePath, newSong.thumbnailPath],
         function (err) {
             if (err) {
@@ -189,10 +189,10 @@ var allSongsArtist = (req, res) => {
             return res.status(200).json([{ success: 'Fail to get all song with artist name' , error:err}]);
         if (rows.length == 0)
             return res.status(200).json([{ success: 'Table is empty' }]);
-        rows[0].success = 'Successfully get all song with artist name';
+        rows[0][0].success = 'Successfully get all song with artist name';
             // concate api's baseUrl with filename for check in browser
             // setBaseUrlWithEachPath(rows, res);
-        return res.status(200).json(rows);
+        return res.status(200).json(rows[0]);
     });
 };
 /** Code End:: get all songs and artist **/
@@ -205,7 +205,7 @@ var singleSongsArtist = (req, res) => {
             return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
         if (rows.length == 0)
             return res.status(200).json([{ success: 'Table is empty' }]);
-        rows[0].success = 'Successfully get single artist song';
+        rows[0][0].success = 'Successfully get single artist song';
         //concate api's baseUrl with filename for check in browser
         // setBaseUrlWithEachPath(rows, res);
         return res.status(200).json(rows[0]);        
@@ -220,7 +220,7 @@ var allArtist = (req, res) => {
         if (rows.length == 0)
             return res.status(200).json([{ success: 'Table is empty' }]);
 
-        rows[0].success = 'Successfully get all artist';
+        rows[0][0].success = 'Successfully get all artist';
         // concate api's baseUrl with filename for check in browser
         // setBaseUrlWithEachPath(rows, res);
         return res.status(200).json(rows[0]);

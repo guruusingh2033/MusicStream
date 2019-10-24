@@ -334,8 +334,8 @@ exports.singleUser = singleUser;
 exports.imageUpload = imageUpload;
 exports.uploadMulter = uploadMulter;
 exports.artist = artist;
-// exports.deleteUser = deleteUser;
 exports.editProfile = editProfile;
+// exports.deleteUser = deleteUser;
 
 
 

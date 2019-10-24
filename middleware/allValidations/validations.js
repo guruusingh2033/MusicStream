@@ -97,6 +97,24 @@ var artist = async (req, res, next) => {
     }
 };
 
+// MiddleWare validation for editProfile/update user
+var editProfile = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        id: 'required',
+        type: 'required'
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.status = 422;
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+};
+
+
 // MiddleWare Validation song fields
 var song = async (req, res, next) => {
     let v = new Validator(req.body, {
@@ -137,5 +155,6 @@ exports.login = login;
 exports.forgetPassword = forgetPassword;
 exports.singleUser = singleUser;
 exports.artist = artist;
+exports.editProfile = editProfile;
 exports.song = song;
 exports.singleSongsArtist = singleSongsArtist;
