@@ -3,6 +3,7 @@
 var db = require('./db');
 const multer = require('multer');
 var md5 = require('md5');
+// var ReverseMd5 = require('reverse-md5')
 require('dotenv/config');
 // const nodemailer = require('nodemailer');
 
@@ -215,10 +216,24 @@ var singleUser = (req, res) => {
       return res.status(200).json([{ success: 'Fail to get single user', error:err }])
     if (rows[0].length === 0)
       return res.status(200).json([{ success: 'Id does not exists' }])
+
+    // console.log(reverseMd5(rows[0].Password));
     rows[0][0].success = 'Successfully get single user';
     return res.status(200).json(rows[0])
   });
 };
+
+// var reverseMd5 = ReverseMd5({
+//   lettersUpper: true,
+//   lettersLower: true,
+//   numbers: true,
+//   special: true,
+//   whitespace: true,
+//   maxLen: 12
+// })
+
+
+
 // Delete a user
 // callback(err)
 // var deleteUser = function (req, callback) {
@@ -259,8 +274,6 @@ var imageUpload = function (req, res) {
     return res.status(200).json([{ filePath: filePath, success: 'Successfully uploaded image' }])
   }
 };
-
-
 
 var artist = function (req, res) {
   // function for creating user in DB
