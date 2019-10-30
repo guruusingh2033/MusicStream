@@ -63,7 +63,7 @@ function insertUser(req, res){
       }
       else if (rows.affectedRows != 0) {
         // Successfully insert user, now return user detail
-        retriveUser(userFields.email, res, true)
+        retriveUser(userFields.email, res, 'signup')
       }
       else
         return res.status(200).json([{ success: 'Fail to signup', error: err }])
@@ -87,7 +87,7 @@ function insertArtist(req, res) {
       }
       else if (rows.affectedRows != 0) {
         // Successfully signup artist, now return user detail
-        retriveUser(artistFields.email, res, true)
+        retriveUser(artistFields.email, res, 'signup')
       } else
         return res.status(200).json([{ success: 'Fail to signup', error: err }])
     }
@@ -154,7 +154,7 @@ function deleteFile(fs) {
   });
 }
 // return User detail from database
-function retriveUser(email, res, isNewUser) {
+function retriveUser(email, res, checkApi) {
   db.query('CALL sp_retriveUserWithEmail(?)', [email], function (err, rows) {
     if (err) return res.status(200).json([{ success: 'Fail to retrive user detail' , error:err}]);
     // if user not found return Invalid Username
@@ -162,8 +162,14 @@ function retriveUser(email, res, isNewUser) {
       return res.status(200).json([{ success: 'Email not registered' }])
       
     //adding success element in rows object 
-    if (isNewUser)      
-      rows[0][0].success = "Please wait for admin to approve. We will contact you shortly";
+    if (rows[0][0].UserType == 2 && checkApi == 'signup')
+        rows[0][0].success = "Successfully registerd";
+    else if (rows[0][0].UserType == 3 && checkApi == 'signup')      
+      rows[0][0].success = "Please wait for admin to approve. We will contact you shortly"; 
+    else if (checkApi == 'forgetPassword')
+      rows[0][0].success = "Success forget password";   
+    else if (checkApi == 'createArtist')
+      rows[0][0].success = "Please wait for admin to approve. We will contact you shortly";    
     else
       rows[0][0].success = "Successfully edited";
     //sendEmail(rows[0]); // send mail to admin
@@ -191,7 +197,7 @@ var login = function (req, res) {
 
 // check email from db, if email exists return user detail
 var forgetPassword = (req, res) => {
-  retriveUser(req.body.email, res, false)
+  retriveUser(req.body.email, res, 'forgetPassword')
 }
 
 // return all users from database
@@ -283,8 +289,8 @@ var createArtist = (req, res) => {
   // Set values of user
   var newUser = setUserValue(req);
   // Inserting user details in DB
-  db.query('CALL sp_createArtist(?,?,?,?,?,?,?)',
-    [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.description, newUser.userName],
+  db.query('CALL sp_createArtist(?,?,?,?,?,?)',
+    [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.description],
     function (err) {
       if (err) {
         // Check for dupicate email
@@ -295,7 +301,7 @@ var createArtist = (req, res) => {
       }
       else {
         // Successfully created user, now return user detail
-        retriveUser(newUser.email, res, true)
+        retriveUser(newUser.email, res, 'createArtist')
       }
     }
   );
@@ -331,7 +337,7 @@ function updateUser(req, res){
       }
       else if (rows.affectedRows != 0) {
         // Successfully updated user, now return user detail
-        retriveUser(userFields.email, res, false)
+        retriveUser(userFields.email, res, 'updateUser')
       }
       else
         return res.status(200).json([{ success: 'Fail to update, Invalid UserType or ID', error: err }])
@@ -356,7 +362,7 @@ function updateArtist(req, res) {
       }
       else if (rows.affectedRows != 0){
         // Successfully updated artist, now return user detail
-        retriveUser(artistFields.email, res, false)
+        retriveUser(artistFields.email, res, 'updateArtist')
       }else
         return res.status(200).json([{ success: 'Fail to update, Invalid UserType or ID', error: err }])
     }
