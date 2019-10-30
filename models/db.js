@@ -48,6 +48,6 @@ var query = function(queryString, params, callback) {
 // };
 
 // Set up a keepalive heartbeat
-setInterval(keepAlive, 30000);
+// setInterval(keepAlive, 30000);
 
 exports.query = query;
