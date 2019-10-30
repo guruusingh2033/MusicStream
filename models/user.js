@@ -312,7 +312,7 @@ function updateUser(req, res){
         else
           return res.status(200).json([{ success: 'Fail to update', error: err }])
       }
-      else if (rows[0].affectedRows < 0) {
+      else if (rows.affectedRows != 0) {
         // Successfully updated user, now return user detail
         retriveUser(userFields.email, res)
       }
@@ -321,11 +321,6 @@ function updateUser(req, res){
     }
   );
 }
-
-// function updateArtist(req, res){
-  
-// }
-
 
 function updateArtist(req, res) {
   //setValue here for updation
