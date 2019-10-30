@@ -157,12 +157,12 @@ function retriveUser(email, res) {
   db.query('CALL sp_retriveUserWithEmail(?)', [email], function (err, rows) {
     if (err) return res.status(200).json([{ success: 'Fail to retrive user detail' , error:err}]);
     // if user not found return Invalid Username
-    if (rows.length == 0)
+    if (rows[0].length == 0)
       return res.status(200).json([{ success: 'Email not registered' }])
     //adding success element in rows object   
-    rows[0].success = "Please wait for admin to approve. We will contact you shortly";
+    rows[0][0].success = "Please wait for admin to approve. We will contact you shortly";
     //sendEmail(rows[0]); // send mail to admin
-    return res.status(201).json([rows[0]]);
+    return res.status(201).json([rows[0][0]]);
   });
 }
 
@@ -303,7 +303,7 @@ function updateUser(req, res){
   const id = req.body.id;
   // Inserting user details in DB 
   db.query('CALL sp_updateUser(?,?,?,?,?,?,?)',
-    [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.phone_no, id, userFields.type],
+    [userFields.name, userFields.password, userFields.email, userFields.phone_no, userFields.userName, id, userFields.type],
     function (err, rows) {
       if (err) {
         // Check for dupicate email
@@ -328,7 +328,7 @@ function updateArtist(req, res) {
   const id = req.body.id;
   // Inserting artist details in DB 
   db.query('CALL sp_updateArtist(?,?,?,?,?,?,?,?,?)',
-    [artistFields.name, artistFields.password, artistFields.email, artistFields.image, artistFields.phone_no, artistFields.description, artistFields.userName, id, artistFields.type],
+    [artistFields.name, artistFields.password, artistFields.email, artistFields.phone_no, artistFields.image, artistFields.description, artistFields.userName, id, artistFields.type],
     function (err, rows) {
       if (err) {
         // Check for dupicate email
