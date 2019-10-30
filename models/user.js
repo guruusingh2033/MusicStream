@@ -7,35 +7,92 @@ require('dotenv/config');
 // const nodemailer = require('nodemailer');
 
 var signup = function (req, res) {
+  const userType = parseInt(req.body.type);
+  // Condtions for updation
+  switch (userType) {
+    case 2: insertUser(req, res); break;
+    case 3: insertArtist(req, res); break;
+    default: return res.status(200).json([{ success: 'Invalid userType, Fail to signup' }])
+  }
+
+
   // function for creating user in DB
-  createUser(req, res);
+  // createUser(req, res);
 };
 
 // creating user in DB
-var createUser = (req, res) => {
-  // Set values of user
-  var newUser = setUserValue(req);
-  // Inserting user details in DB
-  db.query('INSERT INTO tblUsers (Name, Password, Email,  Usertype, Userimage, Status , MobileNo, Description, UserName) values (?,?,?,?,?,?,?,?,?)',
-    [newUser.name, newUser.password, newUser.email, newUser.type, newUser.image, newUser.status, newUser.phone_no, newUser.description, newUser.userName],
-    function (err) {
+// var createUser = (req, res) => {
+//   // Set values of user
+//   var newUser = setUserValue(req);
+//   // Inserting user details in DB
+//   db.query('INSERT INTO tblUsers (Name, Password, Email,  Usertype, Userimage, Status , MobileNo, Description, UserName) values (?,?,?,?,?,?,?,?,?)',
+//     [newUser.name, newUser.password, newUser.email, newUser.type, newUser.image, newUser.status, newUser.phone_no, newUser.description, newUser.userName],
+//     function (err) {
+//       if (err) {
+//         // Check for dupicate email
+//         if (err.code === 'ER_DUP_ENTRY')
+//           return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+//         else
+//           return res.status(200).json([{ success: 'Fail to signup', error:err }])
+//       }
+//       else {
+//         /* copy last uploaded image in permanent folder(registrationImages) and 
+//          remove images from temporary folder(tempFile) */
+//         fileCopy(req)
+//         // Successfully created user, now return user detail
+//         retriveUser(newUser.email, res)
+//       }
+//     }
+//   );
+// };
+
+function insertUser(req, res){
+  //setValue here for insertion
+  const userFields = setUserValue(req);
+  // Inserting user details in DB 
+  db.query('CALL sp_insertUser(?,?,?,?,?,?)',
+    [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.phone_no, userFields.type],
+    function (err, rows) {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
           return res.status(200).json([{ success: 'An account with this email address already exists.' }])
         else
-          return res.status(200).json([{ success: 'Fail to signup', error:err }])
+          return res.status(200).json([{ success: 'Fail to signup', error: err }])
       }
-      else {
-        /* copy last uploaded image in permanent folder(registrationImages) and 
-         remove images from temporary folder(tempFile) */
-        fileCopy(req)
-        // Successfully created user, now return user detail
-        retriveUser(newUser.email, res)
+      else if (rows.affectedRows != 0) {
+        // Successfully insert user, now return user detail
+        retriveUser(userFields.email, res)
       }
+      else
+        return res.status(200).json([{ success: 'Fail to signup', error: err }])
     }
   );
-};
+}
+
+function insertArtist(req, res) {
+  //setValue here for insertion
+  const artistFields = setUserValue(req);
+  // Inserting artist details in DB 
+  db.query('CALL sp_insertArtist(?,?,?,?,?,?,?,?,?)',
+    [artistFields.name, artistFields.password, artistFields.email, artistFields.phone_no, artistFields.image,  artistFields.description, artistFields.userName, artistFields.type, artistFields.status],
+    function (err, rows) {
+      if (err) {
+        // Check for dupicate email
+        if (err.code === 'ER_DUP_ENTRY')
+          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+        else
+          return res.status(200).json([{ success: 'Fail to signup', error: err }])
+      }
+      else if (rows.affectedRows != 0) {
+        // Successfully signup artist, now return user detail
+        retriveUser(artistFields.email, res)
+      } else
+        return res.status(200).json([{ success: 'Fail to signup', error: err }])
+    }
+  );
+}
+
 
 // function used in createUser and createArtist method
 // getting value from request.body and setting in object
@@ -49,7 +106,7 @@ var setUserValue = (req) => {
     type: parseInt(req.body.type),
     status: req.body.status,
     description: req.body.description,
-    userName: req.body.username
+    userName: req.body.email
   };
   if (req.body.password)
     newUser.password = md5(req.body.password);
@@ -97,7 +154,7 @@ function deleteFile(fs) {
 }
 // return User detail from database
 function retriveUser(email, res) {
-  db.query('SELECT * FROM tblUsers WHERE email = ?', [email], function (err, rows) {
+  db.query('CALL sp_retriveUserWithEmail(?)', [email], function (err, rows) {
     if (err) return res.status(200).json([{ success: 'Fail to retrive user detail' , error:err}]);
     // if user not found return Invalid Username
     if (rows.length == 0)
@@ -134,13 +191,13 @@ var forgetPassword = (req, res) => {
 
 // return all users from database
 var allUsers = (req, res) => {
-  db.query('SELECT * FROM tblUsers', [], function (err, rows) {
+  db.query('CALL sp_AllUsers()', [], function (err, rows) {
     if (err)
       return res.status(200).json([{ success: 'Fail to get all users', error:err }]);
     if (rows.length == 0)
       return res.status(200).json([{ success: 'Table is empty'}]);
-    rows[0].success = 'Successfully get all users';
-    return res.status(200).json(rows);
+    rows[0][0].success = 'Successfully get all users';
+    return res.status(200).json(rows[0]);
   });
 };
 
@@ -209,8 +266,8 @@ var createArtist = (req, res) => {
   // Set values of user
   var newUser = setUserValue(req);
   // Inserting user details in DB
-  db.query('INSERT INTO tblUsers (name, email, Usertype, status, MobileNo, Description ) values (?,?,?,?,?,?)',
-    [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.description],
+  db.query('CALL sp_createArtist(?,?,?,?,?,?,?)',
+    [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.description, newUser.userName],
     function (err) {
       if (err) {
         // Check for dupicate email
@@ -245,8 +302,8 @@ function updateUser(req, res){
   const userFields = setUserValue(req);
   const id = req.body.id;
   // Inserting user details in DB 
-  db.query('UPDATE tblUsers SET Name=?, Password=?, Email=?, MobileNo=? WHERE tblUsers_ID=? AND UserType=? ',
-    [userFields.name, userFields.password, userFields.email, userFields.phone_no, id, userFields.type],
+  db.query('CALL sp_updateUser(?,?,?,?,?,?,?)',
+    [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.phone_no, id, userFields.type],
     function (err, rows) {
       if (err) {
         // Check for dupicate email
@@ -255,7 +312,7 @@ function updateUser(req, res){
         else
           return res.status(200).json([{ success: 'Fail to update', error: err }])
       }
-      else if (rows.affectedRows != 0) {
+      else if (rows[0].affectedRows < 0) {
         // Successfully updated user, now return user detail
         retriveUser(userFields.email, res)
       }
@@ -265,13 +322,18 @@ function updateUser(req, res){
   );
 }
 
+// function updateArtist(req, res){
+  
+// }
+
+
 function updateArtist(req, res) {
   //setValue here for updation
   const artistFields = setUserValue(req);
   const id = req.body.id;
   // Inserting artist details in DB 
-  db.query('UPDATE tblUsers SET Name=?, Password=?, Email=?, Userimage=?, MobileNo=?, Description=?  WHERE tblUsers_ID=? AND UserType=?',
-    [artistFields.name, artistFields.password, artistFields.email, artistFields.image, artistFields.phone_no, artistFields.description, id, artistFields.type],
+  db.query('CALL sp_updateArtist(?,?,?,?,?,?,?,?,?)',
+    [artistFields.name, artistFields.password, artistFields.email, artistFields.image, artistFields.phone_no, artistFields.description, artistFields.userName, id, artistFields.type],
     function (err, rows) {
       if (err) {
         // Check for dupicate email
@@ -528,3 +590,6 @@ exports.editProfile = editProfile;
 //     return callback(null, new User(rows[0]));
 //   });
 // };
+
+
+

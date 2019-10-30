@@ -47,7 +47,7 @@ var query = function(queryString, params, callback) {
 //   });
 // };
 
-// // Set up a keepalive heartbeat
+// Set up a keepalive heartbeat
 // setInterval(keepAlive, 30000);
 
 exports.query = query;
