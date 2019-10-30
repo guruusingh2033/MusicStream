@@ -2,8 +2,9 @@
 // const jwt = require('jsonwebtoken');
 var db = require('./db');
 const multer = require('multer');
-var md5 = require('md5');
-// var ReverseMd5 = require('reverse-md5')
+// var md5 = require('md5');
+const Cryptr = require('cryptr');
+const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
 require('dotenv/config');
 // const nodemailer = require('nodemailer');
 
@@ -110,7 +111,7 @@ var setUserValue = (req) => {
     userName: req.body.email
   };
   if (req.body.password)
-    newUser.password = md5(req.body.password);
+    newUser.password = cryptr.encrypt(req.body.password);
   // removing 'tempfile' for getting only image name
   if (req.body.image)
     newUser.image = req.body.image.replace('tempFile/', '');
@@ -184,7 +185,7 @@ var login = function (req, res) {
     // if user not found return Invalid Username
     if (rows[0].length == 0) return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' }]);
     // if valid password User successfully logged in, return username with token
-    if (md5(req.body.password) === rows[0][0].Password) {
+    if (cryptr.encrypt(req.body.password) === rows[0][0].Password) {
       // function for generating token with JWT
       // const tokenStore = generateToken(rows);
       //return res.status(200).send([1, rows[0].Email, tokenStore]);
@@ -222,21 +223,13 @@ var singleUser = (req, res) => {
       return res.status(200).json([{ success: 'Fail to get single user', error:err }])
     if (rows[0].length === 0)
       return res.status(200).json([{ success: 'Id does not exists' }])
-
-    // console.log(reverseMd5(rows[0].Password));
+    // decrypting password
+    rows[0][0].Password = cryptr.decrypt(rows[0][0].Password);
     rows[0][0].success = 'Successfully get single user';
     return res.status(200).json(rows[0])
   });
 };
 
-// var reverseMd5 = ReverseMd5({
-//   lettersUpper: true,
-//   lettersLower: true,
-//   numbers: true,
-//   special: true,
-//   whitespace: true,
-//   maxLen: 12
-// })
 
 
 
