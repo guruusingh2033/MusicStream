@@ -168,17 +168,17 @@ function retriveUser(email, res) {
 
 var login = function (req, res) {
   // Check that the user logging in exists
-  db.query('SELECT * FROM  tblUsers WHERE email = ?', [req.body.email], function (err, rows) {
+  db.query('CALL sp_retriveUserWithEmail(?)', [req.body.email], function (err, rows) {
     if (err) return res.status(200).json([{ success: 'Fail to loggedin', error:err}])
     // if user not found return Invalid Username
-    if (rows.length == 0) return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' }]);
+    if (rows[0].length == 0) return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' }]);
     // if valid password User successfully logged in, return username with token
-    if (md5(req.body.password) === rows[0].Password) {
+    if (md5(req.body.password) === rows[0][0].Password) {
       // function for generating token with JWT
       // const tokenStore = generateToken(rows);
       //return res.status(200).send([1, rows[0].Email, tokenStore]);
-      rows[0].success = 'Successfully loggedin';
-      return res.status(200).json([rows[0]]);
+      rows[0][0].success = 'Successfully loggedin';
+      return res.status(200).json(rows[0]);
     }
     return res.status(200).json([{ success: 'Fail to loggedin, Password invalid' }]);
   });
@@ -206,13 +206,13 @@ var singleUser = (req, res) => {
   const id = req.body.id; // get id from body
   if (!id)
     return res.status(200).json([{ success: 'Invalid Id' }])
-  db.query('SELECT * FROM tblUsers WHERE tblUsers_ID = ?', [id], function (err, rows) {
+  db.query('CALL sp_retriveUserWithID(?)', [id], function (err, rows) {
     if (err)
       return res.status(200).json([{ success: 'Fail to get single user', error:err }])
-    if (rows.length === 0)
+    if (rows[0].length === 0)
       return res.status(200).json([{ success: 'Id does not exists' }])
-    rows[0].success = 'Successfully get single user';
-    return res.status(200).json(rows)
+    rows[0][0].success = 'Successfully get single user';
+    return res.status(200).json(rows[0])
   });
 };
 // Delete a user
