@@ -62,7 +62,7 @@ function insertUser(req, res){
       }
       else if (rows.affectedRows != 0) {
         // Successfully insert user, now return user detail
-        retriveUser(userFields.email, res)
+        retriveUser(userFields.email, res, true)
       }
       else
         return res.status(200).json([{ success: 'Fail to signup', error: err }])
@@ -86,7 +86,7 @@ function insertArtist(req, res) {
       }
       else if (rows.affectedRows != 0) {
         // Successfully signup artist, now return user detail
-        retriveUser(artistFields.email, res)
+        retriveUser(artistFields.email, res, true)
       } else
         return res.status(200).json([{ success: 'Fail to signup', error: err }])
     }
@@ -153,14 +153,18 @@ function deleteFile(fs) {
   });
 }
 // return User detail from database
-function retriveUser(email, res) {
+function retriveUser(email, res, isNewUser) {
   db.query('CALL sp_retriveUserWithEmail(?)', [email], function (err, rows) {
     if (err) return res.status(200).json([{ success: 'Fail to retrive user detail' , error:err}]);
     // if user not found return Invalid Username
     if (rows[0].length == 0)
       return res.status(200).json([{ success: 'Email not registered' }])
-    //adding success element in rows object   
-    rows[0][0].success = "Please wait for admin to approve. We will contact you shortly";
+      
+    //adding success element in rows object 
+    if (isNewUser)      
+      rows[0][0].success = "Please wait for admin to approve. We will contact you shortly";
+    else
+      rows[0][0].success = "Successfully edited";
     //sendEmail(rows[0]); // send mail to admin
     return res.status(201).json([rows[0][0]]);
   });
@@ -186,7 +190,7 @@ var login = function (req, res) {
 
 // check email from db, if email exists return user detail
 var forgetPassword = (req, res) => {
-  retriveUser(req.body.email, res)
+  retriveUser(req.body.email, res, false)
 }
 
 // return all users from database
@@ -278,7 +282,7 @@ var createArtist = (req, res) => {
       }
       else {
         // Successfully created user, now return user detail
-        retriveUser(newUser.email, res)
+        retriveUser(newUser.email, res, true)
       }
     }
   );
@@ -314,7 +318,7 @@ function updateUser(req, res){
       }
       else if (rows.affectedRows != 0) {
         // Successfully updated user, now return user detail
-        retriveUser(userFields.email, res)
+        retriveUser(userFields.email, res, false)
       }
       else
         return res.status(200).json([{ success: 'Fail to update, Invalid UserType or ID', error: err }])
@@ -339,7 +343,7 @@ function updateArtist(req, res) {
       }
       else if (rows.affectedRows != 0){
         // Successfully updated artist, now return user detail
-        retriveUser(artistFields.email, res)
+        retriveUser(artistFields.email, res, false)
       }else
         return res.status(200).json([{ success: 'Fail to update, Invalid UserType or ID', error: err }])
     }
