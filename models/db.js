@@ -37,17 +37,17 @@ var query = function(queryString, params, callback) {
 };
 
 // Heartbeat function to keep the connection to the database up
-// var keepAlive = function() {
-//   getConnection(function(err, conn) {
-//     if (err)
-//       return;
+var keepAlive = function() {
+  getConnection(function(err, conn) {
+    if (err)
+      return;
 
-//     conn.ping();
-//     conn.release();
-//   });
-// };
+    conn.ping();
+    conn.release();
+  });
+};
 
-// // Set up a keepalive heartbeat
-// setInterval(keepAlive, 30000);
+// Set up a keepalive heartbeat
+setInterval(keepAlive, 30000);
 
 exports.query = query;
