@@ -1,11 +1,11 @@
 // var uuidV4 = require('uuid/v4');
 // const jwt = require('jsonwebtoken');
-var db = require('./connection');
 const multer = require('multer');
 // var md5 = require('md5');
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
 require('dotenv/config');
+var db = require('./connection');
 // const nodemailer = require('nodemailer');
 
 var signup = function (req, res) {
@@ -16,8 +16,6 @@ var signup = function (req, res) {
     case 3: insertArtist(req, res); break;
     default: return res.status(200).json([{ success: 'Invalid userType, Fail to signup' }])
   }
-
-
   // function for creating user in DB
   // createUser(req, res);
 };
@@ -330,6 +328,9 @@ function updateUser(req, res){
           return res.status(200).json([{ success: 'Fail to update', error: err }])
       }
       else if (rows.affectedRows != 0) {
+          /* copy last uploaded file in permanent folder and 
+           remove images from temporary folder */
+          fileCopy(req);
         // Successfully updated user, now return user detail
         retriveUser(userFields.email, res, 'updateUser')
       }
@@ -355,6 +356,9 @@ function updateArtist(req, res) {
           return res.status(200).json([{ success: 'Fail to update', error: err }])
       }
       else if (rows.affectedRows != 0){
+        /* copy last uploaded file in permanent folder and 
+           remove images from temporary folder */
+        fileCopy(req);
         // Successfully updated artist, now return user detail
         retriveUser(artistFields.email, res, 'updateArtist')
       }else

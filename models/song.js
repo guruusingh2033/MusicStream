@@ -1,4 +1,4 @@
-const multer = require('multer');
+const multer = require('multer'); // for uploading files
 const db = require('./connection');
 require('dotenv/config');
 
@@ -7,7 +7,6 @@ require('dotenv/config');
 const imageFolderPath = '../test/songs/thumbnail_Images/';
 let tempImageNameStore; // storing image name with foldername like - tempThumbImage/abc.png
 let thumbnailImageName; // storing only image name like - 1571724607849_Capture.png
-
 /***  Code Start:: Thumb Image Upload  ***/
 // set destionation and file name for saving in folder using multer
 var thumbStorage = multer.diskStorage({
@@ -46,7 +45,6 @@ var thumbImageUpload = function (req, res) {
 const songFolderPath = '../test/songs/'; 
 let songName; // for storing only song name --- 1571724607849.mp3
 let tempSongNameStore; // storing image name with folder name like - tempFile/1571724607849.mp3
-
 /***  Code Start:: Song Upload  ***/
 // set destionation and file name for saving in folder using multer
 var storage = multer.diskStorage({
@@ -212,6 +210,7 @@ var singleSongsArtist = (req, res) => {
         return res.status(200).json(rows[0]);        
     });
 };
+/** Code End:: get single songs and artist **/
 
 /** Code Start:: get all songs and artist **/
 var allArtist = (req, res) => {
@@ -229,8 +228,6 @@ var allArtist = (req, res) => {
 };
 /** Code End:: get all songs and artist **/
 
-
-/** Code End:: get single songs and artist **/
 
 // concate api's baseUrl with filename for check in browser
 // function setBaseUrlWithEachPath(rows, res) {

@@ -2,7 +2,7 @@
 const user = require('../models/user');
 const authcheck = require('../middleware/authcheck');
 const song = require('../models/song');
-const validation = require('../middleware/allValidations/validations')
+const validation = require('../middleware/allValidations/validations');
 
 // Routes for authentication (signup, login, logout)
 module.exports = function(app) {  
