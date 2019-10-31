@@ -40,22 +40,6 @@ module.exports = function(app) {
 
 
 
-// SELECT
-// tblUsers.tblUsers_Id,
-//   tblUsers.Name,
-//   tblUsers.UserImage,
-//   NoOfSong.SongCount
-// from tblUsers
-// Left Join
-//   (select ArtistId, count(*) as SongCount from tblMedia  group by ArtistId) as NoOfSong
-// on tblUsers.tblUsers_Id = NoOfSong.ArtistId
-
-
-
-
-
-
-
 // previes code
   // app.get('/signup', auth.alreadyLoggedIn, function(req, res, next) {
   //   res.render('signup', { message: req.flash('signupMessage') });
