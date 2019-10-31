@@ -224,7 +224,8 @@ var singleUser = (req, res) => {
     if (rows[0].length === 0)
       return res.status(200).json([{ success: 'Id does not exists' }])
     // decrypting password
-    rows[0][0].Password = cryptr.decrypt(rows[0][0].Password);
+    if (rows[0][0].Password)
+      rows[0][0].Password = cryptr.decrypt(rows[0][0].Password);
     rows[0][0].success = 'Successfully get single user';
     return res.status(200).json(rows[0])
   });
