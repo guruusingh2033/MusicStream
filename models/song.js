@@ -1,5 +1,5 @@
 const multer = require('multer');
-const db = require('./db');
+const db = require('./connection');
 require('dotenv/config');
 
 // Variabele used for image uploading, copying and deleting 

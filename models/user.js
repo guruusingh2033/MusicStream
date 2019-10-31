@@ -1,6 +1,6 @@
 // var uuidV4 = require('uuid/v4');
 // const jwt = require('jsonwebtoken');
-var db = require('./db');
+var db = require('./connection');
 const multer = require('multer');
 // var md5 = require('md5');
 const Cryptr = require('cryptr');
