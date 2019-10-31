@@ -1,5 +1,4 @@
 const multer = require('multer');
-const { Validator } = require('node-input-validator');
 const db = require('./db');
 require('dotenv/config');
 
