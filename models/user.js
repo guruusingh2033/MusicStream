@@ -185,7 +185,7 @@ var login = function (req, res) {
     // if user not found return Invalid Username
     if (rows[0].length == 0) return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' }]);
     // if valid password User successfully logged in, return username with token
-    if (cryptr.encrypt(req.body.password) === rows[0][0].Password) {
+    if (req.body.password === cryptr.decrypt(rows[0][0].Password)) {
       // function for generating token with JWT
       // const tokenStore = generateToken(rows);
       //return res.status(200).send([1, rows[0].Email, tokenStore]);
