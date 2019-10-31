@@ -243,12 +243,12 @@ var singleUser = (req, res) => {
 let filenameStore;
 var storage = multer.diskStorage({
   // accept image files only   
-  fileFilter: (req, file, cb) => {
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-      return cb(new Error('Only jpg,jpeg,png,gif image files are allowed!'), false);
-    }
-    cb(null, true);
-  },
+  // fileFilter: (req, file, cb) => {
+  //   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+  //     return cb(new Error('Only jpg,jpeg,png,gif image files are allowed!'), false);
+  //   }
+  //   cb(null, true);
+  // },
   destination: (req, image, cb) => {
     cb(null, imagePath + 'tempFile')
   },
