@@ -179,7 +179,7 @@ function retriveUser(email, res, checkApi) {
 
 var login = function (req, res) {
   // Check that the user logging in exists
-  db.query('CALL sp_retriveUserWithEmail(?)', [req.body.email], function (err, rows) {
+  db.query('CALL sp_Login(?)', [req.body.userName], function (err, rows) {
     if (err) return res.status(200).json([{ success: 'Fail to loggedin', error:err}])
     // if user not found return Invalid Username
     if (rows[0].length == 0) return res.status(200).json([{ success: 'Fail to loggedin, Email not registered' }]);

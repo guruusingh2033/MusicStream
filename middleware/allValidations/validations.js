@@ -29,7 +29,7 @@ var signUp = async (req, res, next) => {
 // MiddleWare validation for login
 var login = async (req, res, next) => {
     let v = new Validator(req.body, {
-            email: 'required|email',
+            userName: 'required|email',
             password: 'required'
         });
     const matched = await v.check();
@@ -134,9 +134,9 @@ var song = async (req, res, next) => {
         next();
     }
 };
-
+// used in singleSongsArtist and approveToArtist API
 // MiddleWare validation for artist's id
-var singleSongsArtist = async (req, res, next) => {
+var artistId = async (req, res, next) => {
     let v = new Validator(req.body, {
         artistId: 'required',
     });
@@ -171,5 +171,6 @@ exports.singleUser = singleUser;
 exports.artist = artist;
 exports.editProfile = editProfile;
 exports.song = song;
-exports.singleSongsArtist = singleSongsArtist;
+exports.artistId = artistId;
 exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
+exports.approveToArtist = approveToArtist;

@@ -23,13 +23,13 @@ module.exports = function(app) {
   app.post('/songsThumbImagePost', song.thumbUploadMulter.single('image'), song.thumbImageUpload);
   app.post('/songInsert', validation.song, song.songInsert);  
   app.get('/allSongsArtist', song.allSongsArtist);  // return all artists and songs
-  app.post('/singleSongsArtist', validation.singleSongsArtist, song.singleSongsArtist); // get All song with artist ID
+  app.post('/singleSongsArtist', validation.artistId, song.singleSongsArtist); // get All song with artist ID
   app.get('/allArtist', song.allArtist); // return all artist with there No of Song
 
   // aprove api
   app.get('/allApprovedArtist', aprooval.allApprovedArtist); // return all aproved artist (usertype 3)
   app.get('/allPendingArtist', aprooval.allPendingArtist); // return all pending artist (usertype 3)
-  app.post('/approveToArtist', aprooval.approveToArtist); 
+  app.post('/approveToArtist', validation.artistId, aprooval.approveToArtist); 
 };
 
 
