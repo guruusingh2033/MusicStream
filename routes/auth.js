@@ -15,15 +15,15 @@ module.exports = function(app) {
   app.post('/profile', validation.singleUser, user.singleUser);
   app.post('/createartist', validation.artist, user.artist);
   app.post('/editProfile', validation.editProfile, user.editProfile);
-  // app.delete('/user/:id', authcheck, user.deleteUser);
+  app.post('/delMediaArtIdMedId', validation.deleteMediaArtIdMedId, user.deleteMediaArtIdMedId);
 
   // song Apis 
   app.post('/songsPost', song.songUploadMulter.single('song'), song.songUpload);
   app.post('/songsThumbImagePost', song.thumbUploadMulter.single('image'), song.thumbImageUpload);
   app.post('/songInsert', validation.song, song.songInsert);  
-  app.get('/allSongsArtist', song.allSongsArtist); 
-  app.post('/singleSongsArtist', validation.singleSongsArtist, song.singleSongsArtist); 
-  app.get('/allArtist', song.allArtist); 
+  app.get('/allSongsArtist', song.allSongsArtist);  // return all artists and songs
+  app.post('/singleSongsArtist', validation.singleSongsArtist, song.singleSongsArtist); // get All song with artist ID
+  app.get('/allArtist', song.allArtist); // return all artist with there No of Song
 };
 
 

@@ -229,26 +229,29 @@ var singleUser = (req, res) => {
   });
 };
 
-
-
-
-// Delete a user
-// callback(err)
-// var deleteUser = function (req, callback) {
-//   const id = req.params.id; // get id from url
-//   db.query('DELETE FROM tblUsers WHERE tblUsers_ID = ?', [id], callback);
-// };
+// Delete a record from tblMedia on basis of artist Id and tblMedia Id
+var deleteMediaArtIdMedId = function (req, res) {
+  const tblMedia_Id = req.body.tblMedia_Id; // get id from url
+  const artistId = req.body.artistId; // get id from url
+  db.query('CALL sp_delMediaArtIdMedId(?,?)', [tblMedia_Id, artistId], (err, rows) =>{
+    if(!err && rows.affectedRows != 0){
+      res.status(200).json([{ success: 'Record deleted sucessfully'}])
+    }
+    else
+      res.status(200).json([{ success: 'Fail to delete, ArtistId and tableId should be valid', error: err }]);
+  });
+};
 
 // set destionation and file name for saving in folder using multer
 let filenameStore;
 var storage = multer.diskStorage({
   // accept image files only   
-  // fileFilter: (req, file, cb) => {
-  //   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-  //     return cb(new Error('Only jpg,jpeg,png,gif image files are allowed!'), false);
-  //   }
-  //   cb(null, true);
-  // },
+  fileFilter: (req, file, cb) => {
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+      return cb(new Error('Only jpg,jpeg,png,gif image files are allowed!'), false);
+    }
+    cb(null, true);
+  },
   destination: (req, image, cb) => {
     cb(null, imagePath + 'tempFile')
   },
@@ -413,7 +416,7 @@ exports.imageUpload = imageUpload;
 exports.uploadMulter = uploadMulter;
 exports.artist = artist;
 exports.editProfile = editProfile;
-// exports.deleteUser = deleteUser;
+exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
 
 
 

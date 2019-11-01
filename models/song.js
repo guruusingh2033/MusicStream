@@ -11,12 +11,12 @@ let thumbnailImageName; // storing only image name like - 1571724607849_Capture.
 // set destionation and file name for saving in folder using multer
 var thumbStorage = multer.diskStorage({
     // accept image files only   
-    // fileFilter: (req, file, cb) => {
-    //     if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
-    //         return cb(new Error('Only jpg,jpeg,png,gif image files are allowed!'), false);
-    //     }
-    //     cb(null, true);
-    // },
+    fileFilter: (req, file, cb) => {
+        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+            return cb(new Error('Only jpg,jpeg,png,gif image files are allowed!'), false);
+        }
+        cb(null, true);
+    },
     destination: (req, image, cb) => {
         cb(null, imageFolderPath + 'tempThumbImage')
     },
