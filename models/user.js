@@ -12,6 +12,7 @@ var signup = function (req, res) {
   const userType = parseInt(req.body.type);
   // Condtions for updation
   switch (userType) {
+    case 1: insertUser(req, res); break;
     case 2: insertUser(req, res); break;
     case 3: insertArtist(req, res); break;
     default: return res.status(200).json([{ success: 'Invalid userType, Fail to signup' }])
