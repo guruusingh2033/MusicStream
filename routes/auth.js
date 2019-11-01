@@ -29,6 +29,7 @@ module.exports = function(app) {
   // aprove api
   app.get('/allApprovedArtist', aprooval.allApprovedArtist); // return all aproved artist (usertype 3)
   app.get('/allPendingArtist', aprooval.allPendingArtist); // return all pending artist (usertype 3)
+  app.post('/approveToArtist', aprooval.approveToArtist); 
 };
 
 
