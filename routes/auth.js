@@ -2,7 +2,7 @@
 const user = require('../models/user');
 const authcheck = require('../middleware/authcheck');
 const song = require('../models/song');
-const aprooval = require('../models/approval');
+const approval = require('../models/approval');
 const validation = require('../middleware/allValidations/validations');
 
 // Routes for authentication (signup, login, logout)
@@ -27,9 +27,9 @@ module.exports = function(app) {
   app.get('/allArtist', song.allArtist); // return all artist with there No of Song
 
   // aprove api
-  app.get('/allApprovedArtist', aprooval.allApprovedArtist); // return all aproved artist (usertype 3)
-  app.get('/allPendingArtist', aprooval.allPendingArtist); // return all pending artist (usertype 3)
-  app.post('/approveToArtist', validation.artistId, aprooval.approveToArtist); 
+  app.get('/allApprovedArtist', approval.allApprovedArtist); // return all aproved artist (usertype 3)
+  app.get('/allPendingArtist', approval.allPendingArtist); // return all pending artist (usertype 3)
+  app.post('/approveToArtist', validation.artistId, approval.approveToArtist); 
 };
 
 

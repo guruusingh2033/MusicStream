@@ -173,4 +173,3 @@ exports.editProfile = editProfile;
 exports.song = song;
 exports.artistId = artistId;
 exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
-exports.approveToArtist = approveToArtist;
