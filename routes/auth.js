@@ -2,6 +2,7 @@
 const user = require('../models/user');
 const authcheck = require('../middleware/authcheck');
 const song = require('../models/song');
+const aprooval = require('../models/approval');
 const validation = require('../middleware/allValidations/validations');
 
 // Routes for authentication (signup, login, logout)
@@ -24,6 +25,9 @@ module.exports = function(app) {
   app.get('/allSongsArtist', song.allSongsArtist);  // return all artists and songs
   app.post('/singleSongsArtist', validation.singleSongsArtist, song.singleSongsArtist); // get All song with artist ID
   app.get('/allArtist', song.allArtist); // return all artist with there No of Song
+
+  // aprove api
+  app.get('/approvedArtist', aprooval.approvedArtist); // return all aproved artist (usertype 3)
 };
 
 
