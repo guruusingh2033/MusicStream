@@ -55,7 +55,7 @@ var approveToArtist = (req,res)=>{
                     if (rows[1][0].ret_value == 2)
                         res.status(200).json([{ success: "Successfully approved artist" }]);
                     else
-                        res.status(200).json([{ success: "Not approved artist" }]);
+                        res.status(200).json([{ success: "Artist not approved " }]);
                 } else
                     res.status(200).json([{ success: "Fail to approve artist, Something went wrong", error: err }])
             })
