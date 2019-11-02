@@ -6,7 +6,7 @@ const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
 var allApprovedArtist = (req,res)=>{
     db.query('CALL sp_AllApprovedArtitst()', (err, rows)=>{
         if(!err && rows.affectedrows != 0){
-            rows[0][0].success = "Successfully retirve ALL Approved Artist";
+            setSuccessWithEachRecord(rows, 'approved' );            
             res.status(200).json(rows[0]);
         }else
             res.status(200).json([{ success: "Fail to retirve All Approved Artist", error: err}])
@@ -17,7 +17,7 @@ var allApprovedArtist = (req,res)=>{
 var allPendingArtist = (req, res)=>{
     db.query("CALL sp_AllPendingArtist()", (err, rows)=>{
         if (!err && rows[0].length != 0){
-            rows[0][0].success = "Successfully retirve All Pending Artist for approval";
+            setSuccessWithEachRecord(rows, 'pending');
             res.status(200).json(rows[0]);
         }else if (!err && rows[1].affectedRows == 0) {
             res.status(200).json([{ success: "No artist pending for approval"}]);
@@ -26,6 +26,18 @@ var allPendingArtist = (req, res)=>{
     })
 }
 
+// Add success element in each row with message
+function setSuccessWithEachRecord(rows, checkApi){
+    if (checkApi == 'approved'){
+        for (let i = 0; i < rows[0].length; i++) {
+            rows[0][i].success = "Successfully retirve ALL Approved Artist";
+        } 
+    }else{
+        for (let i = 0; i < rows[0].length; i++) {
+            rows[0][i].success = "Successfully retirve All Pending Artist for approval";
+        } 
+    }     
+}
 // approved artist(insert user password) if status 2 else send not approved 
 var approveToArtist = (req,res)=>{
     const id = req.body.artistId;
