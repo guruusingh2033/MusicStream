@@ -26,7 +26,7 @@ module.exports = function(app) {
   app.post('/singleSongsArtist', validation.artistId, song.singleSongsArtist); // get All song with artist ID
   app.get('/allArtist', song.allArtist); // return all artist with there No of Song
 
-  // aprove api
+  // approval api
   app.get('/allApprovedArtist', approval.allApprovedArtist); // return all aproved artist (usertype 3)
   app.get('/allPendingArtist', approval.allPendingArtist); // return all pending artist (usertype 3)
   app.post('/approveToArtist', validation.artistId, approval.approveToArtist); 
