@@ -610,6 +610,3 @@ exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
 //     return callback(null, new User(rows[0]));
 //   });
 // };
-
-
-

@@ -16,9 +16,11 @@ var allApprovedArtist = (req,res)=>{
 // return all pending artist(UserType 3 and Status 2) for approval
 var allPendingArtist = (req, res)=>{
     db.query("CALL sp_AllPendingArtist()", (err, rows)=>{
-        if(!err){
+        if (!err && rows[1].affectedRows != 0){
             rows[0][0].success = "Successfully retirve All Pending Artist for approval";
             res.status(200).json(rows[0]);
+        } if (!err && rows[1].affectedRows == 0) {
+            res.status(200).json([{ success: "No artist pending for approval"}]);
         }else
             res.status(200).json([{ success: "Fail to retirve All Pending Artist for approval", error: err }])
     })
@@ -28,7 +30,7 @@ var allPendingArtist = (req, res)=>{
 var approveToArtist = (req,res)=>{
     const id = req.body.artistId;
     let param = setValues(req);
-    db.query("CALL sp_approveToArtist(?,?,?, @ret_value); CALL sp_approveToArtistReturnValue;", [id, param.userName, param.password], (err, rows)=>{
+    db.query("CALL sp_ApproveToArtist(?,?,?, @ret_value); CALL sp_ApproveToArtistReturnValue;", [id, param.userName, param.password], (err, rows)=>{
         if(!err && rows[0].affectedrows != 0){
             if (rows[1][0].ret_value == 2)
                 res.status(200).json([{ success:"Successfully approved artist" }]);
