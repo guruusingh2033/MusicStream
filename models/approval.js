@@ -16,10 +16,10 @@ var allApprovedArtist = (req,res)=>{
 // return all pending artist(UserType 3 and Status 2) for approval
 var allPendingArtist = (req, res)=>{
     db.query("CALL sp_AllPendingArtist()", (err, rows)=>{
-        if (!err && rows[1].affectedRows != 0){
+        if (!err && rows[0].length != 0){
             rows[0][0].success = "Successfully retirve All Pending Artist for approval";
             res.status(200).json(rows[0]);
-        } if (!err && rows[1].affectedRows == 0) {
+        }else if (!err && rows[1].affectedRows == 0) {
             res.status(200).json([{ success: "No artist pending for approval"}]);
         }else
             res.status(200).json([{ success: "Fail to retirve All Pending Artist for approval", error: err }])
