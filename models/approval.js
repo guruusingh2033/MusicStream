@@ -51,6 +51,8 @@ var approveToArtist = (req,res)=>{
             res.status(200).json([{ success: "There is no pending artist" }]);
         }else{
             db.query("CALL sp_ApproveToArtist(?,?,?, @ret_value); CALL sp_ApproveToArtistReturnValue;", [id, param.userName, param.password], (err, rows) => {
+                if (err && err.code === 'ER_DUP_ENTRY')
+                    return res.status(200).json([{ success: 'An account with this userName already exists.' }])
                 if (!err && rows[0].affectedrows != 0) {
                     if (rows[1][0].ret_value == 2)
                         res.status(200).json([{ success: "Successfully approved artist" }]);
