@@ -43,26 +43,28 @@ function setSuccessWithEachRecord(rows, checkApi){
 var approveToArtist = (req,res)=>{
     const id = req.body.artistId;
     let param = setValues(req);
-    db.query("CALL sp_CountPendingArtist", (err, rows)=>{
-        if (err) 
-            res.status(200).json([{ success: "Something went wrong", error:err }]);
-        // if pending artist 0 then return message else approved to artist 
-        if (rows[0].length != 0 && rows[0][0].pendingArtist == 0){
-            res.status(200).json([{ success: "There is no pending artist" }]);
-        }else{
+    // db.query("CALL sp_CountPendingArtist", (err, rows)=>{
+    //     if (err) 
+    //         res.status(200).json([{ success: "Something went wrong", error:err }]);
+    //     // if pending artist 0 then return message else approved to artist 
+    //     if (rows[0].length != 0 && rows[0][0].pendingArtist == 0){
+    //         res.status(200).json([{ success: "There is no pending artist" }]);
+    //     }else{
             db.query("CALL sp_ApproveToArtist(?,?,?, @ret_value); CALL sp_ApproveToArtistReturnValue;", [id, param.userName, param.password], (err, rows) => {
                 if (err && err.code === 'ER_DUP_ENTRY')
                     return res.status(200).json([{ success: 'An account with this userName already exists.' }])
                 if (!err && rows[0].affectedrows != 0) {
-                    if (rows[1][0].ret_value == 2)
-                        res.status(200).json([{ success: "Successfully approved artist" }]);
+                    if (rows[1][0].ret_value == 0)
+                        res.status(200).json([{ success: "There is no pending artist" }]);
+                    else  if (rows[1][0].ret_value == 2)
+                        res.status(200).json([{ success: "Successfully approved artist" }]);                    
                     else
                         res.status(200).json([{ success: "Artist not approved " }]);
                 } else
                     res.status(200).json([{ success: "Fail to approve artist, Something went wrong", error: err }])
             })
-        }
-    }) 
+        //}
+    // }) 
 }
 
 // getting value from request.body and setting in object
