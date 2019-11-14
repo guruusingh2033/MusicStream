@@ -18,6 +18,7 @@ module.exports = function(app) {
   app.post('/editProfile', validation.editProfile, user.editProfile);
   app.post('/delProfile', validation.deleteProfile, user.deleteProfile);
   app.post('/delMediaArtIdMedId', validation.deleteMediaArtIdMedId, user.deleteMediaArtIdMedId);
+  app.get('/allUserType2', user.allUserType2);
 
   // song Apis 
   app.post('/songsPost', song.songUploadMulter.single('song'), song.songUpload);

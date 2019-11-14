@@ -373,7 +373,7 @@ function updateArtist(req, res) {
 }
 /** Code End:: update user and artist */
 
-/** Code start:: Delete Profile  */
+// delete profile with id 
 const deleteProfile = (req,res) =>{
   db.query('CALL sp_DeleteProfile(?)', [req.body.id], (err, rows)=>{
     if(err)
@@ -384,7 +384,18 @@ const deleteProfile = (req,res) =>{
       return res.status(200).json([{ success: 'Fail to delete record, Id should be valid' }])
   });
 }
-/** Code start:: Delete Profile  */
+
+// get all user having type 2
+const allUserType2 = (req,res) =>{
+  db.query('CALL sp_AllUsersType2()', [], function (err, rows) {
+    if (err)
+      return res.status(200).json([{ success: 'Fail to get all users type 2', error: err }]);
+    if (rows.length == 0)
+      return res.status(200).json([{ success: 'Table is empty' }]);
+    rows[0][0].success = 'Successfully get all users';
+    return res.status(200).json(rows[0]);
+  });
+}
 
 // var sendEmail = async (data) =>{
 //   // create reusable transporter object using the default SMTP transport
@@ -431,6 +442,7 @@ exports.artist = artist;
 exports.editProfile = editProfile;
 exports.deleteProfile = deleteProfile;
 exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
+exports.allUserType2 = allUserType2;
 
 
 
