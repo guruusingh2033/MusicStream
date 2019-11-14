@@ -164,6 +164,22 @@ var deleteMediaArtIdMedId = async (req,res, next)=>{
         next();
 }
 
+// MiddleWare validation for profile id
+var deleteProfile = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        id: 'required',
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+};
+
+
 exports.signUp = signUp;
 exports.login = login;
 exports.forgetPassword = forgetPassword;
@@ -173,3 +189,4 @@ exports.editProfile = editProfile;
 exports.song = song;
 exports.artistId = artistId;
 exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
+exports.deleteProfile = deleteProfile;

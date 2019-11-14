@@ -86,6 +86,7 @@ function insertArtist(req, res) {
           return res.status(200).json([{ success: 'Fail to signup', error: err }])
       }
       else if (rows.affectedRows != 0) {
+        fileCopy(req);
         // Successfully signup artist, now return user detail
         retriveUser(artistFields.email, res, 'signup')
       } else
@@ -372,7 +373,18 @@ function updateArtist(req, res) {
 }
 /** Code End:: update user and artist */
 
-
+/** Code start:: Delete Profile  */
+const deleteProfile = (req,res) =>{
+  db.query('CALL sp_DeleteProfile(?)', [req.body.id], (err, rows)=>{
+    if(err)
+      return res.status(200).json([{ success: 'May be some connection error ', error: err }])
+    else if (rows.affectedRows != 0)
+      return res.status(200).json([{ success: 'Record Deleted Successfully ' }])
+    else
+      return res.status(200).json([{ success: 'Fail to delete record, Id should be valid' }])
+  });
+}
+/** Code start:: Delete Profile  */
 
 // var sendEmail = async (data) =>{
 //   // create reusable transporter object using the default SMTP transport
@@ -417,6 +429,7 @@ exports.imageUpload = imageUpload;
 exports.uploadMulter = uploadMulter;
 exports.artist = artist;
 exports.editProfile = editProfile;
+exports.deleteProfile = deleteProfile;
 exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
 
 
