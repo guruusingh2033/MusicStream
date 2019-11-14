@@ -179,14 +179,13 @@ var deleteProfile = async (req, res, next) => {
     }
 };
 
-
-exports.signUp = signUp;
-exports.login = login;
-exports.forgetPassword = forgetPassword;
-exports.singleUser = singleUser;
-exports.artist = artist;
-exports.editProfile = editProfile;
-exports.song = song;
-exports.artistId = artistId;
-exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
-exports.deleteProfile = deleteProfile;
+exports.signUp                      = signUp;
+exports.login                       = login;
+exports.forgetPassword              = forgetPassword;
+exports.singleUser                  = singleUser;
+exports.artist                      = artist;
+exports.editProfile                 = editProfile;
+exports.song                        = song;
+exports.artistId                    = artistId;
+exports.deleteMediaArtIdMedId       = deleteMediaArtIdMedId;
+exports.deleteProfile               = deleteProfile;

@@ -14,7 +14,7 @@ var signup = function (req, res) {
   switch (userType) {
     case 1: insertUser(req, res); break;
     case 2: insertUser(req, res); break;
-    case 3: insertArtist(req, res); break;
+    // case 3: insertArtist(req, res); break;
     default: return res.status(200).json([{ success: 'Invalid userType, Fail to signup' }])
   }
   // function for creating user in DB
@@ -71,29 +71,29 @@ function insertUser(req, res){
   );
 }
 
-function insertArtist(req, res) {
-  //setValue here for insertion
-  const artistFields = setUserValue(req);
-  // Inserting artist details in DB 
-  db.query('CALL sp_insertArtist(?,?,?,?,?,?,?,?,?)',
-    [artistFields.name, artistFields.password, artistFields.email, artistFields.phone_no, artistFields.image,  artistFields.description, artistFields.userName, artistFields.type, artistFields.status],
-    function (err, rows) {
-      if (err) {
-        // Check for dupicate email
-        if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
-        else
-          return res.status(200).json([{ success: 'Fail to signup', error: err }])
-      }
-      else if (rows.affectedRows != 0) {
-        fileCopy(req);
-        // Successfully signup artist, now return user detail
-        retriveUser(artistFields.email, res, 'signup')
-      } else
-        return res.status(200).json([{ success: 'Fail to signup', error: err }])
-    }
-  );
-}
+// function insertArtist(req, res) {
+//   //setValue here for insertion
+//   const artistFields = setUserValue(req);
+//   // Inserting artist details in DB 
+//   db.query('CALL sp_insertArtist(?,?,?,?,?,?,?,?,?)',
+//     [artistFields.name, artistFields.password, artistFields.email, artistFields.phone_no, artistFields.image,  artistFields.description, artistFields.userName, artistFields.type, artistFields.status],
+//     function (err, rows) {
+//       if (err) {
+//         // Check for dupicate email
+//         if (err.code === 'ER_DUP_ENTRY')
+//           return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+//         else
+//           return res.status(200).json([{ success: 'Fail to signup', error: err }])
+//       }
+//       else if (rows.affectedRows != 0) {
+//         fileCopy(req);
+//         // Successfully signup artist, now return user detail
+//         retriveUser(artistFields.email, res, 'signup')
+//       } else
+//         return res.status(200).json([{ success: 'Fail to signup', error: err }])
+//     }
+//   );
+// }
 
 
 // function used in createUser and createArtist method
@@ -106,7 +106,7 @@ var setUserValue = (req) => {
     phone_no: req.body.phone_no,
     image: req.body.image,
     type: parseInt(req.body.type),
-    status: req.body.status,
+    status: parseInt(req.body.status),
     description: req.body.description,
     userName: req.body.email
   };
@@ -163,7 +163,7 @@ function retriveUser(email, res, checkApi) {
       return res.status(200).json([{ success: 'Email not registered' }])
       
     //adding success element in rows object 
-    if (rows[0][0].UserType == 2 && checkApi == 'signup')
+    if ((rows[0][0].UserType == 2 || rows[0][0].UserType == 1) && checkApi == 'signup')
         rows[0][0].success = "Successfully registerd";
     else if (rows[0][0].UserType == 3 && checkApi == 'signup')      
       rows[0][0].success = "Please wait for admin to approve. We will contact you shortly"; 
