@@ -35,6 +35,7 @@ module.exports = function(app) {
   app.get('/allApprovedArtist', approval.allApprovedArtist); // return all aproved artist (usertype 3)
   app.get('/allPendingArtist', approval.allPendingArtist); // return all pending artist (usertype 3)
   app.post('/approveToArtist', validation.artistId, approval.approveToArtist); 
+  app.post('/changeStatus', validation.IdStatus, approval.changeStatus);
   
 };
 

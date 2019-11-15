@@ -49,7 +49,7 @@ var signup = function (req, res) {
 
 function insertUser(req, res){
   //setValue here for insertion
-  const userFields = setUserValue(req);
+  const userFields = setUserValue(req);  
   // Inserting user details in DB 
   db.query('CALL sp_insertUser(?,?,?,?,?,?)',
     [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.phone_no, userFields.type],

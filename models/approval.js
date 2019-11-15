@@ -70,7 +70,9 @@ var approveToArtist = (req,res)=>{
 // getting value from request.body and setting in object
 var setValues = (req) => {
     let fieldValues = {
-        userName: req.body.userName,      
+        id:req.body.id,
+        userName: req.body.userName,
+        status: req.body.status      
         // email: req.body.email,
     };
     if (req.body.password)
@@ -78,6 +80,22 @@ var setValues = (req) => {
     return (fieldValues);
 }
 
+// change status(active/inactive) of user based on id
+const changeStatus = (req,res) => {
+    const param = setValues(req)
+    db.query("CALL sp_ChangeStatus(?,?)", [param.id, param.status], (err, rows) => {
+        if(err)
+            return res.status(200).json([{ success: 'Internal server error.', err:err }])
+        else if (rows.affectedRows != 0)
+            return res.status(200).json([{ success: 'Successfully changed status', status: param.status }])
+
+        return res.status(200).json([{ success: 'Fail to change status, Id should be valid' }])
+
+    })
+}
+
+
 exports.allApprovedArtist = allApprovedArtist;
 exports.allPendingArtist = allPendingArtist;
 exports.approveToArtist = approveToArtist
+exports.changeStatus = changeStatus;

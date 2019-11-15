@@ -179,6 +179,21 @@ var deleteProfile = async (req, res, next) => {
     }
 };
 
+const IdStatus = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        id:'required',
+        status:'required'
+    });
+    const matched = await v.check();
+    if(!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
+
 exports.signUp                      = signUp;
 exports.login                       = login;
 exports.forgetPassword              = forgetPassword;
@@ -189,3 +204,4 @@ exports.song                        = song;
 exports.artistId                    = artistId;
 exports.deleteMediaArtIdMedId       = deleteMediaArtIdMedId;
 exports.deleteProfile               = deleteProfile;
+exports.IdStatus                    = IdStatus;
