@@ -179,6 +179,7 @@ var deleteProfile = async (req, res, next) => {
     }
 };
 
+// valdation for id and status field
 const IdStatus = async (req, res, next) => {
     let v = new Validator(req.body, {
         id:'required',

@@ -228,7 +228,6 @@ var allArtist = (req, res) => {
 };
 /** Code End:: get all songs and artist **/
 
-
 // concate api's baseUrl with filename for check in browser
 // function setBaseUrlWithEachPath(rows, res) {
 //     // this is the fastest way of loop
@@ -241,6 +240,19 @@ var allArtist = (req, res) => {
 //     return res.status(200).json(rows);
 // }
 
+const countMediaArtId = (req,res) => {
+    db.query('CALL sp_CountMediaArtId(?)', [req.body.artistId], (err,rows) => {
+        if (err)
+            return res.status(200).json([{ success: 'Fail to get media', error: err }]);
+        if (rows[0].length == 0)
+            return res.status(200).json([{ success: 'Table is empty' }]);
+        if (rows[0][0].artistId == null)
+            return res.status(200).json([{ success: 'Artist Id does not exists' }]);
+        rows[0][0].success = 'Successfully get media';
+        return res.status(200).json(rows[0]);
+    })
+}
+
 exports.songUploadMulter = songUploadMulter;
 exports.songUpload = songUpload;
 exports.songInsert = songInsert;
@@ -249,3 +261,4 @@ exports.thumbImageUpload = thumbImageUpload;
 exports.allSongsArtist = allSongsArtist;
 exports.singleSongsArtist = singleSongsArtist;
 exports.allArtist = allArtist;
+exports.countMediaArtId = countMediaArtId;
