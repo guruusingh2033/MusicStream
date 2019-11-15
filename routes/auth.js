@@ -28,6 +28,7 @@ module.exports = function(app) {
   app.post('/songsThumbImagePost', song.thumbUploadMulter.single('image'), song.thumbImageUpload);
   app.post('/songInsert', validation.song, song.songInsert);  
   app.get('/allSongsArtist', song.allSongsArtist);  // return all artists and songs
+  app.get('/allVideosArtist', song.allVideosArtist);  // return all artists and Video
   app.post('/singleSongsArtist', validation.artistId, song.singleSongsArtist); // get All song with artist ID
   app.get('/allArtist', song.allArtist); // return all artist with there No of Song
   app.post('/countMediaArtId', validation.artistId, song.countMediaArtId);

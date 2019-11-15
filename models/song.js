@@ -253,6 +253,19 @@ const countMediaArtId = (req,res) => {
     })
 }
 
+/** Code Start:: get all songs and artist **/
+const allVideosArtist = (req, res) => {
+    db.query('CALL sp_AllVideosArtist()', [], function (err, rows) {
+        if (err)
+            return res.status(200).json([{ success: 'Fail to get all videos with artist name', error: err }]);
+        if (rows[0].length == 0)
+            return res.status(200).json([{ success: 'Table is empty' }]);
+        rows[0][0].success = 'Successfully get all videos with artist name';
+        return res.status(200).json(rows[0]);
+    });
+};
+/** Code End:: get all songs and artist **/
+
 exports.songUploadMulter = songUploadMulter;
 exports.songUpload = songUpload;
 exports.songInsert = songInsert;
@@ -262,3 +275,4 @@ exports.allSongsArtist = allSongsArtist;
 exports.singleSongsArtist = singleSongsArtist;
 exports.allArtist = allArtist;
 exports.countMediaArtId = countMediaArtId;
+exports.allVideosArtist = allVideosArtist;
