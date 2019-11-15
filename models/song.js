@@ -203,7 +203,7 @@ var singleSongsArtist = (req, res) => {
         if (err)
             return res.status(200).json([{ success: 'Fail to get single artist songs', error: err }]);
         if (rows[0].length == 0)
-            return res.status(200).json([{ success: 'There is no song with ArtistId :: ' + artistId}]);
+            return res.status(200).json([{ success: 'No data found' }]);
         rows[0][0].success = 'Successfully get single artist songs';
         //concate api's baseUrl with filename for check in browser
         // setBaseUrlWithEachPath(rows, res);
@@ -273,7 +273,7 @@ const allVideosWithArtistId = (req, res) => {
         if (err)
             return res.status(200).json([{ success: 'Fail to get single artist videos', error: err }]);
         if (rows[0].length == 0)
-            return res.status(200).json([{ success: 'There is no video with ArtistId = ' + id}]);
+            return res.status(200).json([{ success: 'No data found'}]);
         rows[0][0].success = 'Successfully get single artist videos';
         return res.status(200).json(rows[0]);
     });
