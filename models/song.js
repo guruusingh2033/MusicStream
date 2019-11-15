@@ -201,10 +201,10 @@ var singleSongsArtist = (req, res) => {
     const artistId = parseInt(req.body.artistId);
     db.query("CALL sp_singleSongsArtist(?);", [artistId], function (err, rows) {
         if (err)
-            return res.status(200).json([{ success: 'Fail to get single artist song', error: err }]);
+            return res.status(200).json([{ success: 'Fail to get single artist songs', error: err }]);
         if (rows[0].length == 0)
-            return res.status(200).json([{ success: 'Id doesn`t exists'}]);
-        rows[0][0].success = 'Successfully get single artist song';
+            return res.status(200).json([{ success: 'There is no song with ArtistId :: ' + artistId}]);
+        rows[0][0].success = 'Successfully get single artist songs';
         //concate api's baseUrl with filename for check in browser
         // setBaseUrlWithEachPath(rows, res);
         return res.status(200).json(rows[0]);        
@@ -266,6 +266,19 @@ const allVideosArtist = (req, res) => {
 };
 /** Code End:: get all songs and artist **/
 
+// return all videos of an artist
+const allVideosWithArtistId = (req, res) => {
+    const id = req.body.artistId;
+    db.query("CALL sp_AllVideosWithArtistId(?)", [id], function (err, rows) {
+        if (err)
+            return res.status(200).json([{ success: 'Fail to get single artist videos', error: err }]);
+        if (rows[0].length == 0)
+            return res.status(200).json([{ success: 'There is no video with ArtistId = ' + id}]);
+        rows[0][0].success = 'Successfully get single artist videos';
+        return res.status(200).json(rows[0]);
+    });
+};
+
 exports.songUploadMulter = songUploadMulter;
 exports.songUpload = songUpload;
 exports.songInsert = songInsert;
@@ -276,3 +289,4 @@ exports.singleSongsArtist = singleSongsArtist;
 exports.allArtist = allArtist;
 exports.countMediaArtId = countMediaArtId;
 exports.allVideosArtist = allVideosArtist;
+exports.allVideosWithArtistId = allVideosWithArtistId;
