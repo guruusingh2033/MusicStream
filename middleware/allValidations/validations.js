@@ -29,7 +29,7 @@ var signUp = async (req, res, next) => {
 // MiddleWare validation for login
 var login = async (req, res, next) => {
     let v = new Validator(req.body, {
-            userName: 'required|email',
+            userName: 'required',
             password: 'required'
         });
     const matched = await v.check();
