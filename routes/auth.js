@@ -1,9 +1,10 @@
 // var auth = require('../utils/auth');
 const user = require('../models/user');
-const authcheck = require('../middleware/authcheck');
 const song = require('../models/song');
 const approval = require('../models/approval');
+const whishList = require('../models/wishlist');
 const validation = require('../middleware/allValidations/validations');
+const authcheck = require('../middleware/authcheck');
 
 // Routes for authentication (signup, login, logout)
 module.exports = function(app) {  
@@ -29,7 +30,7 @@ module.exports = function(app) {
   app.post('/songInsert', validation.song, song.songInsert);  
   app.get('/allSongsArtist', song.allSongsArtist);  // return all artists and songs
   app.get('/allVideosArtist', song.allVideosArtist);  // return all artists and Video
-  app.post('/singleSongsArtist', validation.artistId, song.singleSongsArtist); // get All song/videos with artist ID
+  app.post('/singleSongsArtist', validation.artistId, song.singleSongsArtist); // get All song with artist ID
   app.get('/allArtist', song.allArtist); // return all artist with there No of Song
   app.post('/countMediaArtId', validation.artistId, song.countMediaArtId);
   app.post('/allVideosWithArtistId', validation.artistId, song.allVideosWithArtistId); // get All videos with artist ID
@@ -39,6 +40,9 @@ module.exports = function(app) {
   app.get('/allPendingArtist', approval.allPendingArtist); // return all pending artist (usertype 3)
   app.post('/approveToArtist', validation.artistId, approval.approveToArtist); 
   app.post('/changeStatus', validation.IdStatus, approval.changeStatus);
+
+  // Whishlist api
+  app.post('/whishListInsert', validation.userIdMediaId, whishList.insert); // 
   
 };
 
