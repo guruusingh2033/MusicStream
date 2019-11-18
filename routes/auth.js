@@ -42,7 +42,8 @@ module.exports = function(app) {
   app.post('/changeStatus', validation.IdStatus, approval.changeStatus);
 
   // Whishlist api
-  app.post('/whishListInsert', validation.userIdMediaId, whishList.insert); // 
+  app.post('/InsertwhishList', validation.userIdMediaId, whishList.insert);  
+  app.post('/GetWhishList', whishList.getWhishList);  // validation.userIdMediaId,
   
 };
 
