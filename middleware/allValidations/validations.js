@@ -194,6 +194,8 @@ const IdStatus = async (req, res, next) => {
         next();
     }
 }
+
+// validation for userId, mediaId to insert record in table wishlist 
 const userIdMediaId = async (req, res, next) => {
     let v = new Validator(req.body, {
         userId:'required',
@@ -209,6 +211,22 @@ const userIdMediaId = async (req, res, next) => {
     }
 }
 
+// validation for userId to get record from table wishlist 
+const userId = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        userId: 'required',
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
+
+
 exports.signUp                      = signUp;
 exports.login                       = login;
 exports.forgetPassword              = forgetPassword;
@@ -221,3 +239,4 @@ exports.deleteMediaArtIdMedId       = deleteMediaArtIdMedId;
 exports.deleteProfile               = deleteProfile;
 exports.IdStatus                    = IdStatus;
 exports.userIdMediaId               = userIdMediaId;
+exports.userId                      = userId;
