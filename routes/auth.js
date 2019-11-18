@@ -43,7 +43,7 @@ module.exports = function(app) {
 
   // Whishlist api
   app.post('/InsertwhishList', validation.userIdMediaId, whishList.insert);  
-  app.post('/GetWhishList', whishList.getWhishList);  // validation.userIdMediaId,
+  app.post('/GetWhishListByUserId', whishList.getWhishList);  // validation.userIdMediaId,
   
 };
 
