@@ -195,6 +195,7 @@ const IdStatus = async (req, res, next) => {
     }
 }
 
+// Start :: validtion for wishlist
 // validation for userId, mediaId to insert record in table wishlist 
 const userIdMediaId = async (req, res, next) => {
     let v = new Validator(req.body, {
@@ -225,7 +226,7 @@ const userId = async (req, res, next) => {
         next();
     }
 }
-
+// End :: validtion for wishlist
 
 exports.signUp                      = signUp;
 exports.login                       = login;

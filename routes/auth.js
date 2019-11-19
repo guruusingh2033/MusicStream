@@ -44,6 +44,7 @@ module.exports = function(app) {
   // Whishlist api
   app.post('/InsertwhishList', validation.userIdMediaId, whishList.insert);  
   app.post('/GetWishListByUserId', validation.userId, whishList.getWhishList);  
+  app.post('/delWishListByUserIdMediaId', validation.userIdMediaId, whishList.deleteWishListByUserIdMediaId);  
   
 };
 
