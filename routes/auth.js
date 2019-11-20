@@ -2,7 +2,7 @@
 const user = require('../models/user');
 const song = require('../models/song');
 const approval = require('../models/approval');
-const whishList = require('../models/wishlist');
+const wishList = require('../models/wishlist');
 const validation = require('../middleware/allValidations/validations');
 const authcheck = require('../middleware/authcheck');
 
@@ -42,10 +42,10 @@ module.exports = function(app) {
   app.post('/changeStatus', validation.IdStatus, approval.changeStatus);
 
   // Whishlist api
-  app.post('/InsertwhishList', validation.userIdMediaId, whishList.insert);  
-  app.post('/GetWishListByUserId', validation.userId, whishList.getWhishList);  
-  app.post('/delWishListByUserIdMediaId', validation.userIdMediaId, whishList.deleteWishListByUserIdMediaId);  
-  
+  app.post('/InsertwishList', validation.userIdMediaId, wishList.insert);  // correction
+  app.post('/GetWishListByUserId', validation.userId, wishList.getWishList);  
+  app.post('/delWishListByUserIdMediaId', validation.userIdMediaId, wishList.deleteWishListByUserIdMediaId);  
+  app.post('/checkwishlist', validation.userIdMediaId, wishList.checkwishlist )
 };
 
 

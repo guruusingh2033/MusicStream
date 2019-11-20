@@ -12,7 +12,7 @@ const insert = (req, res) => {
     })
 }
 
-const getWhishList = (req, res) => {
+const getWishList = (req, res) => {
     const userId = req.body.userId;
     // const mediaId = req.body.mediaId;
     db.query("CAll sp_WishListGet(?)", [userId], (err, rows) => {
@@ -38,6 +38,19 @@ const deleteWishListByUserIdMediaId = (req, res) => {
     });
 }
 
-exports.getWhishList = getWhishList;
+const checkwishlist = (req, res) => {
+    const userId = req.body.userId;
+    const mediaId = req.body.mediaId;
+    db.query('CALL sp_CheckWishList(?,?)', [userId, mediaId], (err, rows) => {
+        if (err)
+            return res.status(200).json([{ success: 'Internal server error ', error: err }])
+        else if (rows[0].length > 0)
+            return res.status(200).json([{ success: 'Yes' }])
+        else
+            return res.status(200).json([{ success: 'No' }])
+    });
+}
+exports.getWishList = getWishList;
 exports.insert = insert;
 exports.deleteWishListByUserIdMediaId = deleteWishListByUserIdMediaId;
+exports.checkwishlist = checkwishlist;
