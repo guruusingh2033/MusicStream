@@ -7,7 +7,7 @@ const insert = (req, res) => {
         if(err)
             return res.status(200).json({ succes: "Not added", err:err })
         else if(rows.affectedRows != 0){
-            return res.status(200).json([{ success: 'Added success' }]);
+            return res.status(200).json([{ success: 'Added' }]);
         }
     })
 }
@@ -32,9 +32,9 @@ const deleteWishListByUserIdMediaId = (req, res) => {
         if (err)
             return res.status(200).json([{ success: 'Internal server error ', error: err }])
         else if (rows.affectedRows != 0)
-            return res.status(200).json([{ success: 'Record Deleted Successfully ' }])
+            return res.status(200).json([{ success: 'Removed' }])
         else
-            return res.status(200).json([{ success: 'Fail to delete record, Id`s should be valid' }])
+            return res.status(200).json([{ success: 'Not removed' }])
     });
 }
 
