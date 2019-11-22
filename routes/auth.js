@@ -42,8 +42,8 @@ module.exports = function(app) {
   app.post('/changeStatus', validation.IdStatus, approval.changeStatus);
 
   // Whishlist api
-  app.post('/InsertwishList', validation.userIdMediaId, wishList.insert);  // correction
-  app.post('/GetWishListByUserId', validation.userId, wishList.getWishList);  
+  app.post('/InsertwishList', validation.userIdMediaId, wishList.insert); 
+  app.post('/GetWishListByUserId', validation.userId, wishList.getWishListMediaByUserId);  
   app.post('/delWishListByUserIdMediaId', validation.userIdMediaId, wishList.deleteWishListByUserIdMediaId);  
   app.post('/checkwishlist', validation.userIdMediaId, wishList.checkwishlist )
 };

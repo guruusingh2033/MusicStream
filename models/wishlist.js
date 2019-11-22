@@ -12,10 +12,10 @@ const insert = (req, res) => {
     })
 }
 
-const getWishList = (req, res) => {
+const getWishListMediaByUserId = (req, res) => {
     const userId = req.body.userId;
     // const mediaId = req.body.mediaId;
-    db.query("CAll sp_WishListGet(?)", [userId], (err, rows) => {
+    db.query("CAll sp_WishListAndMediaGetByUserId(?)", [userId], (err, rows) => {
         if (err)
             return res.status(200).json({ succes: "Fail to get records, Internal server error", err: err })
         if (rows[0].length == 0)
@@ -50,7 +50,7 @@ const checkwishlist = (req, res) => {
             return res.status(200).json([{ success: 'No' }])
     });
 }
-exports.getWishList = getWishList;
+exports.getWishListMediaByUserId = getWishListMediaByUserId;
 exports.insert = insert;
 exports.deleteWishListByUserIdMediaId = deleteWishListByUserIdMediaId;
 exports.checkwishlist = checkwishlist;
