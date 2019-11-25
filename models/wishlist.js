@@ -19,7 +19,7 @@ const getWishListMediaByUserId = (req, res) => {
         if (err)
             return res.status(200).json({ succes: "Fail to get records, Internal server error", err: err })
         if (rows[0].length == 0)
-            return res.status(200).json([{ success: 'No record found' }]);
+            return res.status(200).json([{ ThumbnailPath: 'No record found' }]);
         rows[0][0].success = 'Successfully get all records';
         return res.status(200).json(rows[0]);
     })
