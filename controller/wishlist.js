@@ -3,7 +3,7 @@ const db = require('./connection');
 const insert = (req, res) => {
     const userId = req.body.userId;
     const mediaId = req.body.mediaId;
-    db.query("CAll sp_WishListInsert(?,?)", [userId, mediaId],  (err, rows)=> {
+    db.query("CALL sp_WishListInsert(?,?)", [userId, mediaId],  (err, rows)=> {
         if(err)
             return res.status(200).json({ succes: "Not added", err:err })
         else if(rows.affectedRows != 0){
@@ -15,7 +15,7 @@ const insert = (req, res) => {
 const getWishListMediaByUserId = (req, res) => {
     const userId = req.body.userId;
     // const mediaId = req.body.mediaId;
-    db.query("CAll sp_WishListAndMediaGetByUserId(?)", [userId], (err, rows) => {
+    db.query("CALL sp_WishListAndMediaGetByUserId(?)", [userId], (err, rows) => {
         if (err)
             return res.status(200).json({ succes: "Fail to get records, Internal server error", err: err })
         if (rows[0].length == 0)

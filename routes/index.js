@@ -1,5 +1,4 @@
-var user = require('../models/user');
-
+var user = require('../controller/user');
 var auth = require('../utils/auth');
 
 // Main routes for app

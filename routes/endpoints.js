@@ -1,9 +1,10 @@
 // var auth = require('../utils/auth');
-const user = require('../models/user');
-const song = require('../models/song');
-const approval = require('../models/approval');
-const wishList = require('../models/wishlist');
+const user = require('../controller/user');
+const song = require('../controller/song');
+const approval = require('../controller/approval');
+const wishList = require('../controller/wishlist');
 const validation = require('../middleware/allValidations/validations');
+const like = require('../controller/like');
 // const authcheck = require('../middleware/authcheck');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
@@ -51,6 +52,10 @@ module.exports = function(app) {
   app.post('/GetWishListByUserId', validation.userId, wishList.getWishListMediaByUserId);  // return all record of wishlist, media with artist name(tbluser) based on userId 
   app.post('/delWishListByUserIdMediaId', validation.userIdMediaId, wishList.deleteWishListByUserIdMediaId);   // remove record from wishlist
   app.post('/checkwishlist', validation.userIdMediaId, wishList.checkwishlist );  // check whether record present in wishlist or not based on user id and media id
+
+  // Liking
+  app.post('/likeDislike', like.addLikeDislike); 
+
 };
 
 
