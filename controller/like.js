@@ -15,6 +15,8 @@ const addLikeDislike = (req, res) => {
             return res.status(200).json([{ success: 'User does not exists' }]);
         if (rows[0][0].p_return == -2)
             return res.status(200).json([{ success: 'Media does not exists' }]);
+
+        return res.status(200).json([{ success: 'No' }]);
     })
 }
 
