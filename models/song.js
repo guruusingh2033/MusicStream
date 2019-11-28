@@ -100,6 +100,19 @@ var createSong = (req, res) => {
     );
 };
 
+// Delete a record from tblMedia on basis of artist Id and tblMedia Id
+var deleteMediaArtIdMedId = function (req, res) {
+    const tblMedia_Id = req.body.tblMedia_Id; // get id from body
+    const artistId = req.body.artistId; // get id body
+    db.query('CALL sp_delMediaArtIdMedId(?,?)', [tblMedia_Id, artistId], (err, rows) => {
+        if (!err && rows.affectedRows != 0) {
+            res.status(200).json([{ success: 'Record deleted sucessfully' }])
+        }
+        else
+            res.status(200).json([{ success: 'Fail to delete, ArtistId and tableId should be valid', error: err }]);
+    });
+};
+
 // function used in createUser and createArtist method
 // getting value from request.body and setting in object
 var setSongValue = (req) => {
@@ -197,9 +210,9 @@ var allSongsArtist = (req, res) => {
 /** Code End:: get all songs and artist **/
 
 /** Code Start:: get single songs and artist **/
-var singleSongsArtist = (req, res) => {
+var artistAllAudioSong = (req, res) => {
     const artistId = parseInt(req.body.artistId);
-    db.query("CALL sp_singleSongsArtist(?);", [artistId], function (err, rows) {
+    db.query("CALL sp_artistAllAudioSong(?);", [artistId], function (err, rows) {
         if (err)
             return res.status(200).json([{ success: 'Fail to get single artist songs', error: err }]);
         if (rows[0].length == 0)
@@ -282,10 +295,11 @@ const allVideosWithArtistId = (req, res) => {
 exports.songUploadMulter = songUploadMulter;
 exports.songUpload = songUpload;
 exports.songInsert = songInsert;
+exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
 exports.thumbUploadMulter = thumbUploadMulter;
 exports.thumbImageUpload = thumbImageUpload;
 exports.allSongsArtist = allSongsArtist;
-exports.singleSongsArtist = singleSongsArtist;
+exports.artistAllAudioSong = artistAllAudioSong;
 exports.allArtist = allArtist;
 exports.countMediaArtId = countMediaArtId;
 exports.allVideosArtist = allVideosArtist;

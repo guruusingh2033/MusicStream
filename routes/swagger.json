@@ -1,0 +1,1236 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Music Stram descritption",
+        "version": "1.0.0",
+        "title": "Music Stream",
+        "termsOfService": "",
+        "contact": {
+            "email": "musicstream@gmail.com"
+        }
+    },
+    "host": "",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Operations about create user/artist, login, forget password",
+            "externalDocs": {
+                "description": "Find out more about MusicStream",
+                "url": "http://testchef.bytecodetechnologies.co.in"
+            }
+        },
+        {
+            "name": "User",
+            "description": "Operations about get user/artist, edit, delete",
+            "externalDocs": {
+                "description": "Find out more",
+                "url": "http://testchef.bytecodetechnologies.co.in"
+            }
+        },
+        {
+            "name": "Song",
+            "description": "Operations about get, insert, edit, delete songs(mp3/videos)"
+        },
+        {
+            "name": "Approval",
+            "description": "Operations about Approval artist"
+        },
+        {
+            "name": "Wishlist",
+            "description": "Operations about wishlist"
+        }
+       
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {  
+        "/filePost": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "upload profile Image",
+                "description": "User can upload his profile image, Copy responded image path and paste into 'image' parameter of 'signUp' endpoint",
+                "operationId": "uploadImage",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "parameters": [
+                    {
+                        "name": "image",
+                        "in": "formData",
+                        "description": "file to upload",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "responsed json Array",
+                        "schema": {
+                           "type": "object",
+                            "properties": {
+                                "filePath": {
+                                    "type": "string"
+                                },
+                                "success": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to upload"
+                    }
+                }
+            }
+        },
+        "/signup": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Create user",
+                "description": "Any new user can register.",
+                "operationId": "createUser",
+                "produces": [                    
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created user, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to create user"
+                    },
+                    "409": {
+                        "description": "Duplicate entry"
+                    }
+                }
+            }
+        },     
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "User login",
+                "description": "",
+                "operationId": "login",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Login object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "responsed json Array of user",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid user password"
+                    }
+                }
+            }
+        },  
+        "/forgetPassword": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Recover user password by email",
+                "description": "",
+                "operationId": "forgetPassword",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created user object",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "email": {
+                                    "type": "string",
+                                    "required": true
+                                }
+                            }                            
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "responsed json array of user",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Email not registered"
+                    }
+                }
+            }
+        },
+        "/createartist": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Create Artist",
+                "description": "Only artist can register",
+                "operationId": "createArtist",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created artist object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {       
+                        "description": "Successfully created artist, responsed json Array",                     
+                        "schema": {
+                            "$ref": "#/definitions/Artist"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to create Artist"
+                    },
+                    "409": {
+                        "description": "Duplicate entry"
+                    }
+                }
+            }
+        },      
+        
+        "/user": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get all users",
+                "description": "",
+                "operationId": "getAllUser",
+                "produces": [                    
+                    "application/json",
+                    "application/xml"
+                ],                
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+        "/profile": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Get single user/artist detail, passing Id",
+                "description": "",
+                "operationId": "getProfileByID",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "pass record Id",
+                        "required": true,
+                        "schema": {
+                            "properties":{
+                                "id": {
+                                    "type": "integer",
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully get record, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to get record"
+                    }
+                }
+            }
+        },
+        "/editProfile": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Update user/artist, based on Id and userType",
+                "description": "usertype 2 - update user, userType-3 update artist",
+                "operationId": "updateRecord",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "pass record Id and other detail for updation",
+                        "required": true,
+                        "schema": {
+                            "$ref":"#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully update record, responsed json Array",
+                        "schema": {                           
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to update record"
+                    }
+                }
+            }
+        },
+        "/delProfile": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete record, based on Id",
+                "description": "",
+                "operationId": "deleteRecord",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Pass id",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Succesfully removed record"
+                    },
+                    "400": {
+                        "description": "Fail to delete record"
+                    }
+                }
+            }
+        },        
+        "/allUserType2": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "get all user having type 2 (mean not artist/admin, only users)",
+                "description": "",
+                "operationId": "getAllUserType2",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+
+        "/songsPost": {
+            "post": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "upload song",
+                "description": "Upload song, Copy responded path and paste into 'filePath' parameter of 'songInsert' endpoint",
+                "operationId": "uploadSong",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "parameters": [
+                    {
+                        "name": "song",
+                        "in": "formData",
+                        "description": "file to upload",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "responsed json Array",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "filePath": {
+                                    "type": "string"
+                                },
+                                "success": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to upload"
+                    }
+                }
+            }
+        },
+        "/songsThumbImagePost": {
+            "post": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "upload song Image",
+                "description": "Upload song image, Copy responded image path and paste into 'thumbnailPath' parameter of 'songInsert' endpoint",
+                "operationId": "uploadImage",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "parameters": [
+                    {
+                        "name": "image",
+                        "in": "formData",
+                        "description": "file to upload",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "responsed json Array",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "filePath": {
+                                    "type": "string"
+                                },
+                                "success": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to upload"
+                    }
+                }
+            }
+        },
+        "/songInsert": {
+            "post": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "Insert song",
+                "description": "Insert artist songs based on artist Id",
+                "operationId": "insertSong",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "insert song object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully inserted record, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to insert record"
+                    } 
+                }
+            }
+        },        
+        "/delMediaArtIdMedId": {
+            "post": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "Delete song, based on MediaId, ArtistId",
+                "description": "",
+                "operationId": "deleteRecord",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Pass MediaId, ArtistId",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "tblMedia_Id": {
+                                    "type": "integer",
+                                    "required": true
+                                },
+                                "artistId": {
+                                    "type": "integer",
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Succesfully removed record"
+                    },
+                    "400": {
+                        "description": "Fail to delete record"
+                    }
+                }
+            }
+        },
+        "/allSongsArtist": {
+            "get": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "Get all audio song",
+                "description": "Return all audio songs with artist Name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ",
+                "operationId": "getAllAudioSong",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+        "/allVideosArtist": {
+            "get": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "Get all video song",
+                "description": "Return all video songs with artist Name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ",
+                "operationId": "getAllVideoSong",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+        "/singleSongsArtist": {
+            "post": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "Get all audio song, passing artist id",
+                "description": "Return all audio songs with artist name by passing artist id                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ",
+                "operationId": "getSingleSong",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Pass artist id",
+                        "required": true,
+                        "schema": {
+                           "properties":{
+                               "artistId":{
+                                   "type":"integer",
+                                   "required":true
+                               }
+                           }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+        "/allVideosWithArtistId": {
+            "post": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "Get all video song, pass artist id",
+                "description": "Return all video songs with artist name by passing artist id                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ",
+                "operationId": "getSingleSong",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Pass artist id",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "artistId": {
+                                    "type": "integer",
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+        "/allArtist": {
+            "get": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "Get all artist with thier number of songs ",
+                "description": "Return all artist with thier number of songs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ",
+                "operationId": "allArtist",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+        "/countMediaArtId": {
+            "post": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "count video and audio song, pass artist id",
+                "description": "Return count of video and audio songs for particular artist ",
+                "operationId": "countMedia",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Pass artist id",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "artistId": {
+                                    "type": "integer",
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/Song"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+
+        "/allApprovedArtist": {
+            "get": {
+                "tags": [
+                    "Approval"
+                ],
+                "summary": "Get all approved artist",
+                "description": "Return all aprpoved artist",
+                "operationId": "allApprovedArtist",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/Artist"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+        "/allPendingArtist": {
+            "get": {
+                "tags": [
+                    "Approval"
+                ],
+                "summary": "Get all pending artist from approval",
+                "description": "Return all pending artist from approval",
+                "operationId": "allPendingArtist",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/Artist"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+        "/approveToArtist": {
+            "post": {
+                "tags": [
+                    "Approval"
+                ],
+                "summary": "Give approval to artist, by admin",
+                "description": "Give approval to artist by updating username and passord to the artist, process will be done by admin only",
+                "operationId": "approveToArtist",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Approve artist object",
+                        "required": true,
+                        "schema": {                            
+                            "properties": {
+                                "artistId": {
+                                    "type": "integer",
+                                    "required": true
+                                },
+                                "userName": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "password": {
+                                    "type": "string",
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "responsed json Array of user",
+                        "schema": {
+                            "$ref": "#/definitions/Artist"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to update record"
+                    }
+                }
+            }
+        },
+        "/changeStatus": {
+            "post": {
+                "tags": [
+                    "Approval"
+                ],
+                "summary": "Change status of any record active/in-active",
+                "description": "Change status of any record based on record Id",
+                "operationId": "changeStatus",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "change status object",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "id": {
+                                    "type": "integer",
+                                    "required": true
+                                },
+                                "userName": {
+                                    "type": "string",
+                                    "required": true
+                                },
+                                "status": {
+                                    "type": "integer",
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "responsed json Array of user",
+                        "schema": {
+                            "$ref": "#/definitions/Artist"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to update record"
+                    }
+                }
+            }
+        },
+
+        "/InsertwishList": {
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Insert record into wishlist",
+                "description": "",
+                "operationId": "InsertwishList",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "wishlist object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/WishList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Record added"
+                    },
+                    "400": {
+                        "description": "Not added"
+                    }
+                }
+            }
+        },
+        "/GetWishListByUserId": {
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Return record from 3 tables based on user Id",
+                "description": "Return all record of wishlist, media with artist name(tbluser) based on userId",
+                "operationId": "GetWishListByUserId",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "pass user id",
+                        "required": true,
+                        "schema": {
+                            "properties": {
+                                "userId": {
+                                    "type": "integer",
+                                    "required": true
+                                }
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "return json array of record"
+                    },
+                    "400": {
+                        "description": "not found record"
+                    }
+                }
+            }
+        },
+        "/delWishListByUserIdMediaId": {
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Remove record from wishlist",
+                "description": "",
+                "operationId": "delWishListByUserIdMediaId",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "wihslist object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/WishList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "record removed"
+                    },
+                    "400": {
+                        "description": "record not removed"
+                    }
+                }
+            }
+        },
+        "/checkwishlist": {
+            "post": {
+                "tags": [
+                    "Wishlist"
+                ],
+                "summary": "Check wether record is present in wishlist or not, pass user id, media id",
+                "description": "",
+                "operationId": "checkwishlist",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "wishlist object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/WishList"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Record present"
+                    },
+                    "400": {
+                        "description": "Record not present"
+                    }
+                }
+            }
+        }
+        
+    },
+    "securityDefinitions": {
+        "petstore_auth": {
+            "type": "oauth2",
+            "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+            "flow": "implicit",
+            "scopes": {
+                "write:pets": "modify pets in your account",
+                "read:pets": "read your pets"
+            }
+        },
+        "api_key": {
+            "type": "apiKey",
+            "name": "api_key",
+            "in": "header"
+        }
+    },
+    "definitions": {  
+        "User": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "integer",
+                    "format": "int(11)"
+                },
+                "image": {
+                    "type": "string",
+                    "description": "First upload your image through 'filePost' endpoints and paste here responed image path"                   
+                },
+                "status": {
+                    "type": "integer",
+                    "format": "tinyInt"
+                    
+                },
+                "phone_no": {
+                    "type": "string",
+                    "format": "mobile"                    
+                },
+                "description": {
+                    "type": "string"
+                },
+                "userName": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "User"
+            }
+        },
+        "Login": {
+            "type": "object",
+            "properties": {
+                "userName": {
+                    "type": "string",
+                    "required":true
+                },
+                "password": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "xml": {
+                "name": "login"
+            }
+        },
+        "Artist": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "integer",
+                    "format": "int(11)"
+                },
+                "image": {
+                    "type": "string",
+                    "description": "First upload your image through 'filePost' endpoints and paste here responed image path"
+                },
+                "status": {
+                    "type": "integer",
+                    "format": "tinyInt"
+                },
+                "phone_no": {
+                    "type": "string",
+                    "format": "mobile"
+                },
+                "description": {
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Artist"
+            }
+        },
+        "Song":{
+            "type": "object",
+            "properties": {
+                "name":{
+                    "type": "string",
+                    "required":true
+                }, 
+                "artistId":{
+                    "type": "integer",
+                    "required":true
+                }, 
+                "type":{
+                    "type": "integer",
+                    "required": true
+                }, 
+                "filePath":{
+                    "type": "string",
+                    "required":true
+                }, 
+                "thumbnailPath":{
+                    "type": "string"
+                }
+            },
+            "xml": {
+                "name": "Song"
+            }
+           
+        },
+        "WishList": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "integer",
+                    "required": true
+                },
+                "mediaId": {
+                    "type": "integer",
+                    "required": true
+                }
+            },
+            "xml": {
+                "name": "WishList"
+            }
+        },
+        "ApiResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}

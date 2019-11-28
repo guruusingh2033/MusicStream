@@ -40,7 +40,7 @@ app.use(flash());
 
 // Set up routes and pass in configured passport
 require('./routes/index.js')(app);
-require('./routes/auth.js')(app);
+require('./routes/endpoints.js')(app);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {

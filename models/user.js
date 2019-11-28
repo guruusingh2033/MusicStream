@@ -164,7 +164,7 @@ function retriveUser(email, res, checkApi) {
       
     //adding success element in rows object 
     if ((rows[0][0].UserType == 2 || rows[0][0].UserType == 1) && checkApi == 'signup')
-        rows[0][0].success = "Successfully registerd";
+        rows[0][0].success = "Successfully registred";
     else if (rows[0][0].UserType == 3 && checkApi == 'signup')      
       rows[0][0].success = "Please wait for admin to approve. We will contact you shortly"; 
     else if (checkApi == 'forgetPassword')
@@ -205,7 +205,7 @@ var forgetPassword = (req, res) => {
 var allUsers = (req, res) => {
   db.query('CALL sp_AllUsers()', [], function (err, rows) {
     if (err)
-      return res.status(200).json([{ success: 'Fail to get all users', error:err }]);
+      return res.status(400).json([{ success: 'Fail to get all users', error:err }]);
     if (rows.length == 0)
       return res.status(200).json([{ success: 'Table is empty'}]);
     rows[0][0].success = 'Successfully get all users';
@@ -228,19 +228,6 @@ var singleUser = (req, res) => {
       rows[0][0].Password = cryptr.decrypt(rows[0][0].Password);
     rows[0][0].success = 'Successfully get single user';
     return res.status(200).json(rows[0])
-  });
-};
-
-// Delete a record from tblMedia on basis of artist Id and tblMedia Id
-var deleteMediaArtIdMedId = function (req, res) {
-  const tblMedia_Id = req.body.tblMedia_Id; // get id from url
-  const artistId = req.body.artistId; // get id from url
-  db.query('CALL sp_delMediaArtIdMedId(?,?)', [tblMedia_Id, artistId], (err, rows) =>{
-    if(!err && rows.affectedRows != 0){
-      res.status(200).json([{ success: 'Record deleted sucessfully'}])
-    }
-    else
-      res.status(200).json([{ success: 'Fail to delete, ArtistId and tableId should be valid', error: err }]);
   });
 };
 
@@ -441,7 +428,6 @@ exports.uploadMulter = uploadMulter;
 exports.artist = artist;
 exports.editProfile = editProfile;
 exports.deleteProfile = deleteProfile;
-exports.deleteMediaArtIdMedId = deleteMediaArtIdMedId;
 exports.allUserType2 = allUserType2;
 
 
