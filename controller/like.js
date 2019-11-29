@@ -7,7 +7,7 @@ const addLikeDislike = (req, res) => {
     db.query("CALL sp_LikingInsert(?, ?, ?, @p_return);", [value.userId, value.mediaId, value.like], (err, rows) => {
         if(err)
             return res.status(200).json({ succes: "Internal Server error ", err: err })
-
+        // if rows[0][0].p_return == 3 successfuly updated value 
         if (rows[0][0].p_return > 0){
             return res.status(200).json([{ success: 'Yes' }]);
         }

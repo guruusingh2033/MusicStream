@@ -5,6 +5,7 @@ const approval = require('../controller/approval');
 const wishList = require('../controller/wishlist');
 const validation = require('../middleware/allValidations/validations');
 const like = require('../controller/like');
+const comment = require('../controller/comment');
 // const authcheck = require('../middleware/authcheck');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
@@ -53,9 +54,13 @@ module.exports = function(app) {
   app.post('/delWishListByUserIdMediaId', validation.userIdMediaId, wishList.deleteWishListByUserIdMediaId);   // remove record from wishlist
   app.post('/checkwishlist', validation.userIdMediaId, wishList.checkwishlist );  // check whether record present in wishlist or not based on user id and media id
 
-  // Liking
+  // Liking api
   app.post('/likeDislike', validation.userIdMediaId, like.addLikeDislike); 
   app.post('/fetchLikeDislike', validation.userIdMediaId, like.fetchLikeDislike); 
+
+  // comment api
+  app.post('/addComment', validation.userIdMediaId, comment.addComment); 
+  app.post('/fetchComment', validation.userIdMediaId, comment.fetchComment);
 
 };
 

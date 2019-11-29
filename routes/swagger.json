@@ -43,6 +43,10 @@
         {
             "name": "Liking",
             "description": "Operations about like-dislike"
+        },
+        {
+            "name": "Comments",
+            "description": "Operations about comments"
         }
        
     ],
@@ -1079,10 +1083,10 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "Liking object",
+                        "description": "InsertLiking object",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/Liking"
+                            "$ref": "#/definitions/InsertLiking"
                         }
                     }
                 ],
@@ -1116,6 +1120,73 @@
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/FetchLiking"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "0/1  (0-dislike, 1-like)"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+
+        "/addComment": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "If user and media exist in comment then update comment value else insert commnet value",
+                "description": "",
+                "operationId": "addComments",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Insert Commnet object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/InsertComment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inserted /Not Inserted"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/fetchComment": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Fetch comment based on userId and media id",
+                "description": "",
+                "operationId": "fetchComment",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "fetchComment object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/FetchComment"
                         }
                     }
                 ],
@@ -1284,7 +1355,7 @@
                 "name": "WishList"
             }
         },
-        "Liking":{
+        "InsertLiking":{
             "type": "object",
             "properties": {
                 "userId": {
@@ -1301,7 +1372,7 @@
                 }
             },
             "xml": {
-                "name": "Liking"
+                "name": "Insert Liking"
             }
         },
         "FetchLiking": {
@@ -1318,6 +1389,42 @@
             },
             "xml": {
                 "name": "Fetch Liking"
+            }
+        },
+        "InsertComment": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "integer",
+                    "required": true
+                },
+                "mediaId": {
+                    "type": "integer",
+                    "required": true
+                },
+                "comment": {
+                    "type": "string",
+                    "required": true
+                }
+            },
+            "xml": {
+                "name": "Add Comment"
+            }
+        },
+        "FetchComment": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "integer",
+                    "required": true
+                },
+                "mediaId": {
+                    "type": "integer",
+                    "required": true
+                }
+            },
+            "xml": {
+                "name": "Insert Comment"
             }
         },
         "ApiResponse": {
