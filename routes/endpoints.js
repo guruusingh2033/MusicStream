@@ -54,7 +54,8 @@ module.exports = function(app) {
   app.post('/checkwishlist', validation.userIdMediaId, wishList.checkwishlist );  // check whether record present in wishlist or not based on user id and media id
 
   // Liking
-  app.post('/likeDislike', like.addLikeDislike); 
+  app.post('/likeDislike', validation.userIdMediaId, like.addLikeDislike); 
+  app.post('/fetchLikeDislike', validation.userIdMediaId, like.fetchLikeDislike); 
 
 };
 

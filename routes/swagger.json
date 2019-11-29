@@ -39,6 +39,10 @@
         {
             "name": "Wishlist",
             "description": "Operations about wishlist"
+        },
+        {
+            "name": "Liking",
+            "description": "Operations about like-dislike"
         }
        
     ],
@@ -1057,8 +1061,75 @@
                     }
                 }
             }
-        }
+        },
         
+        "/likeDislike": {
+            "post": {
+                "tags": [
+                    "Liking"
+                ],
+                "summary": "If user and media exist in Liking then update like value else insert like value",
+                "description": "",
+                "operationId": "likeDislike",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Liking object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Liking"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Yes/No"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/fetchLikeDislike": {
+            "post": {
+                "tags": [
+                    "Liking"
+                ],
+                "summary": "Fetch like dislike based on userId and media id",
+                "description": "",
+                "operationId": "fetchlikeDislike",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Liking object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/FetchLiking"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "0/1  (0-dislike, 1-like)"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+
     },
     "securityDefinitions": {
         "petstore_auth": {
@@ -1211,6 +1282,42 @@
             },
             "xml": {
                 "name": "WishList"
+            }
+        },
+        "Liking":{
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "integer",
+                    "required": true
+                },
+                "mediaId": {
+                    "type": "integer",
+                    "required": true
+                },
+                "like": {
+                    "type": "integer",
+                    "required": true
+                }
+            },
+            "xml": {
+                "name": "Liking"
+            }
+        },
+        "FetchLiking": {
+            "type": "object",
+            "properties": {
+                "userId": {
+                    "type": "integer",
+                    "required": true
+                },
+                "mediaId": {
+                    "type": "integer",
+                    "required": true
+                }
+            },
+            "xml": {
+                "name": "Fetch Liking"
             }
         },
         "ApiResponse": {
