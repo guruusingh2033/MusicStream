@@ -26,7 +26,7 @@ const fetchComment = (req, res) => {
             return res.status(200).json({ succes: "Internal Server error ", err: err })
         if (rows[0].length > 0) {
             rows[0][0].success = "Successfully fetched records";
-            return res.status(200).json(rows[0][0]);
+            return res.status(200).json(rows[0]);
         }
         return res.status(200).json([{ success: 'No record found' }]);
     })
