@@ -228,6 +228,21 @@ const userId = async (req, res, next) => {
 }
 // End :: validtion for wishlist
 
+
+const mediaId = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        mediaId: 'required',
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
+
 exports.signUp                      = signUp;
 exports.login                       = login;
 exports.forgetPassword              = forgetPassword;
@@ -241,3 +256,4 @@ exports.deleteProfile               = deleteProfile;
 exports.IdStatus                    = IdStatus;
 exports.userIdMediaId               = userIdMediaId;
 exports.userId                      = userId;
+exports.mediaId                     = mediaId;

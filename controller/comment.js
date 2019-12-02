@@ -21,7 +21,7 @@ const addComment = (req, res) => {
 
 const fetchComment = (req, res) => {
     const value = commnet.modelComment(req);
-    db.query("CALL sp_CommentFetch(?, ?);", [value.userId, value.mediaId], (err, rows) => {
+    db.query("CALL sp_CommentFetch(?);", [value.mediaId], (err, rows) => {
         if (err)
             return res.status(200).json({ succes: "Internal Server error ", err: err })
         if (rows[0].length > 0) {

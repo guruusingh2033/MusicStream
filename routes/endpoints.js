@@ -60,7 +60,7 @@ module.exports = function(app) {
 
   // comment api
   app.post('/addComment', validation.userIdMediaId, comment.addComment); 
-  app.post('/fetchComment', validation.userIdMediaId, comment.fetchComment);
+  app.post('/fetchComment', validation.mediaId, comment.fetchComment);
 
 };
 
@@ -103,3 +103,6 @@ module.exports = function(app) {
   //   req.logout();
   //   res.redirect('/');
   // });
+
+  // swagger
+  // http://demo.trms.com/CarouselAPI/swagger/ui/index#/Authentications

@@ -110,13 +110,73 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Created user object",
+                        "in": "formData",
+                        "name": "name",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/User"
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "type",
+                        "description": "type-2 for user",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "enum": [2],
+                            "default": 2
+                        }                       
+                    },
+                    {
+                        "in": "formData",
+                        "name": "image",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "description": "status 1 active(aprroved), 2 not approved(in-actve)",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "integer",
+                            "enum": [
+                                1,
+                                2
+                            ],
+                            "default": 2
                         }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "phone_no",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -149,13 +209,18 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Login object",
+                        "in": "formData",
+                        "name": "userName",
+                        "description": "UserName",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Login"
-                        }
+                        "type":"string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "Password",
+                        "required": true,
+                        "type":"string"
                     }
                 ],
                 "responses": {
@@ -185,19 +250,11 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Created user object",
+                        "in": "formData",
+                        "name": "email",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "email": {
-                                    "type": "string",
-                                    "required": true
-                                }
-                            }                            
-                        }
+                        "type": "string"                        
                     }
                 ],
                 "responses": {
@@ -227,13 +284,68 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Created artist object",
+                        "in": "formData",
+                        "name": "name",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/User"
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "type",
+                        "description": "Type-3 for artist",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                2
+                            ],
+                            "default": 2
                         }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "image",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "description": "Status 1(acitve/approved), Status 2(in-active/not approved)",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                1,
+                                2
+                            ],
+                            "default": 2
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "phone_no",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -292,10 +404,11 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "pass record Id",
+                        "in": "formData",
+                        "name": "id",
+                        "description": "Profile id",
                         "required": true,
+                        "type":"integer",
                         "schema": {
                             "properties":{
                                 "id": {
@@ -331,15 +444,86 @@
                     "application/json",
                     "application/xml"
                 ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "pass record Id and other detail for updation",
+               "parameters": [
+                   {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref":"#/definitions/User"
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "type",
+                        "description": "2- for user, 3- for artist",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [2,3],
+                            "default": 2
                         }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "image",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "description": "1- apprvoed, 2- not approved",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [1,2],
+                            "default": 2
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "phone_no",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "userName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -369,19 +553,11 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Pass id",
+                        "in": "formData",
+                        "name": "id",
+                        "description": "Profile id",
                         "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "type": "integer",
-                                    "required": true
-                                }
-                            }
-                        }
+                        "type": "integer"                        
                     }
                 ],
                 "responses": {
@@ -516,13 +692,47 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "insert song object",
+                        "in": "formData",
+                        "name": "name",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Song"
+                        "type":"string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "type",
+                        "description": "1 audio song, 2 video song",
+                        "required":true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                1,
+                                2
+                            ],
+                            "default": 1
                         }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "filePath",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "thumbnailPath",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -551,24 +761,19 @@
                     "application/xml"
                 ],
                 "parameters": [
+                    { 
+                        "in": "formData",
+                        "name": "tblMedia_Id",
+                        "description": "Pass MediaId",                              
+                        "type": "integer",
+                        "required": true
+                    },
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Pass MediaId, ArtistId",
-                        "required": true,
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "tblMedia_Id": {
-                                    "type": "integer",
-                                    "required": true
-                                },
-                                "artistId": {
-                                    "type": "integer",
-                                    "required": true
-                                }
-                            }
-                        }
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "Pass  ArtistId",
+                        "type": "integer",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -645,18 +850,11 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Pass artist id",
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                           "properties":{
-                               "artistId":{
-                                   "type":"integer",
-                                   "required":true
-                               }
-                           }
-                        }
+                        "type": "integer"                        
                     }
                 ],
                 "responses": {
@@ -679,25 +877,18 @@
                 ],
                 "summary": "Get all video song, pass artist id",
                 "description": "Return all video songs with artist name by passing artist id                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ",
-                "operationId": "getSingleSong",
+                "operationId": "allVideosWithArtistId",
                 "produces": [
                     "application/json",
                     "application/xml"
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
+                        "in": "formData",
+                        "name": "artistId",
                         "description": "Pass artist id",
                         "required": true,
-                        "schema": {
-                            "properties": {
-                                "artistId": {
-                                    "type": "integer",
-                                    "required": true
-                                }
-                            }
-                        }
+                        "type": "integer"                        
                     }
                 ],
                 "responses": {
@@ -751,19 +942,12 @@
                     "application/xml"
                 ],
                 "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
+                   {
+                        "in": "formData",
+                        "name": "artistId",
                         "description": "Pass artist id",
                         "required": true,
-                        "schema": {
-                            "properties": {
-                                "artistId": {
-                                    "type": "integer",
-                                    "required": true
-                                }
-                            }
-                        }
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -844,26 +1028,25 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Approve artist object",
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "Artist id",
                         "required": true,
-                        "schema": {                            
-                            "properties": {
-                                "artistId": {
-                                    "type": "integer",
-                                    "required": true
-                                },
-                                "userName": {
-                                    "type": "string",
-                                    "required": true
-                                },
-                                "password": {
-                                    "type": "string",
-                                    "required": true
-                                }
-                            }
-                        }
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "userName",
+                        "description": "User name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "Password",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -893,26 +1076,25 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "change status object",
+                        "in": "formData",
+                        "name": "id",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "properties": {
-                                "id": {
-                                    "type": "integer",
-                                    "required": true
-                                },
-                                "userName": {
-                                    "type": "string",
-                                    "required": true
-                                },
-                                "status": {
-                                    "type": "integer",
-                                    "required": true
-                                }
-                            }
-                        }
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "userName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -943,13 +1125,19 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "wishlist object",
+                        "in": "formData",
+                        "name": "userId",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/WishList"
-                        }
+                        "type":"integer"
+                        
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mediaId",
+                        "description": "",
+                        "required": true,
+                        "type":"integer"
                     }
                 ],
                 "responses": {
@@ -976,18 +1164,11 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
+                        "in": "formData",
+                        "name": "userId",
                         "description": "pass user id",
                         "required": true,
-                        "schema": {
-                            "properties": {
-                                "userId": {
-                                    "type": "integer",
-                                    "required": true
-                                }
-                            }
-                        }
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1014,13 +1195,18 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "wihslist object",
+                        "in": "formData",
+                        "name": "userId",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/WishList"
-                        }
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mediaId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1047,13 +1233,18 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "wishlist object",
+                        "in": "formData",
+                        "name": "userId",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/WishList"
-                        }
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mediaId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1081,13 +1272,25 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "InsertLiking object",
+                        "in": "formData",
+                        "name": "userId",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/InsertLiking"
-                        }
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mediaId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "like",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1114,13 +1317,18 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Liking object",
+                        "in": "formData",
+                        "name": "userId",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/FetchLiking"
-                        }
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mediaId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1148,13 +1356,25 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Insert Commnet object",
+                        "in": "formData",
+                        "name": "userId",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/InsertComment"
-                        }
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "mediaId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "comment",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -1172,7 +1392,7 @@
                 "tags": [
                     "Comments"
                 ],
-                "summary": "Fetch comment based on userId and media id",
+                "summary": "Fetch comment based on media id",
                 "description": "",
                 "operationId": "fetchComment",
                 "produces": [
@@ -1181,13 +1401,11 @@
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "fetchComment object",
+                        "in": "formData",
+                        "name": "mediaId",
+                        "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/FetchComment"
-                        }
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1264,6 +1482,7 @@
         },
         "Login": {
             "type": "object",
+            "in":"formData",
             "properties": {
                 "userName": {
                     "type": "string",

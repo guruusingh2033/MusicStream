@@ -80,7 +80,7 @@ var setValues = (req) => {
     return (fieldValues);
 }
 
-// change status(active/inactive) of user based on id
+// change status(active (1)/inactive (2)) of user based on id
 const changeStatus = (req,res) => {
     const param = setValues(req)
     db.query("CALL sp_ChangeStatus(?,?)", [param.id, param.status], (err, rows) => {
