@@ -28,7 +28,7 @@ const fetchComment = (req, res) => {
             rows[0][0].success = "Successfully fetched records";
             return res.status(200).json(rows[0]);
         }
-        return res.status(200).json([{ success: 'No record found' }]);
+        return res.status(200).json([{ thumbnailPath: 'No record found' }]);
     })
 }
 
