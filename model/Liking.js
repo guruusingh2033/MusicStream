@@ -3,9 +3,8 @@ const modelLike = (req) =>{
         likeId : req.body.likeId,
         userId : req.body.userId,
         mediaId : req.body.mediaId,
-        like : req.body.like
-    }
-    
+        like : parseInt(req.body.like)
+    }    
 }
 
 exports.modelLike = modelLike;
