@@ -243,6 +243,40 @@ const mediaId = async (req, res, next) => {
     }
 }
 
+// booking validation
+const booking = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        artistId: 'required',
+        place: 'required',
+        date: 'required',
+        time: 'required'        
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
+
+const bookingId = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        bookingId: 'required'
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
+
+
+
 exports.signUp                      = signUp;
 exports.login                       = login;
 exports.forgetPassword              = forgetPassword;
@@ -257,3 +291,5 @@ exports.IdStatus                    = IdStatus;
 exports.userIdMediaId               = userIdMediaId;
 exports.userId                      = userId;
 exports.mediaId                     = mediaId;
+exports.booking = booking;
+exports.bookingId = bookingId;

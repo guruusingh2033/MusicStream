@@ -47,6 +47,10 @@
         {
             "name": "Comments",
             "description": "Operations about comments"
+        },
+        {
+            "name": "Booking",
+            "description": "Operations about booking"
         }
        
     ],
@@ -1411,6 +1415,225 @@
                 "responses": {
                     "200": {
                         "description": "0/1  (0-dislike, 1-like)"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+
+        "/insertBooking": {
+            "post": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "User can book artist for programs",
+                "description": "",
+                "operationId": "addBooking",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "place",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "description": "",                        
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "date",
+                        "description": "yyyy/mm/dd",
+                        "required": true,
+                        "type": "string",
+                        "format": "date" 
+                    },
+                    {
+                        "in": "formData",
+                        "name": "time",
+                        "description": "hh:mm:ss",
+                        "required": true,
+                        "type": "string",
+                        "format": "time"
+                    }                   
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inserted /Not Inserted"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },        
+        "/fetchBooking": {
+            "post": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Return all record from booking, pass artistId",
+                "description": "",
+                "operationId": "getBooking",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return json array of object"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/fetchAllBooking": {
+            "get": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Return detail of booking and artist ",
+                "description": "",
+                "operationId": "getAllBooking",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return json array of object"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/deleteBooking":{
+            "post": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Removing booking by artist",
+                "description": "",
+                "operationId": "removeBooking",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "bookingId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Booking removed/ not removed"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/editBooking": {
+            "post": {
+                "tags": [
+                    "Booking"
+                ],
+                "summary": "Edit booking details",
+                "description": "",
+                "operationId": "editBooking",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "bookingId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "place",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "description": "",
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "date",
+                        "description": "yyyy/mm/dd",
+                        "required": true,
+                        "type": "string",
+                        "format": "date"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "time",
+                        "description": "hh:mm:ss",
+                        "required": true,
+                        "type": "string",
+                        "format": "time"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Updated /Not updated"
                     },
                     "500": {
                         "description": "Internal server error"

@@ -6,6 +6,7 @@ const wishList = require('../controller/wishlist');
 const validation = require('../middleware/allValidations/validations');
 const like = require('../controller/like');
 const comment = require('../controller/comment');
+const booking = require('../controller/booking');
 // const authcheck = require('../middleware/authcheck');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
@@ -62,6 +63,12 @@ module.exports = function(app) {
   app.post('/addComment', validation.userIdMediaId, comment.addComment); 
   app.post('/fetchComment', validation.mediaId, comment.fetchComment);
 
+  // Booking api
+  app.post('/insertBooking', validation.booking, booking.insertBooking);
+  app.post('/fetchBooking', validation.artistId, booking.fetchBooking);
+  app.get('/fetchAllBooking', booking.fetchAllBooking); // get detail of booking and artist
+  app.post('/deleteBooking', booking.deleteBooking);
+  app.post('/editBooking', validation.bookingId, validation.booking, booking.editBooking);  
 };
 
 
