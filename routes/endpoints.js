@@ -66,7 +66,7 @@ module.exports = function(app) {
   // Booking api
   app.post('/insertBooking', validation.booking, booking.insertBooking);
   app.post('/fetchBooking', validation.artistId, booking.fetchBooking);
-  app.post('/fetchAllBooking', booking.fetchAllBooking); // get detail of booking and artist
+  app.get('/fetchAllBooking', booking.fetchAllBooking); // get detail of booking and artist
   app.post('/deleteBooking', booking.deleteBooking);
   app.post('/editBooking', validation.bookingId, validation.booking, booking.editBooking);  
 };

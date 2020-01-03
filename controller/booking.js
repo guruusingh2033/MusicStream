@@ -23,11 +23,11 @@ const fetchBooking = (req, res)=> {
     db.query("CALL sp_BookingFetch(?);", [value.artistId], (err, rows) => {
         if (err)
             return res.status(200).json({ success: "Internal Server error ", err: err })
-        if (rows[0].length > 0) {            
+        if (rows[0].length > 0) {
             rows[0][0].success = "Successfully fetched records";
             return res.status(200).json(rows[0]);
         }
-        return res.status(200).json([{ tblMyBookings_ID: 'No record found' }]);
+        return res.status(200).json([{ success: 'No record found' }]);
     })
 }
 
@@ -40,7 +40,7 @@ const fetchAllBooking = (req, res) => {
             rows[0][0].success = "Successfully fetched records";
             return res.status(200).json(rows[0]);
         }
-        return res.status(200).json([{ tblMyBookings_ID: 'No record found' }]);
+        return res.status(200).json([{ success: 'No record found' }]);
     })
 }
 
