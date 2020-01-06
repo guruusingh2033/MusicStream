@@ -393,8 +393,8 @@ var sendEmail = async (data) =>{
   let transporter = nodemailer.createTransport({
     service: "Gmail", // comment this for test
     auth: {
-      user: process.env.GMAIL_USER, // generated ethereal user
-      pass: process.env.GMAIL_PASSWORD // generated ethereal password
+      user: 'saumyamohan83@gmail.com', //process.env.GMAIL_USER, // generated ethereal user
+      pass: 'RadheyRadhey@somya', //process.env.GMAIL_PASSWORD // generated ethereal password
     }
   });
 
