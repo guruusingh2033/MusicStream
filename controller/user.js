@@ -391,7 +391,9 @@ const allUserType2 = (req,res) =>{
 var sendEmail = async (data) =>{
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    service: "Gmail", // comment this for test
+    host: 'smtp.gmail.com',
+    port: 465,
+    // service: "Gmail", // comment this for test
     auth: {
       user: 'saumyamohan83@gmail.com', //process.env.GMAIL_USER, // generated ethereal user
       pass: 'RadheyRadhey@somya' //process.env.GMAIL_PASSWORD // generated ethereal password
