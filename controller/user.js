@@ -391,9 +391,9 @@ const allUserType2 = (req,res) =>{
 var sendEmail = async (data) =>{
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    // host: 'smtp.gmail.com',
-    // port: 465,
-    // secure: true,
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false, // true for 465, false for other ports
     // service: "Gmail", // comment this for test
     auth: {
       user: 'saumyamohan83@gmail.com', //process.env.GMAIL_USER, // generated ethereal user
