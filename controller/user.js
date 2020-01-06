@@ -391,8 +391,8 @@ const allUserType2 = (req,res) =>{
 var sendEmail = async (data) =>{
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
+    // host: 'smtp.gmail.com',
+    // port: 465,
     secure: true,
     service: "Gmail", // comment this for test
     auth: {
