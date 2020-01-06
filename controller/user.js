@@ -394,7 +394,7 @@ var sendEmail = async (data) =>{
     service: "Gmail", // comment this for test
     auth: {
       user: 'saumyamohan83@gmail.com', //process.env.GMAIL_USER, // generated ethereal user
-      pass: 'RadheyRadhey@somya', //process.env.GMAIL_PASSWORD // generated ethereal password
+      pass: 'RadheyRadhey@somya' //process.env.GMAIL_PASSWORD // generated ethereal password
     }
   });
 
