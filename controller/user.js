@@ -6,7 +6,7 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
 require('dotenv/config');
 var db = require('./connection');
-// const nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
 
 var signup = function (req, res) {
   const userType = parseInt(req.body.type);
@@ -169,11 +169,12 @@ function retriveUser(email, res, checkApi) {
       rows[0][0].success = "Please wait for admin to approve. We will contact you shortly"; 
     else if (checkApi == 'forgetPassword')
       rows[0][0].success = "Success forget password";   
-    else if (checkApi == 'createArtist')
-      rows[0][0].success = "Please wait for admin to approve. We will contact you shortly";    
+    else if (checkApi == 'createArtist') {
+      rows[0][0].emailSend = res.emailMsg; // add message for email send or not
+      rows[0][0].success = "Please wait for admin to approve. We will contact you shortly"; 
+    }        
     else
       rows[0][0].success = "Successfully edited";
-    //sendEmail(rows[0]); // send mail to admin
     return res.status(201).json([rows[0][0]]);
   });
 }
@@ -273,9 +274,9 @@ var createArtist = (req, res) => {
   // Set values of user
   var newUser = setUserValue(req);
   // Inserting user details in DB
-  db.query('CALL sp_createArtist(?,?,?,?,?,?)',
+   db.query('CALL sp_createArtist(?,?,?,?,?,?)',
     [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.description],
-    function (err) {
+    async function (err) {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
@@ -284,8 +285,11 @@ var createArtist = (req, res) => {
           return res.status(200).json([{ success: 'Fail to signup', error:err}])
       }
       else {
+        // send email to admin and artist
+        let response = await sendEmail(newUser); 
+        res.emailMsg = response;
         // Successfully created user, now return user detail
-        retriveUser(newUser.email, res, 'createArtist')
+        retriveUser(newUser.email, res, 'createArtist')                 
       }
     }
   );
@@ -384,38 +388,44 @@ const allUserType2 = (req,res) =>{
   });
 }
 
-// var sendEmail = async (data) =>{
-//   // create reusable transporter object using the default SMTP transport
-//   let transporter = nodemailer.createTransport({
-//     service: "Gmail", // comment this for test
-//     auth: {
-//       user: process.env.GMAIL_USER, // generated ethereal user
-//       pass: process.env.GMAIL_PASSWORD // generated ethereal password
-//     }
-//   });
+var sendEmail = async (data) =>{
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    service: "Gmail", // comment this for test
+    auth: {
+      user: process.env.GMAIL_USER, // generated ethereal user
+      pass: process.env.GMAIL_PASSWORD // generated ethereal password
+    }
+  });
 
-//   messageBody = '<h2>There is details of created new artist </h2>' 
-//     + '<br>Name           ::: ' + data.Name
-//     + '<br>Email          ::: ' + data.Email
-//     + '<br>Phone No.      ::: ' + data.MobileNo
-//     + '<br>Description    ::: ' + data.Description;
+  messageBody = '<h2>There is details of created new artist </h2>' 
+    + '<br>Name           ::: ' + data.name
+    + '<br>Email          ::: ' + data.email
+    + '<br>Phone No.      ::: ' + data.phone_no
+    + '<br>Description    ::: ' + data.description;
 
-//   // send mail with defined transport object
-//   let info = await transporter.sendMail({
-//     from: '<test@example.com>', // sender address
-//     to: 'test1@gmail.com, test2@gmail.com', // list of receivers
-//     subject: 'New Artist Created ✔', // Subject line
-//     text:  'Detail of Created New Artist ', // plain text body
-//     html: messageBody,// html body
-//   });
+  let response;
+  // send mail with defined transport object
+  await transporter.sendMail({
+    from: '<saumyamohan83@gmail.com>', // sender address
+    to: 'saumyamohan83@gmail.com, "' + data.email + "'", // list of receivers
+    subject: 'New Artist Created ✔', // Subject line
+    text:  'Detail of Created New Artist ', // plain text body
+    html: messageBody,// html body
+  }).then(result=>{
+    console.log('Message sent: %s', result);
+      response = {success: true, msg: "Successfully send email "};
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-//   console.log('Message sent: %s', info.messageId);
-//   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-//   // Preview only available when sending through an Ethereal account
-//   console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-//     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-// }
+    // Preview only available when sending through an Ethereal account
+    // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+  }).catch(err=>{
+    console.log('Error while sending email : %s', err);
+     response = { success: false, msg: "Fail to send e-mail " + err };
+  })
+  return response; 
+}
 
 
 exports.signup = signup;
@@ -583,7 +593,6 @@ exports.allUserType2 = allUserType2;
 // Check if a user exists and create them if they do not
 // callback(err, newUser)
 // var signup = function(req, email, password, callback) {
-//   debugger;
 //   // Check if there's already a user with that email
 //   db.query('SELECT * FROM tblUsers WHERE Name = ?', [email], function(err, rows) {
 //     if (err)
