@@ -304,7 +304,7 @@
                     {
                         "in": "formData",
                         "name": "type",
-                        "description": "Type-3 for artist",
+                        "description": "Type-2 for artist",
                         "required": true,
                         "type": "array",
                         "items": {
