@@ -1,4 +1,4 @@
-// var uuidV4 = require('uuid/v4');
+﻿// var uuidV4 = require('uuid/v4');
 // const jwt = require('jsonwebtoken');
 const multer = require('multer');
 // var md5 = require('md5');
@@ -391,15 +391,20 @@ const allUserType2 = (req,res) =>{
 var sendEmail = async (data) =>{
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: true, // true for 465, false for other ports
-    // service: "Gmail", // comment this for test
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    //service: "Gmail", // comment this for test
     auth: {
       user: 'saumyamohan83@gmail.com', //process.env.GMAIL_USER, // generated ethereal user
       pass: 'RadheyRadhey@somya' //process.env.GMAIL_PASSWORD // generated ethereal password
+    },
+    tls: {
+      // do not fail on invalid certs
+      rejectUnauthorized: false
     }
   });
+
 
   messageBody = '<h2>There is details of created new artist </h2>' 
     + '<br>Name           ::: ' + data.name
