@@ -408,14 +408,7 @@
                         "description": "",
                         "required": true,
                         "type": "string"
-                    },                    
-                    {
-                        "in": "formData",
-                        "name": "image",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },                    
+                    },                           
                     {
                         "in": "formData",
                         "name": "phone_no",

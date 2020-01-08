@@ -453,13 +453,12 @@ function editProfilebyAdmin(req, res) {
   const fields = setUserValue(req);
   const artistId = req.body.artistId;
   // Inserting artist details in DB 
-  db.query('CALL sp_UpdateByAdmin(?,?,?,?,?,?,?,?)',
+  db.query('CALL sp_UpdateByAdmin(?,?,?,?,?,?,?)',
     [
       fields.name,
       fields.password,
       fields.email,
       fields.phone_no,
-      fields.image,
       fields.description,
       fields.userName,
       artistId

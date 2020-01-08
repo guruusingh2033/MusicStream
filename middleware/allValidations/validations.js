@@ -121,7 +121,6 @@ var editProfilebyAdmin = async (req, res, next) => {
         password: 'required',
         email: 'required|email',
         phone_no: 'required|integer|min:1',
-        image: 'required',
         description: 'required',
         userName: 'required',
         artistId: 'required'
