@@ -23,6 +23,7 @@ module.exports = function(app) {
   app.post('/login', validation.login, user.login);
   app.post('/forgetPassword', validation.forgetPassword, user.forgetPassword);
   app.post('/createartist', validation.artist, user.artist); 
+  app.post('/editProfilebyAdmin', validation.editProfilebyAdmin, user.editProfilebyAdmin);
 
   // user Apis
   app.get('/user', user.allUsers);

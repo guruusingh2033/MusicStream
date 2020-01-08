@@ -107,9 +107,12 @@ var setUserValue = (req) => {
     image: req.body.image,
     type: parseInt(req.body.type),
     status: parseInt(req.body.status),
-    description: req.body.description,
-    userName: req.body.email
+    description: req.body.description,    
   };
+  if (req.body.userName)
+    newUser.userName = req.body.userName;
+  else
+    newUser.userName = email;
   if (req.body.password)
     newUser.password = cryptr.encrypt(req.body.password);
   // removing 'tempfile' for getting only image name
@@ -342,7 +345,17 @@ function updateArtist(req, res) {
   const id = req.body.id;
   // Inserting artist details in DB 
   db.query('CALL sp_updateArtist(?,?,?,?,?,?,?,?,?)',
-    [artistFields.name, artistFields.password, artistFields.email, artistFields.phone_no, artistFields.image, artistFields.description, artistFields.userName, id, artistFields.type],
+    [
+      artistFields.name, 
+      artistFields.password, 
+      artistFields.email, 
+      artistFields.phone_no,
+      artistFields.image, 
+      artistFields.description, 
+      artistFields.userName, 
+      id, 
+      artistFields.type
+    ],
     function (err, rows) {
       if (err) {
         // Check for dupicate email
@@ -435,6 +448,42 @@ var sendEmail = async (data) =>{
   return response; 
 }
 
+function editProfilebyAdmin(req, res) {
+  //setValue here for updation
+  const fields = setUserValue(req);
+  const artistId = req.body.artistId;
+  // Inserting artist details in DB 
+  db.query('CALL sp_UpdateByAdmin(?,?,?,?,?,?,?,?)',
+    [
+      fields.name,
+      fields.password,
+      fields.email,
+      fields.phone_no,
+      fields.image,
+      fields.description,
+      fields.userName,
+      artistId
+    ],
+    function (err, rows) {
+      if (err) {
+        // Check for dupicate email
+        if (err.code === 'ER_DUP_ENTRY')
+          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+        else
+          return res.status(200).json([{ success: 'Not updated', error: err }])
+      }
+      else if (rows.affectedRows != 0) {
+        /* copy last uploaded file in permanent folder and 
+           remove images from temporary folder */
+        fileCopy(req);
+
+        return res.status(200).json([{ success: 'Updated'}])
+      } else
+        return res.status(200).json([{ success: 'Not updated', error: err }])
+    }
+  );
+}
+
 
 exports.signup = signup;
 exports.login = login;
@@ -447,6 +496,7 @@ exports.artist = artist;
 exports.editProfile = editProfile;
 exports.deleteProfile = deleteProfile;
 exports.allUserType2 = allUserType2;
+exports.editProfilebyAdmin = editProfilebyAdmin;
 
 
 

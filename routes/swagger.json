@@ -367,7 +367,87 @@
                     }
                 }
             }
-        },      
+        }, 
+        "/editProfilebyAdmin": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Update user profile by admin",
+                "description": "Edit user profile by admin",
+                "operationId": "editProfilebyAdmin",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "password",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },                    
+                    {
+                        "in": "formData",
+                        "name": "image",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },                    
+                    {
+                        "in": "formData",
+                        "name": "phone_no",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "description",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "userName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully update record, responsed json Array"
+                    },
+                    "400": {
+                        "description": "Fail to update record, responsed json Array"
+                    }
+                }
+            }
+        },     
         
         "/user": {
             "get": {

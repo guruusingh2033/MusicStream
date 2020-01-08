@@ -114,6 +114,29 @@ var editProfile = async (req, res, next) => {
     }
 };
 
+// MiddleWare validation for editProfilebyAdmin/update user
+var editProfilebyAdmin = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        name: 'required',
+        password: 'required',
+        email: 'required|email',
+        phone_no: 'required|integer|min:1',
+        image: 'required',
+        description: 'required',
+        userName: 'required',
+        artistId: 'required'
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.status = 422;
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+};
+
 
 // MiddleWare Validation song fields
 var song = async (req, res, next) => {
@@ -293,3 +316,4 @@ exports.userId                      = userId;
 exports.mediaId                     = mediaId;
 exports.booking = booking;
 exports.bookingId = bookingId;
+exports.editProfilebyAdmin = editProfilebyAdmin;
