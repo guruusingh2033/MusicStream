@@ -549,7 +549,7 @@ const artistLikingAdminIncrement = (req, res) => {
   })
 };
 
-const fetchTotalLikessOfArtist = (req, res) => {
+const fetchTotalLikesOfArtist = (req, res) => {
   db.query("CALL sp_fetchTotalLikessOfArtist(?);", [req.body.artistId], (err, rows) => {
     if (err)
       return res.status(200).json({ succes: "Internal Server error ", err: err })
@@ -576,7 +576,7 @@ exports.insertCheckValue = insertCheckValue;
 exports.insertArtistLike = insertArtistLike;
 exports.fetchLikesOfParticularUser = fetchLikesOfParticularUser;
 exports.artistLikingAdminIncrement = artistLikingAdminIncrement;
-exports.fetchTotalLikessOfArtist = fetchTotalLikessOfArtist;
+exports.fetchTotalLikesOfArtist = fetchTotalLikesOfArtist;
 
 
 

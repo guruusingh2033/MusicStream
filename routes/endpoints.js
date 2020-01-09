@@ -35,7 +35,7 @@ module.exports = function(app) {
   app.post('/insertCheckValue', validation.insertCheckValue, user.insertCheckValue);
   app.post('/insertArtistLike', validation.insertArtistLike, user.insertArtistLike);
   app.post('/fetchLikesOfParticularUser', validation.userIdArtitstId, user.fetchLikesOfParticularUser);
-  app.post('/fetchTotalLikessOfArtist', validation.artistId, user.fetchTotalLikessOfArtist);
+  app.post('/fetchTotalLikesOfArtist', validation.artistId, user.fetchTotalLikesOfArtist);
 
   // Song Apis 
   app.post('/songsPost', song.songUploadMulter.single('song'), song.songUpload);

@@ -802,7 +802,7 @@
                 }
             }
         },
-        "/fetchTotalLikessOfArtist": {
+        "/fetchTotalLikesOfArtist": {
             "post": {
                 "tags": [
                     "User"
