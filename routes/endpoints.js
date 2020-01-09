@@ -31,6 +31,9 @@ module.exports = function(app) {
   app.post('/editProfile', validation.editProfile, user.editProfile);
   app.post('/delProfile', validation.deleteProfile, user.deleteProfile);
   app.get('/allUserType2', user.allUserType2);  // get all user having type 2 (mean not artist/admin only user)
+  app.post('/insertCheckValue', validation.insertCheckValue, user.insertCheckValue);
+  app.post('/insertArtistLike', user.insertArtistLike);
+   
 
   // Song Apis 
   app.post('/songsPost', song.songUploadMulter.single('song'), song.songUpload);

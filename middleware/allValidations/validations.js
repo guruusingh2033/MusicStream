@@ -298,6 +298,21 @@ const bookingId = async (req, res, next) => {
 }
 
 
+const insertCheckValue = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        id: 'required',
+        checkValue: 'required'
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
+
 
 exports.signUp                      = signUp;
 exports.login                       = login;
@@ -316,3 +331,4 @@ exports.mediaId                     = mediaId;
 exports.booking = booking;
 exports.bookingId = bookingId;
 exports.editProfilebyAdmin = editProfilebyAdmin;
+exports.insertCheckValue = insertCheckValue;

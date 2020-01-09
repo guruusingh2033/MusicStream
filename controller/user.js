@@ -483,6 +483,42 @@ function editProfilebyAdmin(req, res) {
   );
 }
 
+// insert check value in tblUser in DB
+var insertCheckValue = (req, res) => {
+  // Inserting value in DB
+  db.query('CALL sp_UserInsertCheckValue(?,?)',
+    [req.body.id, req.body.checkValue],
+    function (err, rows) {
+      if (err) {
+        return res.status(200).json([{ success: 'Fail to insert', error: err }])
+      }
+      if (rows.affectedRows != 0) {
+        return res.status(200).json([{ success: 'Inserted' }])
+      } else {
+        return res.status(200).json([{ success: 'Not inserted', error: err }])
+      }
+    }
+  );
+};
+
+// insert artitst Like in tblArtistLiking in DB
+const insertArtistLike = (req, res) => {
+  db.query("CALL sp_ArtistLikingInsert(?, ?, ?, @p_return);", [req.body.userId, req.body.artistId, req.body.like], (err, rows) => {
+    if (err)
+      return res.status(200).json({ succes: "Internal Server error ", err: err })
+    // if rows[0][0].p_return == 3 successfuly updated value 
+    if (rows[0][0].p_return > 0) {
+      return res.status(200).json([{ success: 'Yes' }]);
+    }
+    if (rows[0][0].p_return == -1)
+      return res.status(200).json([{ success: 'User does not exists' }]);
+    if (rows[0][0].p_return == -2)
+      return res.status(200).json([{ success: 'Artist does not exists' }]);
+
+    return res.status(200).json([{ success: 'No' }]);
+  })
+}
+
 
 exports.signup = signup;
 exports.login = login;
@@ -496,6 +532,8 @@ exports.editProfile = editProfile;
 exports.deleteProfile = deleteProfile;
 exports.allUserType2 = allUserType2;
 exports.editProfilebyAdmin = editProfilebyAdmin;
+exports.insertCheckValue = insertCheckValue;
+exports.insertArtistLike = insertArtistLike;
 
 
 

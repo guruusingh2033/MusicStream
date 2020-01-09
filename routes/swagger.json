@@ -672,6 +672,89 @@
                 }
             }
         },
+        "/insertCheckValue": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Add check value",
+                "description": "",
+                "operationId": "insertCheckValue",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "checkValue",
+                        "description": "check value 0/1",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inserted"
+                    },
+                    "400": {
+                        "description": "Not inserted"
+                    }
+                }
+            }
+        },
+        "/insertArtistLike": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "If user and media exist in Liking then update like value else insert like value",
+                "description": "",
+                "operationId": "insertArtistLike",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "userId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "like",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Yes/No"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
 
         "/songsPost": {
             "post": {
