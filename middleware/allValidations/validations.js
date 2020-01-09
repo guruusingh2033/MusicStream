@@ -313,6 +313,52 @@ const insertCheckValue = async (req, res, next) => {
     }
 }
 
+const insertArtistLike = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        userId: 'required',
+        artistId: 'required',
+        like: 'required'
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
+
+const userIdArtitstId = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        userId: 'required',
+        artistId: 'required'
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
+
+
+const artistLikingAdminIncrement = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        artistId: 'required',
+        incrementValue: 'required'
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
 
 exports.signUp                      = signUp;
 exports.login                       = login;
@@ -332,3 +378,6 @@ exports.booking = booking;
 exports.bookingId = bookingId;
 exports.editProfilebyAdmin = editProfilebyAdmin;
 exports.insertCheckValue = insertCheckValue;
+exports.insertArtistLike = insertArtistLike;
+exports.userIdArtitstId = userIdArtitstId;
+exports.artistLikingAdminIncrement = artistLikingAdminIncrement;

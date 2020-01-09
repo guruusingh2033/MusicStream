@@ -12,7 +12,7 @@ var signup = function (req, res) {
   const userType = parseInt(req.body.type);
   // Condtions for updation
   switch (userType) {
-    case 1: insertUser(req, res); break;
+    // case 1: insertUser(req, res); break;
     case 2: insertUser(req, res); break;
     // case 3: insertArtist(req, res); break;
     default: return res.status(200).json([{ success: 'Invalid userType, Fail to signup' }])
@@ -51,8 +51,8 @@ function insertUser(req, res){
   //setValue here for insertion
   const userFields = setUserValue(req);  
   // Inserting user details in DB 
-  db.query('CALL sp_insertUser(?,?,?,?,?,?)',
-    [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.phone_no, userFields.type],
+  db.query('CALL sp_insertUser(?,?,?,?,?)',
+    [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.type],
     function (err, rows) {
       if (err) {
         // Check for dupicate email
@@ -519,6 +519,46 @@ const insertArtistLike = (req, res) => {
   })
 }
 
+const fetchLikesOfParticularUser = (req, res) => {
+  db.query("CALL sp_ArtistLikingFetchForParticularUser(?, ?);", [req.body.userId, req.body.artistId], (err, rows) => {
+    if (err)
+      return res.status(200).json({ succes: "Internal Server error ", err: err })
+    if (rows[0].length > 0) {
+      return res.status(200).json([{ success: rows[0][0].Liking }]);
+    }
+    return res.status(200).json([{ success: 'No record found' }]);
+  })
+};
+
+const artistLikingAdminIncrement = (req, res) => {
+  db.query("CALL sp_ArtistLikingAdminIncrementInsert(?, ?, @p_return);", [req.body.artistId, req.body.incrementValue], (err, rows) => {
+    if (err){
+      if (err.code === 'ER_DUP_ENTRY') {
+        return res.status(200).json([{ success: 'Duplicate Entry' }])
+      }
+      return res.status(200).json({ succes: "Internal Server error ", err: err })
+    }     
+    if (rows[0][0].p_return == -2)
+      return res.status(200).json([{ success: 'Artist does not exists' }]); 
+
+    if (rows[0][0].p_return > 0) {
+      return res.status(200).json([{ success: 'Inserted' }])
+    } else {
+      return res.status(200).json([{ success: 'Not inserted', error: err }])
+    }
+  })
+};
+
+const fetchTotalLikessOfArtist = (req, res) => {
+  db.query("CALL sp_fetchTotalLikessOfArtist(?);", [req.body.artistId], (err, rows) => {
+    if (err)
+      return res.status(200).json({ succes: "Internal Server error ", err: err })
+    if (rows[0].length > 0) {
+      return res.status(200).json([{ success: rows[0][0].SumOfAdminArtistLike }]);
+    }
+    return res.status(200).json([{ success: 'No record found' }]);
+  })
+}
 
 exports.signup = signup;
 exports.login = login;
@@ -534,6 +574,9 @@ exports.allUserType2 = allUserType2;
 exports.editProfilebyAdmin = editProfilebyAdmin;
 exports.insertCheckValue = insertCheckValue;
 exports.insertArtistLike = insertArtistLike;
+exports.fetchLikesOfParticularUser = fetchLikesOfParticularUser;
+exports.artistLikingAdminIncrement = artistLikingAdminIncrement;
+exports.fetchTotalLikessOfArtist = fetchTotalLikessOfArtist;
 
 
 

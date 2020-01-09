@@ -24,7 +24,8 @@ module.exports = function(app) {
   app.post('/forgetPassword', validation.forgetPassword, user.forgetPassword);
   app.post('/createartist', validation.artist, user.artist); 
   app.post('/editProfilebyAdmin', validation.editProfilebyAdmin, user.editProfilebyAdmin);
-
+  app.post('/artistLikingAdminIncrement', validation.artistLikingAdminIncrement, user.artistLikingAdminIncrement);
+ 
   // user Apis
   app.get('/user', user.allUsers);
   app.post('/profile', validation.singleUser, user.singleUser);
@@ -32,8 +33,9 @@ module.exports = function(app) {
   app.post('/delProfile', validation.deleteProfile, user.deleteProfile);
   app.get('/allUserType2', user.allUserType2);  // get all user having type 2 (mean not artist/admin only user)
   app.post('/insertCheckValue', validation.insertCheckValue, user.insertCheckValue);
-  app.post('/insertArtistLike', user.insertArtistLike);
-   
+  app.post('/insertArtistLike', validation.insertArtistLike, user.insertArtistLike);
+  app.post('/fetchLikesOfParticularUser', validation.userIdArtitstId, user.fetchLikesOfParticularUser);
+  app.post('/fetchTotalLikessOfArtist', validation.artistId, user.fetchTotalLikessOfArtist);
 
   // Song Apis 
   app.post('/songsPost', song.songUploadMulter.single('song'), song.songUpload);
@@ -44,8 +46,8 @@ module.exports = function(app) {
   app.get('/allVideosArtist', song.allVideosArtist);  // return all artists and Videos
   app.post('/singleSongsArtist', validation.artistId, song.artistAllAudioSong); // get All mp3 song with artist ID
   app.post('/allVideosWithArtistId', validation.artistId, song.allVideosWithArtistId); // get All videos with artist ID
-  app.get('/allArtist', song.allArtist); // return all artist with there No of Song
-  app.post('/countMediaArtId', validation.artistId, song.countMediaArtId); // return counting of videos and song based on artist Id
+  app.get('/allArtist', song.allArtist); // return all artist with there No of Song and also no of videos
+  app.post('/countMediaArtId', validation.userIdArtitstId, song.countMediaArtId); // return counting of videos and song based on artist Id
   
   // Approval api
   app.get('/allApprovedArtist', approval.allApprovedArtist); // return all aproved artist (usertype 3)

@@ -136,6 +136,13 @@
                     },
                     {
                         "in": "formData",
+                        "name": "userName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
                         "name": "type",
                         "description": "type-2 for user",
                         "required": true,
@@ -145,43 +152,7 @@
                             "enum": [2],
                             "default": 2
                         }                       
-                    },
-                    {
-                        "in": "formData",
-                        "name": "image",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "formData",
-                        "name": "status",
-                        "description": "status 1 active(aprroved), 2 not approved(in-actve)",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "integer",
-                            "enum": [
-                                1,
-                                2
-                            ],
-                            "default": 2
-                        }
-                    },
-                    {
-                        "in": "formData",
-                        "name": "phone_no",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "formData",
-                        "name": "description",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
+                    }                    
                 ],
                 "responses": {
                     "201": {
@@ -715,7 +686,7 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "If user and media exist in Liking then update like value else insert like value",
+                "summary": "If user and artist exist in Liking then update like value else insert like value",
                 "description": "",
                 "operationId": "insertArtistLike",
                 "produces": [
@@ -748,6 +719,113 @@
                 "responses": {
                     "200": {
                         "description": "Yes/No"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/fetchLikesOfParticularUser": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Fetch like dislike based on userId and artist id",
+                "description": "",
+                "operationId": "fetchLikesOfParticularUser",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "userId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "0/1  (0-dislike, 1-like)"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/artistLikingAdminIncrement": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Add artifical likes by admin for particular artist",
+                "description": "",
+                "operationId": "artistLikingAdminIncrement",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "incrementValue",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inserted"
+                    },
+                    "400": {
+                        "description": "Not inserted"
+                    }
+                }
+            }
+        },
+        "/fetchTotalLikessOfArtist": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Fetch total likes based on artist id",
+                "description": "",
+                "operationId": "fetchTotalLikessOfArtist",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "artistId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Fetch Total no of likes"
                     },
                     "500": {
                         "description": "Internal server error"
