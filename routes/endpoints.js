@@ -25,6 +25,8 @@ module.exports = function(app) {
   app.post('/createartist', validation.artist, user.artist); 
   app.post('/editProfilebyAdmin', validation.editProfilebyAdmin, user.editProfilebyAdmin);
   app.post('/artistLikingAdminIncrement', validation.artistLikingAdminIncrement, user.artistLikingAdminIncrement);
+  app.post('/loginWithOtpInsert', validation.loginWithOtpInsert, user.loginWithOtpInsert);
+   
  
   // user Apis
   app.get('/user', user.allUsers);

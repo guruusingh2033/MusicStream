@@ -405,6 +405,74 @@
                 }
             }
         },     
+        "/loginWithOtpInsert": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Insertlogin With Otp values",
+                "description": "",
+                "operationId": "loginWithOtpInsert",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "phone_no",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "type",
+                        "description": "2- for user, 3- for artist",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                2,
+                                3
+                            ],
+                            "default": 2
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "description": "1- apprvoed, 2- not approved",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                1,
+                                2
+                            ],
+                            "default": 2
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created user, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to create user"
+                    },
+                    "409": {
+                        "description": "Duplicate entry"
+                    }
+                }
+            }
+        },
+        
         
         "/user": {
             "get": {

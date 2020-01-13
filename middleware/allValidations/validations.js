@@ -360,6 +360,26 @@ const artistLikingAdminIncrement = async (req, res, next) => {
     }
 }
 
+const loginWithOtpInsert = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        phone_no: 'required|integer|min:1',
+        status: 'required',
+        type: 'required'
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.status = 422;
+        req.body = v.errors;
+        v.errors.success = "Validation error";
+        if (v.errors.phone_no)
+            v.errors.phone_no.message = "Phone number invalid"; // custom validate message for phone number
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
+
+
 exports.signUp                      = signUp;
 exports.login                       = login;
 exports.forgetPassword              = forgetPassword;
@@ -381,3 +401,4 @@ exports.insertCheckValue = insertCheckValue;
 exports.insertArtistLike = insertArtistLike;
 exports.userIdArtitstId = userIdArtitstId;
 exports.artistLikingAdminIncrement = artistLikingAdminIncrement;
+exports.loginWithOtpInsert = loginWithOtpInsert;
