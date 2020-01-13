@@ -401,50 +401,34 @@ const allUserType2 = (req,res) =>{
   });
 }
 
-var sendEmail = async (data) =>{
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    // host: '127.0.0.1',
-    // port: 465,
-    // secure: true, // true for 465, false for other ports
-    service: "Gmail", // comment this for test
-    auth: {
-      user: 'saumyamohan83@gmail.com', //process.env.GMAIL_USER, // generated ethereal user
-      pass: 'RadheyRadhey@somya' //process.env.GMAIL_PASSWORD // generated ethereal password
-    }
-  });
 
+//var send = require('gmail-send')({
+var send = require('gmail-send')({
+  user: 'saumyamohan83@gmail.com',
+  pass: 'RadheyRadhey@somya',
+  to: 'saumyamohan83@gmail.com',
+  subject: 'test subject',
+  text: 'gmail-send promise examples',
+});
 
-  let messageBody = '<h2>There is details of created new artist </h2>' 
-    + '<br>Name           ::: ' + data.name
-    + '<br>Email          ::: ' + data.email
-    + '<br>Phone No.      ::: ' + data.phone_no
-    + '<br>Description    ::: ' + data.description;
-
-  let mailOptions = {
-    from: '<saumyamohan83@gmail.com>', // sender address
-    to: 'saumyamohan83@gmail.com, "' + data.email + "'", // list of receivers
-    subject: 'New Artist Created ✔', // Subject line
-    text: 'Detail of Created New Artist ', // plain text body
-    html: messageBody,// html body
-  };
-
+const sendEmail = async (data) => {
   let response;
-  // send mail with defined transport object
-  await transporter.sendMail(mailOptions).then(result=>{
-    console.log('Message sent: %s', result);
-      response = {success: true, msg: "Successfully send email "};
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+  try {
+      const res  = await send(); // Using default parameters
+    console.log('* [promise-example-2] res.result:', res.result);
+    response = { success: true, msg: "Successfully send email " };
+    // uncomment to see full response from Nodemailer:
+    // console.log('* [promise-example-2] res.full:', res.full);
+  } catch (e) {
+    console.error('* [promise-example-2] ERROR:', e);
+    response = { success: false, msg: "Fail to send e-mail " + err };
+  }
+  return response;
+};
 
-    // Preview only available when sending through an Ethereal account
-    // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-  }).catch(err=>{
-    console.log('Error while sending email : %s', err);
-     response = { success: false, msg: "Fail to send e-mail " + err };
-  })
-  return response; 
-}
+// var sendEmail = async (data) =>{
+ 
+// }
 
 function editProfilebyAdmin(req, res) {
   //setValue here for updation
