@@ -6,7 +6,7 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
 require('dotenv/config');
 var db = require('./connection');
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
 
 var signup = function (req, res) {
   const userType = parseInt(req.body.type);
@@ -405,8 +405,8 @@ var sendEmail = async (data) =>{
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    port: 587,
+    secure: false, // true for 465, false for other ports
     //service: "Gmail", // comment this for test
     auth: {
       user: 'saumyamohan83@gmail.com', //process.env.GMAIL_USER, // generated ethereal user
