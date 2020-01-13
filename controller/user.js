@@ -112,7 +112,7 @@ var setUserValue = (req) => {
   if (req.body.userName)
     newUser.userName = req.body.userName;
   else
-    newUser.userName = email;
+    newUser.userName = req.body.email;
   if (req.body.password)
     newUser.password = cryptr.encrypt(req.body.password);
   // removing 'tempfile' for getting only image name
