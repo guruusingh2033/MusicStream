@@ -6,7 +6,7 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
 require('dotenv/config');
 var db = require('./connection');
-const nodemailer = require("nodemailer");
+var  nodemailer = require("nodemailer");
 
 var signup = function (req, res) {
   const userType = parseInt(req.body.type);
@@ -404,10 +404,10 @@ const allUserType2 = (req,res) =>{
 var sendEmail = async (data) =>{
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: '127.0.0.1',
-    port: 465,
-    secure: true, // true for 465, false for other ports
-    //service: "Gmail", // comment this for test
+    // host: '127.0.0.1',
+    // port: 465,
+    // secure: true, // true for 465, false for other ports
+    service: "Gmail", // comment this for test
     auth: {
       user: 'saumyamohan83@gmail.com', //process.env.GMAIL_USER, // generated ethereal user
       pass: 'RadheyRadhey@somya' //process.env.GMAIL_PASSWORD // generated ethereal password
@@ -415,21 +415,23 @@ var sendEmail = async (data) =>{
   });
 
 
-  messageBody = '<h2>There is details of created new artist </h2>' 
+  let messageBody = '<h2>There is details of created new artist </h2>' 
     + '<br>Name           ::: ' + data.name
     + '<br>Email          ::: ' + data.email
     + '<br>Phone No.      ::: ' + data.phone_no
     + '<br>Description    ::: ' + data.description;
 
-  let response;
-  // send mail with defined transport object
-  await transporter.sendMail({
+  let mailOptions = {
     from: '<saumyamohan83@gmail.com>', // sender address
     to: 'saumyamohan83@gmail.com, "' + data.email + "'", // list of receivers
     subject: 'New Artist Created ✔', // Subject line
-    text:  'Detail of Created New Artist ', // plain text body
+    text: 'Detail of Created New Artist ', // plain text body
     html: messageBody,// html body
-  }).then(result=>{
+  };
+
+  let response;
+  // send mail with defined transport object
+  await transporter.sendMail(mailOptions).then(result=>{
     console.log('Message sent: %s', result);
       response = {success: true, msg: "Successfully send email "};
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
