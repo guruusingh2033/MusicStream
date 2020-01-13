@@ -541,6 +541,7 @@ const artistLikingAdminIncrement = (req, res) => {
     if (rows[0][0].p_return == -2)
       return res.status(200).json([{ success: 'Artist does not exists' }]); 
 
+    // if rows[0][0].p_return == 3 successfuly updated value 
     if (rows[0][0].p_return > 0) {
       return res.status(200).json([{ success: 'Inserted' }])
     } else {

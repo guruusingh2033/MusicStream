@@ -288,13 +288,6 @@
                     },
                     {
                         "in": "formData",
-                        "name": "image",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "formData",
                         "name": "status",
                         "description": "Status 1(acitve/approved), Status 2(in-active/not approved)",
                         "required": true,

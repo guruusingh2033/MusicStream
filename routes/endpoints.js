@@ -47,7 +47,7 @@ module.exports = function(app) {
   app.post('/singleSongsArtist', validation.artistId, song.artistAllAudioSong); // get All mp3 song with artist ID
   app.post('/allVideosWithArtistId', validation.artistId, song.allVideosWithArtistId); // get All videos with artist ID
   app.get('/allArtist', song.allArtist); // return all artist with there No of Song and also no of videos
-  app.post('/countMediaArtId', validation.userIdArtitstId, song.countMediaArtId); // return counting of videos and song based on artist Id
+  app.post('/countMediaArtId', validation.artistId, song.countMediaArtId); // return counting of videos and song based on artist Id
   
   // Approval api
   app.get('/allApprovedArtist', approval.allApprovedArtist); // return all aproved artist (usertype 3)
