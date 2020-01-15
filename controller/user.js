@@ -569,8 +569,8 @@ const loginWithOtpInsert = (req, res) =>{
       if (err) {
         return res.status(200).json([{ success: 'Fail to insert', error: err }])
       }
-      if (rows.affectedRows > 0) {
-        return res.status(200).json([{ success: 'Inserted' }])
+      if (rows[0][0].Id) {        
+        return res.status(200).json([{ success: 'Inserted', id: rows[0][0].Id }])
       } else {
         return res.status(200).json([{ success: 'Not inserted', error: err }])
       }
