@@ -567,13 +567,10 @@ const loginWithOtpInsert = (req, res) =>{
     [userFields.phone_no, userFields.type,userFields.status ],
     function (err, rows) {
       if (err) {
-        if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'Mobile number already exists.' }])
-        else
           return res.status(200).json([{ success: 'Fail to insert', error: err }])
       }     
       if (rows[0][0].Id) {        
-        return res.status(200).json([{ success: 'Inserted', id: rows[0][0].Id }])
+        return res.status(200).json([rows[0][0]])
       } else {
         return res.status(200).json([{ success: 'Not inserted', error: err }])
       }
