@@ -1,18 +1,19 @@
 var mySql = require('mysql');
+var config = require('../config/database');
 
 const mySqlCon = mySql.createConnection({
-    host:'212.71.250.201',
-    user:'a572016d_ShyamMusicUser',
-    password:'shyam@123',
-    database:'a572016d_ShyamMusicStreaming',
-    multipleStatements:true
+    host: config.connection.host,
+    user: config.connection.user,
+    password: config.connection.password,
+    database: config.database,
+    multipleStatements: config.connection.multipleStatements
 })
 
 mySqlCon.connect((err)=>{
     if(!err)
         console.log('DataBase Connected');
     else
-        console.log('DataBase Connection Failed');
+        console.log('DataBase Connection Failed ',  err);
 })
 
 module.exports = mySqlCon;
