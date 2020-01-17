@@ -411,7 +411,7 @@ var sendEmail = async (data) => {
     // service: "Gmail", // comment this for test
     auth: {
       user: 'info@shyammobile.com', //process.env.GMAIL_USER, // generated ethereal user
-      pass: 'shyam@info' //process.env.GMAIL_PASSWORD // generated ethereal password
+      pass: 'shyaminfo' //process.env.GMAIL_PASSWORD // generated ethereal password
     },
     tls: {
       rejectUnauthorized: true
