@@ -428,7 +428,7 @@ var sendEmail = async (data) => {
     from: '<info@shyammobile.com>', // sender address
     to: 'info@shyammobile.com, "' + data.email + "'", // list of receivers
     subject: 'New Artist Created ?', // Subject line
-    text: 'Detail of Created New Artist ', // plain text body
+    text: 'Detail of Created New Artist ' + messageBody, // plain text body
     html: messageBody,// html body
   };
 
