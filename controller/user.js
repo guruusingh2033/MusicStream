@@ -405,13 +405,13 @@ const allUserType2 = (req,res) =>{
 var sendEmail = async (data) => {
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: 'sg2plcpnl0195.prod.sin2.secureserver.net',
-    port: 465,
-    secure: true, // true for 465, false for other ports
+    host: 'mail.shyammobile.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
     // service: "Gmail", // comment this for test
     auth: {
       user: 'info@shyammobile.com', //process.env.GMAIL_USER, // generated ethereal user
-      pass: 'shyaminfo' //process.env.GMAIL_PASSWORD // generated ethereal password
+      pass: 'shyam@info' //process.env.GMAIL_PASSWORD // generated ethereal password
     },
     tls: {
       rejectUnauthorized: true
