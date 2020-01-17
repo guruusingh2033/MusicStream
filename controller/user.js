@@ -405,16 +405,18 @@ const allUserType2 = (req,res) =>{
 var sendEmail = async (data) => {
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    // host: '127.0.0.1',
-    // port: 465,
-    // secure: true, // true for 465, false for other ports
-    service: "Gmail", // comment this for test
+    host: 'mail.shyammobile.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    // service: "Gmail", // comment this for test
     auth: {
-      user: 'saumyamohan83@gmail.com', //process.env.GMAIL_USER, // generated ethereal user
-      pass: 'RadheyRadhey@somya' //process.env.GMAIL_PASSWORD // generated ethereal password
+      user: 'info@shyammobile.com', //process.env.GMAIL_USER, // generated ethereal user
+      pass: 'shyam@info' //process.env.GMAIL_PASSWORD // generated ethereal password
+    },
+    tls: {
+      rejectUnauthorized: false
     }
   });
-
 
   let messageBody = '<h2>There is details of created new artist </h2>'
     + '<br>Name           ::: ' + data.name
@@ -423,8 +425,8 @@ var sendEmail = async (data) => {
     + '<br>Description    ::: ' + data.description;
 
   let mailOptions = {
-    from: '<saumyamohan83@gmail.com>', // sender address
-    to: 'hspharwinder@gmail.com, "' + data.email + "'", // list of receivers
+    from: '<info@shyammobile.com>', // sender address
+    to: 'info@shyammobile.com, "' + data.email + "'", // list of receivers
     subject: 'New Artist Created ?', // Subject line
     text: 'Detail of Created New Artist ', // plain text body
     html: messageBody,// html body
