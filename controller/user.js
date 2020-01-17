@@ -405,7 +405,7 @@ const allUserType2 = (req,res) =>{
 var sendEmail = async (data) => {
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: 'mail.bytecodetechnologies.co.in ',
+    host: 'mail.bytecodetechnologies.co.in',
     port: 465,
     secure: true, // true for 465, false for other ports
     // service: "Gmail", // comment this for test
