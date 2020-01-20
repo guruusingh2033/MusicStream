@@ -4,7 +4,7 @@ require('dotenv/config');
 
 // Variabele used for image uploading, copying and deleting 
 //imagepath used in multer, fileCopy and deleteFile Function
-const imageFolderPath = '../songs/thumbnail_Images/';
+const imageFolderPath = '/songs/thumbnail_Images/';
 let tempImageNameStore; // storing image name with foldername like - tempThumbImage/abc.png
 let thumbnailImageName; // storing only image name like - 1571724607849_Capture.png
 /***  Code Start:: Thumb Image Upload  ***/
