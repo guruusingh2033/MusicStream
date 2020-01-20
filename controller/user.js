@@ -51,8 +51,8 @@ function insertUser(req, res){
   //setValue here for insertion
   const userFields = setUserValue(req);  
   // Inserting user details in DB 
-  db.query('CALL sp_insertUser(?,?,?,?,?)',
-    [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.type],
+  db.query('CALL sp_insertUser(?,?,?,?,?,?)', 
+    [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.type, userFields.status],
     function (err, rows) {
       if (err) {
         // Check for dupicate email
@@ -122,7 +122,7 @@ var setUserValue = (req) => {
 }
 
 //imagepath used in multer, fileCopy and deleteFile Function
-const imagePath = '/images/registrationImages/'; 
+const imagePath = 'images/registrationImages/'; 
 // function used in signup function
 // copy file from temporary folder(tempFile) to parmanent folder(registrationImages)
 function fileCopy(req) { //

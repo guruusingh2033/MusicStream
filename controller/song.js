@@ -4,7 +4,7 @@ require('dotenv/config');
 
 // Variabele used for image uploading, copying and deleting 
 //imagepath used in multer, fileCopy and deleteFile Function
-const imageFolderPath = '/songs/thumbnail_Images/';
+const imageFolderPath = 'songs/thumbnail_Images/';
 let tempImageNameStore; // storing image name with foldername like - tempThumbImage/abc.png
 let thumbnailImageName; // storing only image name like - 1571724607849_Capture.png
 /***  Code Start:: Thumb Image Upload  ***/
@@ -42,7 +42,7 @@ var thumbImageUpload = function (req, res) {
 
 // Variabele used for song uploading, copying and deleting 
 // songFolderPath used in multer, fileCopy and deleteFile Function
-const songFolderPath = '../songs/'; 
+const songFolderPath = 'songs/'; 
 let songName; // for storing only song name --- 1571724607849.mp3
 let tempSongNameStore; // storing image name with folder name like - tempFile/1571724607849.mp3
 /***  Code Start:: Song Upload  ***/

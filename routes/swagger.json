@@ -152,7 +152,22 @@
                             "enum": [2],
                             "default": 2
                         }                       
-                    }                    
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "description": "Status 1(acitve/approved), Status 2(in-active/not approved)",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                1,
+                                2
+                            ],
+                            "default": 2
+                        }
+                    }         
                 ],
                 "responses": {
                     "201": {
