@@ -17,7 +17,7 @@
             "description": "Operations about create user/artist, login, forget password",
             "externalDocs": {
                 "description": "Find out more about MusicStream",
-                "url": "http://testchef.bytecodetechnologies.co.in"
+                "url": "http://api.shyammobile.com/swagger/"
             }
         },
         {
@@ -25,7 +25,7 @@
             "description": "Operations about get user/artist, edit, delete",
             "externalDocs": {
                 "description": "Find out more",
-                "url": "http://testchef.bytecodetechnologies.co.in"
+                "url": "http://api.shyammobile.com/swagger/"
             }
         },
         {
