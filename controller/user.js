@@ -405,16 +405,18 @@ const allUserType2 = (req,res) =>{
 var sendEmail = async (data) => {
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: 'mail.bytecodetechnologies.co.in',
-    port: 465,
-    secure: true, // true for 465, false for other ports
+    host: 'mail.shyammobile.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    debug: true,
+    // sendmail: true,
     // service: "Gmail", // comment this for test
     auth: {
-      user: 'developer.account@bytecodetechnologies.co.in', //process.env.GMAIL_USER, // generated ethereal user
-      pass: 'developerby123' //process.env.GMAIL_PASSWORD // generated ethereal password
+      user: 'info@shyammobile.com', //process.env.GMAIL_USER, // generated ethereal user
+      pass: 'shyaminfo' //process.env.GMAIL_PASSWORD // generated ethereal password
     },
     tls: {
-      rejectUnauthorized: true
+      rejectUnauthorized: false
     }
   });
 
@@ -426,7 +428,7 @@ var sendEmail = async (data) => {
 
   let mailOptions = {
     from: '<info@shyammobile.com>', // sender address
-    to: 'info@shyammobile.com, "' + data.email + "'", // list of receivers
+    to: 'info@shyammobile.com, hspharwinder@gmail.com, saumyamohan83@gmail.com, "' + data.email + "'", // list of receivers
     subject: 'New Artist Created ?', // Subject line
     text: 'Detail of Created New Artist ' + messageBody, // plain text body
     html: messageBody,// html body
@@ -435,7 +437,7 @@ var sendEmail = async (data) => {
   let response;
   // send mail with defined transport object
   await transporter.sendMail(mailOptions).then(result => {
-    console.log('Message sent: %s', result);
+    console.log('Email send successfull sent: %s', result);
     response = { success: true, msg: "Successfully send email " };
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
@@ -468,7 +470,7 @@ function editProfilebyAdmin(req, res) {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+          return res.status(200).json([{ success: 'An account with this email/phone already exists.' }])
         else
           return res.status(200).json([{ success: 'Not updated', error: err }])
       }

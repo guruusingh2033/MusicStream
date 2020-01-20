@@ -82,7 +82,7 @@ var artist = async (req, res, next) => {
         phone_no: 'required|integer|min:1',
         description: 'required',
         status: 'required',
-        type: 'required',
+        type: 'required'
     });
     const matched = await v.check();
     if (!matched) {
