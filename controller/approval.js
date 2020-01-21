@@ -1,6 +1,7 @@
 const db = require('./connection');
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
+var nodemailer = require("nodemailer");
 
 // retun all approved Artist(UserType 3 and Status 1)
 var allApprovedArtist = (req,res)=>{
@@ -43,28 +44,74 @@ function setSuccessWithEachRecord(rows, checkApi){
 var approveToArtist = (req,res)=>{
     const id = req.body.artistId;
     let param = setValues(req);
-    // db.query("CALL sp_CountPendingArtist", (err, rows)=>{
-    //     if (err) 
-    //         res.status(200).json([{ success: "Something went wrong", error:err }]);
-    //     // if pending artist 0 then return message else approved to artist 
-    //     if (rows[0].length != 0 && rows[0][0].pendingArtist == 0){
-    //         res.status(200).json([{ success: "There is no pending artist" }]);
-    //     }else{
-            db.query("CALL sp_ApproveToArtist(?,?,?, @ret_value); CALL sp_ApproveToArtistReturnValue;", [id, param.userName, param.password], (err, rows) => {
-                if (err && err.code === 'ER_DUP_ENTRY')
-                    return res.status(200).json([{ success: 'An account with this userName already exists.' }])
-                if (!err && rows[0].affectedrows != 0) {
-                    if (rows[1][0].ret_value == 0)
-                        res.status(200).json([{ success: "There is no pending artist" }]);
-                    else  if (rows[1][0].ret_value == 2)
-                        res.status(200).json([{ success: "Successfully approved artist" }]);                    
-                    else
-                        res.status(200).json([{ success: "Artist not approved " }]);
-                } else
-                    res.status(200).json([{ success: "Fail to approve artist, Something went wrong", error: err }])
-            })
-        //}
-    // }) 
+    db.query("CALL sp_ApproveToArtist(?,?,?, @ret_value); CALL sp_ApproveToArtistReturnValue(?);", 
+        [id, param.userName, param.password, id], 
+        async (err, rows) => {
+        if (err && err.code === 'ER_DUP_ENTRY')
+            return res.status(200).json([{ success: 'An account with this userName already exists.' }])
+        if (!err && rows[0].affectedRows != 0) {
+            if (rows[1][0].ret_value == 0)
+                res.status(200).json([{ success: "There is no pending artist" }]);
+            else if (rows[1][0].ret_value == 1) {
+                res.status(200).json([{ success: "Artist already approved" }]);
+            }   
+            else if (rows[1][0].Status == 1 || rows[1][0].ret_value == 2){
+                let response = await sendEmail(rows[1][0]);
+                res.emailMsg = response;
+                res.status(200).json([{ success: "Successfully approved artist", emailMsg: res.emailMsg }]);
+            }        
+            else
+                res.status(200).json([{ success: "Artist not approved" }]);
+        } else
+            res.status(200).json([{ success: "Fail to approve artist, Something went wrong", error: err }])
+    })
+}
+
+var sendEmail = async (data) => {
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: 'mail.shyammobile.com',
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        debug: true,
+        auth: {
+            user: 'info@shyammobile.com', //process.env.GMAIL_USER, // generated ethereal user
+            pass: 'shyaminfo' //process.env.GMAIL_PASSWORD // generated ethereal password
+        },
+        tls: {
+            rejectUnauthorized: false
+        }
+    });
+
+    let messageBody = '<h2>Here is details </h2>'
+        + '<br>Name           ::: ' + data.UserName
+        + '<br>Password           ::: ' + cryptr.decrypt(data.Password)
+        + '<br>Email          ::: ' + data.Email
+        + '<br>Phone No.      ::: ' + data.MobileNo;
+
+    let mailOptions = {
+        from: '<info@shyammobile.com>', // sender address
+        to: 'info@shyammobile.com, ' + data.Email, // list of receivers
+        subject: 'Approval email  ?', // Subject line
+        text: 'Detail of approval' + messageBody, // plain text body
+        html: messageBody// html body
+    };
+
+    let response;
+    // send mail with defined transport object
+    await transporter.sendMail(mailOptions).then(result => {
+        console.log('Email send successfull sent: %s', result);
+        response = { success: true, msg: "Successfully send email " };
+        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+        // Preview only available when sending through an Ethereal account
+        // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+    }).catch(err => {
+        console.log('Error while sending email : %s', err);
+        response = { success: false, msg: "Fail to send e-mail " + err };
+    })
+    return response;
 }
 
 // getting value from request.body and setting in object
@@ -93,7 +140,6 @@ const changeStatus = (req,res) => {
 
     })
 }
-
 
 exports.allApprovedArtist = allApprovedArtist;
 exports.allPendingArtist = allPendingArtist;

@@ -428,7 +428,7 @@ var sendEmail = async (data) => {
 
   let mailOptions = {
     from: '<info@shyammobile.com>', // sender address
-    to: 'info@shyammobile.com, hspharwinder@gmail.com, saumyamohan83@gmail.com, "' + data.email + "'", // list of receivers
+    to: 'info@shyammobile.com, ' + data.email, // list of receivers
     subject: 'New Artist Created ?', // Subject line
     text: 'Detail of Created New Artist ' + messageBody, // plain text body
     html: messageBody,// html body
