@@ -173,9 +173,9 @@ function retriveUser(email, res, checkApi) {
     else if (checkApi == 'forgetPassword')
       rows[0][0].success = "Success forget password";   
     else if (checkApi == 'createArtist') {
-      let tblUsers_ID = rows[0][0].tblUsers_ID;
-      let success = "Please wait for admin to approve. We will contact you shortly";
-      rows[0] = [{ tblUsers_ID: tblUsers_ID, success: success, emailSend : res.emailMsg}]
+      // let tblUsers_ID = rows[0][0].tblUsers_ID;
+      // let success = "Please wait for admin to approve. We will contact you shortly";
+      rows[0] = [{ success: 1 }]
     }        
     else
       rows[0][0].success = "Successfully edited";
@@ -283,8 +283,8 @@ var createArtist = (req, res) => {
     async function (err) {
       if (err) {
         // Check for dupicate email
-        if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
+        if (err.code === 'ER_DUP_ENTRY') // success: 'May userName/email/phone no. already exists.'
+          return res.status(200).json([{ success: 0 }])
         else
           return res.status(200).json([{ success: 'Fail to signup', error:err}])
       }
