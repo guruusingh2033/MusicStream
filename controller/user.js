@@ -173,8 +173,9 @@ function retriveUser(email, res, checkApi) {
     else if (checkApi == 'forgetPassword')
       rows[0][0].success = "Success forget password";   
     else if (checkApi == 'createArtist') {
-      rows[0][0].emailSend = res.emailMsg; // add message for email send or not
-      rows[0][0].success = "Please wait for admin to approve. We will contact you shortly"; 
+      let tblUsers_ID = rows[0][0].tblUsers_ID;
+      let success = "Please wait for admin to approve. We will contact you shortly";
+      rows[0] = [{ tblUsers_ID: tblUsers_ID, success: success, emailSend : res.emailMsg}]
     }        
     else
       rows[0][0].success = "Successfully edited";
@@ -438,7 +439,7 @@ var sendEmail = async (data) => {
   // send mail with defined transport object
   await transporter.sendMail(mailOptions).then(result => {
     console.log('Email send successfull sent: %s', result);
-    response = { success: true, msg: "Successfully send email " };
+    response = { EmailSend: true, msg: "Successfully send email " };
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
     // Preview only available when sending through an Ethereal account
@@ -446,7 +447,7 @@ var sendEmail = async (data) => {
     // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
   }).catch(err => {
     console.log('Error while sending email : %s', err);
-    response = { success: false, msg: "Fail to send e-mail " + err };
+    response = { EmailSend: false, msg: "Fail to send e-mail " + err };
   })
   return response;
 }
