@@ -57,7 +57,7 @@ function insertUser(req, res){
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
         else
           return res.status(200).json([{ success: 'Fail to signup', error: err }])
       }
@@ -284,7 +284,7 @@ var createArtist = (req, res) => {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
         else
           return res.status(200).json([{ success: 'Fail to signup', error:err}])
       }
@@ -323,7 +323,7 @@ function updateUser(req, res){
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
         else
           return res.status(200).json([{ success: 'Fail to update', error: err }])
       }
@@ -361,7 +361,7 @@ function updateArtist(req, res) {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'An account with this email address already exists.' }])
+          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
         else
           return res.status(200).json([{ success: 'Fail to update', error: err }])
       }
@@ -471,7 +471,7 @@ function editProfilebyAdmin(req, res) {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'An account with this email/phone already exists.' }])
+          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
         else
           return res.status(200).json([{ success: 'Not updated', error: err }])
       }
