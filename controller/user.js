@@ -281,8 +281,8 @@ var createArtist = (req, res) => {
      function (err) { // async
       if (err) {
         // Check for dupicate email
-        if (err.code === 'ER_DUP_ENTRY') // success: 'May userName/email/phone no. already exists.'
-          return res.status(200).json([{ success: 0 }])
+        if (err.code === 'ER_DUP_ENTRY') 
+          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.'}])
         else
           return res.status(200).json([{ success: 'Fail to signup', error:err}])
       }
