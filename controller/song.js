@@ -189,7 +189,7 @@ function retriveSong(name, res) {
         if (err) return res.send([{ success: 'Fail to retrive song detail', err: err }]);
         //adding success element in rows object   
         rows[0][0].success = "Song successfully inserted";
-        return res.status(201).json(rows[0]);
+        return res.status(200).json(rows[0]);
     });
 }
 /***   Code End:: inserting song detail into DB  ***/

@@ -170,7 +170,7 @@
                     }         
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Successfully created user, responsed json Array",
                         "schema": {
                             "$ref": "#/definitions/User"
@@ -332,7 +332,7 @@
                     }
                 ],
                 "responses": {
-                    "201": {       
+                    "200": {       
                         "description": "Successfully created artist, responsed json Array",                     
                         "schema": {
                             "$ref": "#/definitions/Artist"
@@ -472,7 +472,7 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Successfully created user, responsed json Array",
                         "schema": {
                             "$ref": "#/definitions/User"
@@ -1050,7 +1050,7 @@
                     }
                 ],
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Successfully inserted record, responsed json Array",
                         "schema": {
                             "$ref": "#/definitions/Song"

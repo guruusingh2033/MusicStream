@@ -179,7 +179,7 @@ function retriveUser(email, res, checkApi) {
     }        
     else
       rows[0][0].success = "Successfully edited";
-    return res.status(201).json([rows[0][0]]);
+    return res.status(200).json([rows[0][0]]);
   });
 }
 

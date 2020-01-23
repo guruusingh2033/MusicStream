@@ -48,7 +48,7 @@ var approveToArtist = (req,res)=>{
         [id, param.userName, param.password, id], 
         async (err, rows) => {
         if (err && err.code === 'ER_DUP_ENTRY')
-            return res.status(200).json([{ success: 'An account with this userName already exists.' }])
+            return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
         if (!err && rows[0].affectedRows != 0) {
             if (rows[1][0].ret_value == 0)
                 res.status(200).json([{ success: "There is no pending artist" }]);
