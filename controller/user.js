@@ -173,9 +173,7 @@ function retriveUser(email, res, checkApi) {
     else if (checkApi == 'forgetPassword')
       rows[0][0].success = "Success forget password";   
     else if (checkApi == 'createArtist') {
-      // let tblUsers_ID = rows[0][0].tblUsers_ID;
-      // let success = "Please wait for admin to approve. We will contact you shortly";
-      rows[0] = [{ success: 1 }]
+      rows[0][0].success = "Please wait for admin to approve. We will contact you shortly";     
     }        
     else
       rows[0][0].success = "Successfully edited";
