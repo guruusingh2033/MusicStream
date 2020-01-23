@@ -46,7 +46,7 @@ var approveToArtist = (req,res)=>{
     let param = setValues(req);
     db.query("CALL sp_ApproveToArtist(?,?,?, @ret_value); CALL sp_ApproveToArtistReturnValue(?);", 
         [id, param.userName, param.password, id], 
-        async (err, rows) => {
+        (err, rows) => {//async            
         if (err && err.code === 'ER_DUP_ENTRY')
             return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
         if (!err && rows[0].affectedRows != 0) {
@@ -56,7 +56,7 @@ var approveToArtist = (req,res)=>{
                 res.status(200).json([{ success: "Artist already approved" }]);
             }   
             else if (rows[1][0].Status == 1 || rows[1][0].ret_value == 2){
-                let response = await sendEmail(rows[1][0]);
+                let response = sendEmail(rows[1][0]); // await
                 res.emailMsg = response;
                 res.status(200).json([{ success: "Successfully approved artist", emailMsg: res.emailMsg }]);
             }        
@@ -67,7 +67,7 @@ var approveToArtist = (req,res)=>{
     })
 }
 
-var sendEmail = async (data) => {
+var sendEmail = (data) => { // async
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: 'mail.shyammobile.com',
@@ -99,9 +99,9 @@ var sendEmail = async (data) => {
 
     let response;
     // send mail with defined transport object
-    await transporter.sendMail(mailOptions).then(result => {
+    transporter.sendMail(mailOptions).then(result => { // await
         console.log('Email send successfull sent: %s', result);
-        response = { success: true, msg: "Successfully send email " };
+        response = { EmailSend: true, msg: "Successfully send email " };
         // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
         // Preview only available when sending through an Ethereal account
@@ -109,7 +109,7 @@ var sendEmail = async (data) => {
         // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
     }).catch(err => {
         console.log('Error while sending email : %s', err);
-        response = { success: false, msg: "Fail to send e-mail " + err };
+        response = { EmailSend: false, msg: "Fail to send e-mail " + err };
     })
     return response;
 }

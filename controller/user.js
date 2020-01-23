@@ -280,7 +280,7 @@ var createArtist = (req, res) => {
   // Inserting user details in DB
    db.query('CALL sp_createArtist(?,?,?,?,?,?)',
     [newUser.name, newUser.email, newUser.type, newUser.status, newUser.phone_no, newUser.description],
-    async function (err) {
+     function (err) { // async
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY') // success: 'May userName/email/phone no. already exists.'
@@ -290,7 +290,7 @@ var createArtist = (req, res) => {
       }
       else {
         // send email to admin and artist
-        let response = await sendEmail(newUser); 
+        let response = sendEmail(newUser); // await
         res.emailMsg = response;
         // Successfully created user, now return user detail
         retriveUser(newUser.email, res, 'createArtist')                 
@@ -403,7 +403,7 @@ const allUserType2 = (req,res) =>{
 }
 
 
-var sendEmail = async (data) => {
+var sendEmail = (data) => { // async
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     host: 'mail.shyammobile.com',
@@ -437,7 +437,7 @@ var sendEmail = async (data) => {
 
   let response;
   // send mail with defined transport object
-  await transporter.sendMail(mailOptions).then(result => {
+  transporter.sendMail(mailOptions).then(result => { // await
     console.log('Email send successfull sent: %s', result);
     response = { EmailSend: true, msg: "Successfully send email " };
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
