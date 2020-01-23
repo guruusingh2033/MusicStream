@@ -290,15 +290,15 @@
                     {
                         "in": "formData",
                         "name": "type",
-                        "description": "Type-2 for artist",
+                        "description": "Type-3 for artist",
                         "required": true,
                         "type": "array",
                         "items": {
                             "type": "string",
                             "enum": [
-                                2
+                                3
                             ],
-                            "default": 2
+                            "default": 3
                         }
                     },
                     {
