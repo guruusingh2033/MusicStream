@@ -417,11 +417,11 @@ var sendEmail = (data) => { // async
     }
   });
 
-  let messageBody = '<h2>There is details of created new artist </h2>'
-    + '<br>Name           ::: ' + data.name
-    + '<br>Email          ::: ' + data.email
-    + '<br>Phone No.      ::: ' + data.phone_no
-    + '<br>Description    ::: ' + data.description;
+  let messageBody = '<h2 style="margin-bottom: -6px;">There is details of created new artist </h2>'
+    + 'Name: ' + data.name
+    + '<br>Email: ' + data.email
+    + '<br>Phone No.: ' + data.phone_no
+    + '<br>Description: ' + data.description;
 
   let mailOptions = {
     from: emailConfig.from, // sender address
