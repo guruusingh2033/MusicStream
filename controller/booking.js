@@ -75,7 +75,7 @@ const editBooking = (req,res)=>{
 const bookNowEvent = (req, res) => {
     db.query("CALL sp_retriveUserWithID(?); CALL sp_retriveUserWithID(?); CALL sp_BookEventById(?); ", 
         [req.body.userId, req.body.artistId, req.body.eventId], 
-    async (err, rows) => {
+        (err, rows) => { // async
         if (err)
             return res.status(200).json({ success: "Internal Server error ", err: err })
         if (rows[0].length > 0) {
@@ -83,14 +83,15 @@ const bookNowEvent = (req, res) => {
             // value.artistEmail = rows[0][0].Email;
             // value.artistPhoneno = rows[0][0].MobileNo;
             let data = { name: req.body.name, email:req.body.email, description: req.body.description};
-            let reponse = await sendEmail(rows, data)
-            return res.status(200).json(reponse);
+            let reponse1 = sendEmail(rows, data) // await
+            let response = { EmailSend: true, msg: "Successfully send email " };
+            return res.status(200).json(response);
         }
         return res.status(200).json([{ tblMyBookings_ID: 'No record found' }]);
     })
 }
 
-var sendEmail = async (data, param) => { 
+var sendEmail = (data, param) => {  // async
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: emailConfig.host,
@@ -119,7 +120,7 @@ var sendEmail = async (data, param) => {
 
     let response;
     // send mail with defined transport object
-    await transporter.sendMail(mailOptions).then(result => { 
+    transporter.sendMail(mailOptions).then(result => { // await
         console.log('Email send successfull sent: %s', result);
         response = { EmailSend: true, msg: "Successfully send email " };
     }).catch(err => {
