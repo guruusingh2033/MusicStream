@@ -404,18 +404,16 @@ const allUserType2 = (req,res) =>{
 var sendEmail = (data) => { // async
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
-    host: 'mail.shyammobile.com',
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    debug: true,
-    // sendmail: true,
-    // service: "Gmail", // comment this for test
+    host: emailConfig.host,
+    port: emailConfig.port,
+    secure: emailConfig.secure, // true for 465, false for other ports
+    debug: emailConfig.debug,
     auth: {
-      user: 'info@shyammobile.com', //process.env.GMAIL_USER, // generated ethereal user
-      pass: 'shyaminfo' //process.env.GMAIL_PASSWORD // generated ethereal password
+      user: emailConfig.auth.user, //process.env.GMAIL_USER, // generated ethereal user
+      pass: emailConfig.auth.pass //process.env.GMAIL_PASSWORD // generated ethereal password
     },
     tls: {
-      rejectUnauthorized: false
+      rejectUnauthorized: emailConfig.tls.rejectUnauthorized
     }
   });
 
@@ -426,8 +424,9 @@ var sendEmail = (data) => { // async
     + '<br>Description    ::: ' + data.description;
 
   let mailOptions = {
-    from: '<info@shyammobile.com>', // sender address
-    to: 'info@shyammobile.com, ' + data.email, // list of receivers
+    from: emailConfig.from, // sender address
+    to: emailConfig.to + ', ' + data.Email, // list of receivers
+    // to: 'info@shyammobile.com, ' + data.email, // list of receivers
     subject: 'New Artist Created ?', // Subject line
     text: 'Detail of Created New Artist ' + messageBody, // plain text body
     html: messageBody,// html body

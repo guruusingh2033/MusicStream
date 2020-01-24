@@ -70,16 +70,16 @@ var approveToArtist = (req,res)=>{
 var sendEmail = (data) => { // async
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
-        host: 'mail.shyammobile.com',
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        debug: true,
+        host: emailConfig.host,
+        port: emailConfig.port,
+        secure: emailConfig.secure, // true for 465, false for other ports
+        debug: emailConfig.debug,
         auth: {
-            user: 'info@shyammobile.com', //process.env.GMAIL_USER, // generated ethereal user
-            pass: 'shyaminfo' //process.env.GMAIL_PASSWORD // generated ethereal password
+            user: emailConfig.auth.user, //process.env.GMAIL_USER, // generated ethereal user
+            pass: emailConfig.auth.pass //process.env.GMAIL_PASSWORD // generated ethereal password
         },
         tls: {
-            rejectUnauthorized: false
+            rejectUnauthorized: emailConfig.tls.rejectUnauthorized
         }
     });
 
@@ -90,8 +90,8 @@ var sendEmail = (data) => { // async
         + '<br>Phone No.      ::: ' + data.MobileNo;
 
     let mailOptions = {
-        from: '<info@shyammobile.com>', // sender address
-        to: 'info@shyammobile.com, ' + data.Email, // list of receivers
+        from: emailConfig.from, // sender address
+        to: emailConfig.to + ', ' + data.Email, // list of receivers
         subject: 'Approval email  ?', // Subject line
         text: 'Detail of approval' + messageBody, // plain text body
         html: messageBody// html body
