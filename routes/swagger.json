@@ -1982,6 +1982,7 @@
                     "in": "formData",
                     "name": "description",
                     "description": "",
+                    "required": true,
                     "type": "string"
                 },                
                 {
@@ -2004,6 +2005,7 @@
                     "in": "formData",
                     "name": "email",
                     "description": "",
+                    "required": true,
                     "type": "string"
                 },
                 {
@@ -2038,12 +2040,14 @@
                     "in": "formData",
                     "name": "artistName",
                     "description": "",
+                    "required": true,
                     "type": "string"
                 },
                 {
                     "in": "formData",
                     "name": "describe",
                     "description": "",
+                    "required": true,
                     "type": "string"
                 }
                 

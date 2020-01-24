@@ -132,17 +132,17 @@ var sendEmail = async (data) => {
 const mailHtml = (data)=>{ 
     return {
          header:'<h1>Booking query </h1>',
-        eventDetails: '<h2 style="margin- bottom: -6px;">Event details </h2>'
+        eventDetails: '<h2 style="margin-bottom: -6px;">Event details </h2>'
         + 'Place: ' + data.artistplace
         + '<br>Date: ' + data.date
         + '<br>Time: ' + data.time
         + '<br>Details: ' + data.description,
-        userDetails: '<h2 style="margin- bottom: -6px;">User details </h2>'
+        userDetails: '<h2 style="margin-bottom: -6px;">User details </h2>'
         + 'Name: ' + data.name
         + '<br>Email: ' + data.email
         + '<br>Phone No.: ' + data.phoneNo
         + '<br>Details: ' + data.describe,
-        artistDetails: '<h2 style="margin- bottom: -6px;">Artist details </h2>'
+        artistDetails: '<h2 style="margin-bottom: -6px;">Artist details </h2>'
         + 'Name: ' + data.artistName
         + '<br>Email: ' + data.artistEmail
         + '<br>Phone No.: ' + data.artistPhoneno
