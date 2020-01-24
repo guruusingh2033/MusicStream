@@ -131,8 +131,7 @@ var sendEmail = (data, param) => {  // async
 }
 
 const mailHtml = (data,param)=>{ 
-    return {
-       
+    return {       
         eventDetails: '<h2 style="margin-bottom: -6px;">Event details </h2>'
             + 'Artist Name: ' + data[2][0].Name //? data[2][0].Name:''
             + '<br>Artist Email: ' + data[2][0].Email //? data[2][0].Email : ''
@@ -142,8 +141,8 @@ const mailHtml = (data,param)=>{
             + '<br>Time: ' + data[4][0].Time, //? data[4][0].Time : '',
         userDetails: '<h2 style="margin-bottom: -6px;">User details </h2>'
             + 'Name: ' + param.name //? param.name : ''
-                + '<br>Email: ' + param.email //? param.email : ''
-                    + '<br>Phone No: ' + data[0][0].MobileNo, //? data[0][0].MobileNo : ''        
+            + '<br>Email: ' + param.email //? param.email : ''
+            + '<br>Phone No: ' + data[0][0].MobileNo, //? data[0][0].MobileNo : ''        
         text: '<br><br><label><b>Booking request details:</b></label> ' + param.description //? param.description : '',
        
     }

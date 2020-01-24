@@ -2,6 +2,7 @@ const db = require('./connection');
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
 var nodemailer = require("nodemailer");
+var emailConfig = require('../config/email')
 
 // retun all approved Artist(UserType 3 and Status 1)
 var allApprovedArtist = (req,res)=>{

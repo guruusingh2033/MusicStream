@@ -7,6 +7,7 @@ const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
 require('dotenv/config');
 var db = require('./connection');
 var  nodemailer = require("nodemailer");
+var emailConfig = require('../config/email')
 
 var signup = function (req, res) {
   const userType = parseInt(req.body.type);
