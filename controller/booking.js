@@ -84,7 +84,7 @@ const bookNowEvent = (req, res) => {
             // value.artistPhoneno = rows[0][0].MobileNo;
             let data = { name: req.body.name, email:req.body.email, description: req.body.description};
             let reponse1 = sendEmail(rows, data) // await
-            let response = { EmailSend: true, msg: "Successfully send email " };
+            let response = [{ EmailSend: true, msg: "Successfully send email " }];
             return res.status(200).json(response);
         }
         return res.status(200).json([{ tblMyBookings_ID: 'No record found' }]);
