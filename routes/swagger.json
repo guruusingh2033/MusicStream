@@ -1966,40 +1966,31 @@
                "parameters": [    
                    {
                     "in": "formData",
+                    "name": "userId",
+                    "description": "",
+                    "required": true,
+                    "type": "integer"
+                },            
+                {
+                    "in": "formData",
+                    "name": "artistId",
+                    "description": "",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "in": "formData",
+                    "name": "eventId",
+                    "description": "",
+                    "required": true,
+                    "type": "integer"
+                },
+                {
+                    "in": "formData",
                     "name": "name",
                     "description": "",
                     "required": true,
                     "type": "string"
-                },            
-                {
-                    "in": "formData",
-                    "name": "place",
-                    "description": "",
-                    "required": true,
-                    "type": "string"
-                },
-                {
-                    "in": "formData",
-                    "name": "description",
-                    "description": "",
-                    "required": true,
-                    "type": "string"
-                },                
-                {
-                    "in": "formData",
-                    "name": "date",
-                    "description": "yyyy/mm/dd",
-                    "required": true,
-                    "type": "string",
-                    "format": "date"
-                },
-                {
-                    "in": "formData",
-                    "name": "time",
-                    "description": "hh:mm:ss",
-                    "required": true,
-                    "type": "string",
-                    "format": "time"
                 },
                 {
                     "in": "formData",
@@ -2010,46 +2001,12 @@
                 },
                 {
                     "in": "formData",
-                    "name": "usertId",
-                    "description": "",
-                    "required": true,
-                    "type": "integer"
-                },
-                {
-                    "in": "formData",
-                    "name": "phoneNo",
-                    "description": "",
-                    "required": true,
-                    "type": "integer"
-                },                
-                {
-                    "in": "formData",
-                    "name": "artistId",
-                    "description": "",
-                    "required": true,
-                    "type": "integer"
-                },
-                {
-                    "in": "formData",
-                    "name": "artistplace",
-                    "description": "",
-                    "required": true,
-                    "type": "string"
-                },
-                {
-                    "in": "formData",
-                    "name": "artistName",
-                    "description": "",
-                    "required": true,
-                    "type": "string"
-                },
-                {
-                    "in": "formData",
-                    "name": "describe",
+                    "name": "description",
                     "description": "",
                     "required": true,
                     "type": "string"
                 }
+                
                 
             ],
                 "responses": {

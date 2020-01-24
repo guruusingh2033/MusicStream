@@ -1,7 +1,8 @@
 const modelBooking = (req) => {
     return {
         // user detail
-        bookingId: req.body.bookingId,       
+        bookingId: req.body.bookingId, 
+        eventId: req.body.eventId,      
         place: req.body.place,
         description: req.body.description,
         date: req.body.date,

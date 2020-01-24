@@ -73,23 +73,24 @@ const editBooking = (req,res)=>{
 }
 
 const bookNowEvent = (req, res) => {
-    const value = booking.modelBooking(req);
-    db.query("CALL sp_ArtistGetById(?);", [value.artistId], 
+    db.query("CALL sp_retriveUserWithID(?); CALL sp_retriveUserWithID(?); CALL sp_BookEventById(?); ", 
+        [req.body.userId, req.body.artistId, req.body.eventId], 
     async (err, rows) => {
         if (err)
             return res.status(200).json({ success: "Internal Server error ", err: err })
         if (rows[0].length > 0) {
             rows[0][0].success = "Successfully fetched records";
-            value.artistEmail = rows[0][0].Email;
-            value.artistPhoneno = rows[0][0].MobileNo;
-            let reponse = await sendEmail(value)
+            // value.artistEmail = rows[0][0].Email;
+            // value.artistPhoneno = rows[0][0].MobileNo;
+            let data = { name: req.body.name, email:req.body.email, description: req.body.description};
+            let reponse = await sendEmail(rows, data)
             return res.status(200).json(reponse);
         }
         return res.status(200).json([{ tblMyBookings_ID: 'No record found' }]);
     })
 }
 
-var sendEmail = async (data) => { 
+var sendEmail = async (data, param) => { 
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: emailConfig.host,
@@ -105,7 +106,7 @@ var sendEmail = async (data) => {
         }
     });
 
-    let mailHtmlStore = mailHtml(data)
+    let mailHtmlStore = mailHtml(data, param)
 
     let mailOptions = {
         from: emailConfig.from, // sender address
@@ -113,8 +114,7 @@ var sendEmail = async (data) => {
         subject: 'A particular user has requested of  event', // Subject line
         // text: mailHtmlStore.header + mailHtmlStore.eventDetails 
         //     + mailHtmlStore.userDetails + mailHtmlStore.artistDetails, // plain text body // + mailHtmlStore
-        html: mailHtmlStore.header + mailHtmlStore.eventDetails 
-            + mailHtmlStore.userDetails + mailHtmlStore.artistDetails// html body
+        html: mailHtmlStore.eventDetails + mailHtmlStore.userDetails + mailHtmlStore.text // html body
     };
 
     let response;
@@ -129,23 +129,22 @@ var sendEmail = async (data) => {
     return response;
 }
 
-const mailHtml = (data)=>{ 
+const mailHtml = (data,param)=>{ 
     return {
-         header:'<h1>Booking query </h1>',
+       
         eventDetails: '<h2 style="margin-bottom: -6px;">Event details </h2>'
-        + 'Place: ' + data.artistplace
-        + '<br>Date: ' + data.date
-        + '<br>Time: ' + data.time
-        + '<br>Details: ' + data.description,
+            + 'Artist Name: ' + data[2][0].Name //? data[2][0].Name:''
+            + '<br>Artist Email: ' + data[2][0].Email //? data[2][0].Email : ''
+            + '<br>Artist Phone No: ' + data[2][0].MobileNo //? data[2][0].MobileNo : ''
+            + '<br>Place: ' + data[4][0].Place //? data[4][0].Place : ''
+            + '<br>Date: ' + data[4][0].Date1 //? data[4][0].Date : ''
+            + '<br>Time: ' + data[4][0].Time, //? data[4][0].Time : '',
         userDetails: '<h2 style="margin-bottom: -6px;">User details </h2>'
-        + 'Name: ' + data.name
-        + '<br>Email: ' + data.email
-        + '<br>Phone No.: ' + data.phoneNo
-        + '<br>Details: ' + data.describe,
-        artistDetails: '<h2 style="margin-bottom: -6px;">Artist details </h2>'
-        + 'Name: ' + data.artistName
-        + '<br>Email: ' + data.artistEmail
-        + '<br>Phone No.: ' + data.artistPhoneno
+            + 'Name: ' + param.name //? param.name : ''
+                + '<br>Email: ' + param.email //? param.email : ''
+                    + '<br>Phone No: ' + data[0][0].MobileNo, //? data[0][0].MobileNo : ''        
+        text: '<br><br><label><b>Booking request details:</b></label> ' + param.description //? param.description : '',
+       
     }
 }
 
