@@ -94,7 +94,7 @@ var sendEmail = (data) => { // async
         from: emailConfig.from, // sender address
         to: emailConfig.to + ', ' + data.Email, // list of receivers
         subject: 'Approval email', // Subject line
-        text: 'Detail of approval' + messageBody, // plain text body
+        // text: 'Detail of approval' + messageBody, // plain text body
         html: messageBody// html body
     };
 

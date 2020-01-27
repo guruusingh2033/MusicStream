@@ -440,7 +440,7 @@ var sendEmail = (data) => { // async
     to: emailConfig.to + ', ' + data.Email, // list of receivers
     // to: 'info@shyammobile.com, ' + data.email, // list of receivers
     subject: 'New Artist Created', // Subject line
-    text: 'Detail of Created New Artist ' + messageBody, // plain text body
+    // text: 'Detail of Created New Artist ' + messageBody, // plain text body
     html: messageBody,// html body
   };
 
