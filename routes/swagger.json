@@ -167,6 +167,13 @@
                             ],
                             "default": 2
                         }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "phone_no",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
                     }         
                 ],
                 "responses": {

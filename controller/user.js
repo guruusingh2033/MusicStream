@@ -52,8 +52,8 @@ function insertUser(req, res){
   //setValue here for insertion
   const userFields = setUserValue(req);  
   // Inserting user details in DB 
-  db.query('CALL sp_insertUser(?,?,?,?,?,?)', 
-    [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.type, userFields.status],
+  db.query('CALL sp_insertUser(?,?,?,?,?,?,?)', 
+    [userFields.name, userFields.password, userFields.email, userFields.userName, userFields.type, userFields.status, userFields.phone_no],
     function (err, rows) {
       if (err) {
         // Check for dupicate email
@@ -389,6 +389,17 @@ const deleteProfile = (req,res) =>{
   });
 }
 
+// const delProfileArtist = (req, res) => {
+//   db.query('CALL sp_DeleteProfile(?)', [req.body.id], (err, rows) => {
+//     if (err)
+//       return res.status(200).json([{ success: 'May be some connection error ', error: err }])
+//     else if (rows.affectedRows != 0)
+//       return res.status(200).json([{ success: 'Record Deleted Successfully ' }])
+//     else
+//       return res.status(200).json([{ success: 'Fail to delete record, Id should be valid' }])
+//   });
+// }
+
 // get all user having type 2
 const allUserType2 = (req,res) =>{
   db.query('CALL sp_AllUsersType2()', [], function (err, rows) {
@@ -428,7 +439,7 @@ var sendEmail = (data) => { // async
     from: emailConfig.from, // sender address
     to: emailConfig.to + ', ' + data.Email, // list of receivers
     // to: 'info@shyammobile.com, ' + data.email, // list of receivers
-    subject: 'New Artist Created ?', // Subject line
+    subject: 'New Artist Created', // Subject line
     text: 'Detail of Created New Artist ' + messageBody, // plain text body
     html: messageBody,// html body
   };

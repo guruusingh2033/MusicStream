@@ -93,7 +93,7 @@ var sendEmail = (data) => { // async
     let mailOptions = {
         from: emailConfig.from, // sender address
         to: emailConfig.to + ', ' + data.Email, // list of receivers
-        subject: 'Approval email  ?', // Subject line
+        subject: 'Approval email', // Subject line
         text: 'Detail of approval' + messageBody, // plain text body
         html: messageBody// html body
     };
