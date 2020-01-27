@@ -11,5 +11,6 @@ module.exports = {
         rejectUnauthorized: false
     },
     from: '<info@shyammobile.com>', // sender address
-    to: 'shyamparivar@shyammobile.com'
+    to: 'shyamparivar@shyammobile.com',
+    baseUrl:'http://api.shyammobile.com/'
 };

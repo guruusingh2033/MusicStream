@@ -84,7 +84,8 @@ var sendEmail = (data) => { // async
         }
     });
 
-    let messageBody = '<h2 style="margin-bottom: -6px;">Here is details </h2>'
+    let messageBody = '<img src="../logo/shyamlogo.png"></img>'
+        + '<h2 style="margin-bottom: -6px;">Here is details </h2>'
         + 'Name: ' + data.UserName
         + '<br>Password: ' + cryptr.decrypt(data.Password)
         + '<br>Email: ' + data.Email

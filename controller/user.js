@@ -429,11 +429,13 @@ var sendEmail = (data) => { // async
     }
   });
 
-  let messageBody = '<h2 style="margin-bottom: -6px;">There is details of created new artist </h2>'
-    + 'Name: ' + data.name
-    + '<br>Email: ' + data.email
-    + '<br>Phone No.: ' + data.phone_no
-    + '<br>Description: ' + data.description;
+  let messageBody = '<table><tr><th> <img src="' + emailConfig.baseUrl + '"images/shyamlogo.png"></img> <img src="' + emailConfig.baseUrl +'logo/shyamlogo.png"></img><th></tr>'
+    + '<tr><th><h2 style="margin-bottom: -6px;">There is details of created new artist </h2></th><tr>'
+    + '<tr> <td>Name:</td><td> ' + data.name + '</td></tr>'
+    + '<tr><td>Email:</td><td> ' + data.email+'</td></tr>'
+    + '<tr><td>Phone No.: </td><td>' + data.phone_no + '</td></tr>'
+    + '<tr><td>Description: </td><td>' + data.description +'</td></tr>'
+    +'</table>';
 
   let mailOptions = {
     from: emailConfig.from, // sender address

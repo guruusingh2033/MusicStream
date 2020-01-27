@@ -132,7 +132,8 @@ var sendEmail = (data, param) => {  // async
 
 const mailHtml = (data,param)=>{ 
     return {       
-        eventDetails: '<h2 style="margin-bottom: -6px;">Event details </h2>'
+        eventDetails: '<img src="../logo/shyamlogo.png">'
+            + '<h2 style="margin-bottom: -6px;">Event details </h2>'
             + 'Artist Name: ' + data[2][0].Name //? data[2][0].Name:''
             + '<br>Artist Email: ' + data[2][0].Email //? data[2][0].Email : ''
             + '<br>Artist Phone No: ' + data[2][0].MobileNo //? data[2][0].MobileNo : ''
