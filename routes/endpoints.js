@@ -25,14 +25,14 @@ module.exports = function(app) {
   app.post('/createartist', validation.artist, user.artist); 
   app.post('/editProfilebyAdmin', validation.editProfilebyAdmin, user.editProfilebyAdmin);
   app.post('/artistLikingAdminIncrement', validation.artistLikingAdminIncrement, user.artistLikingAdminIncrement);
-  app.post('/loginWithOtpInsert', validation.loginWithOtpInsert, user.loginWithOtpInsert);
-   
+  app.post('/loginWithOtpInsert', validation.loginWithOtpInsert, user.loginWithOtpInsert);   
  
   // user Apis
   app.get('/user', user.allUsers);
   app.post('/profile', validation.singleUser, user.singleUser);
   app.post('/editProfile', validation.editProfile, user.editProfile);
   app.post('/delProfile', validation.deleteProfile, user.deleteProfile);
+  app.post('/delProfileArtist', validation.deleteProfile, user.delProfileArtist);
   app.get('/allUserType2', user.allUserType2);  // get all user having type 2 (mean not artist/admin only user)
   app.post('/insertCheckValue', validation.insertCheckValue, user.insertCheckValue);
   app.post('/insertArtistLike', validation.insertArtistLike, user.insertArtistLike);

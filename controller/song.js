@@ -4,7 +4,8 @@ require('dotenv/config');
 
 // Variabele used for image uploading, copying and deleting 
 //imagepath used in multer, fileCopy and deleteFile Function
-const imageFolderPath = 'songs/thumbnail_Images/';
+const imageFolderPath = 'songs/thumbnail_Images/'; // live path
+// const imageFolderPath = '../test/songs/thumbnail_Images/';  // local path
 let tempImageNameStore; // storing image name with foldername like - tempThumbImage/abc.png
 let thumbnailImageName; // storing only image name like - 1571724607849_Capture.png
 /***  Code Start:: Thumb Image Upload  ***/
@@ -42,7 +43,8 @@ var thumbImageUpload = function (req, res) {
 
 // Variabele used for song uploading, copying and deleting 
 // songFolderPath used in multer, fileCopy and deleteFile Function
-const songFolderPath = 'songs/'; 
+const songFolderPath = 'songs/'; // live path
+// const songFolderPath = '../test/songs/';  // local path
 let songName; // for storing only song name --- 1571724607849.mp3
 let tempSongNameStore; // storing image name with folder name like - tempFile/1571724607849.mp3
 /***  Code Start:: Song Upload  ***/
@@ -202,8 +204,6 @@ var allSongsArtist = (req, res) => {
         if (rows[0].length == 0)
             return res.status(200).json([{ success: 'Table is empty' }]);
         rows[0][0].success = 'Successfully get all song with artist name';
-            // concate api's baseUrl with filename for check in browser
-            // setBaseUrlWithEachPath(rows, res);
         return res.status(200).json(rows[0]);
     });
 };
@@ -218,8 +218,6 @@ var artistAllAudioSong = (req, res) => {
         if (rows[0].length == 0)
             return res.status(200).json([{ success: 'No data found' }]);
         rows[0][0].success = 'Successfully get single artist songs';
-        //concate api's baseUrl with filename for check in browser
-        // setBaseUrlWithEachPath(rows, res);
         return res.status(200).json(rows[0]);        
     });
 };
@@ -234,24 +232,10 @@ var allArtist = (req, res) => {
             return res.status(200).json([{ success: 'Table is empty' }]);
 
         rows[0][0].success = 'Successfully get all artist';
-        // concate api's baseUrl with filename for check in browser
-        // setBaseUrlWithEachPath(rows, res);
         return res.status(200).json(rows[0]);
     });
 };
 /** Code End:: get all songs and artist **/
-
-// concate api's baseUrl with filename for check in browser
-// function setBaseUrlWithEachPath(rows, res) {
-//     // this is the fastest way of loop
-//     let i = 0;
-//     let iMax = rows.length;
-//     for (; i < iMax; i++) {
-//         rows[i].FilePath = process.env.BASE_URL + rows[i].FilePath;
-//         rows[i].ThumbnailPath = process.env.BASE_URL + rows[i].ThumbnailPath;
-//     }
-//     return res.status(200).json(rows);
-// }
 
 const countMediaArtId = (req,res) => {
     db.query('CALL sp_CountMediaArtId(?)', [req.body.artistId], (err,rows) => {

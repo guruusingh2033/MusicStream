@@ -123,7 +123,8 @@ var setUserValue = (req) => {
 }
 
 //imagepath used in multer, fileCopy and deleteFile Function
-const imagePath = 'images/registrationImages/'; 
+const imagePath = 'images/registrationImages/'; // live path
+// const imagePath = '../test/images/registrationImages/'; // local path
 // function used in signup function
 // copy file from temporary folder(tempFile) to parmanent folder(registrationImages)
 function fileCopy(req) { //
@@ -388,17 +389,107 @@ const deleteProfile = (req,res) =>{
       return res.status(200).json([{ success: 'Fail to delete record, Id should be valid' }])
   });
 }
+// delete each and everything of aritst records and files
+const delProfileArtist = async (req, res) => {
+  await db.query('CALL sp_retriveUserWithID(?); CALL sp_MediaByArtistId(?); CALL sp_ArtitstDeleteProfile(?)', 
+    [req.body.id, req.body.id, req.body.id], async (err, rows) => {
+    if (err)
+      return res.status(200).json([{ success: 'May be some connection error ', error: err }])
+      // let delThumbnailPath = [];  
+     
+      if (rows[2].length > 0){      
+        for (let i=0; i< rows[2].length; i++) {
+          // delThumbnailPath.push((rows[2][0].ThumbnailPath));
+          await deleteArtistMediaImages(rows[2][i].ThumbnailPath);
+          await deleteArtistMediaSong(rows[2][i].FilePath);         
+        }        
+      }
+      if (rows[0].length > 0) {
+        for (let i = 0; i < rows[0].length; i++) {
+          // delThumbnailPath.push((rows[2][0].ThumbnailPath));
+          await deleteArtistProfileImages(rows[0][i].UserImage);
+        }
+      }
+      return res.status(200).json([{ success: 'Delete Success ' }])
+      return res.status(200).json([{ success: 'something went wrong' }])
 
-// const delProfileArtist = (req, res) => {
-//   db.query('CALL sp_DeleteProfile(?)', [req.body.id], (err, rows) => {
-//     if (err)
-//       return res.status(200).json([{ success: 'May be some connection error ', error: err }])
-//     else if (rows.affectedRows != 0)
-//       return res.status(200).json([{ success: 'Record Deleted Successfully ' }])
-//     else
-//       return res.status(200).json([{ success: 'Fail to delete record, Id should be valid' }])
-//   });
-// }
+      
+    // else if (rows.affectedRows != 0)
+    //   return res.status(200).json([{ success: 'Record Deleted Successfully ' }])
+    // else
+    //   return res.status(200).json([{ success: 'Fail to delete record, Id should be valid' }])
+  });
+}
+
+// function used in delProfileArtist
+// delete file from thumbnail_Images
+async function deleteArtistMediaImages(thumbnailPath) {
+  if (thumbnailPath !== null){
+    const fs = require('fs');
+    const path = require('path');
+    const directory = 'songs/thumbnail_Images/';  // live path
+    // const directory = '../test/songs/thumbnail_Images/'; // local path
+    await fs.readdir(directory, async (err, files) => {
+      if (err) throw err;
+      for (const file of files) {
+        if (file === thumbnailPath){
+          await fs.unlink(path.join(directory, file), err => {
+            if (err) throw err;
+            msg = 'successfully deleted ' + file;
+            console.log('successfully deleted ' + file);
+          });
+        }        
+      }
+    });
+  }  
+}
+
+// function used in delProfileArtist
+// delete file from songs
+async function deleteArtistMediaSong(filePath) {
+  if (filePath !== null) {
+    const fs = require('fs');
+    const path = require('path');
+    const directory = 'songs/'; // live path
+    // const directory = '../test/songs/'; // local path
+    await fs.readdir(directory, async (err, files) => {
+      if (err) throw err;
+      for (const file of files) {
+        if (file === filePath) {
+          await fs.unlink(path.join(directory, file), err => {
+            if (err) throw err;
+            msg = 'successfully deleted ' + file;
+            console.log('successfully deleted ' + file);
+          });
+        }
+      }
+    });
+  }  
+}
+
+// function used in delProfileArtist
+// delete file from images/registrationImages
+async function deleteArtistProfileImages(userImage) {
+  if (userImage !== null)
+  {
+    const fs = require('fs');
+    const path = require('path');
+    const directory = imagePath;
+    await fs.readdir(directory, async (err, files) => {
+      if (err) throw err;
+      for (const file of files) {
+        if (file === userImage){
+          await fs.unlink(path.join(directory, file), err => {
+            if (err) throw err;
+            msg = 'successfully deleted ' + file;
+            console.log('successfully deleted ' + file);
+          });
+        }
+      }
+    });
+  }
+  
+}
 
 // get all user having type 2
 const allUserType2 = (req,res) =>{
@@ -429,18 +520,18 @@ var sendEmail = (data) => { // async
     }
   });
 
-  let messageBody = '<table><tr><th> <img src="' + emailConfig.baseUrl + 'logo/shyamlogo.png"></img> <img src="' + emailConfig.baseUrl +'logo/shyamlogo.png"></img><th></tr>'
-    + '<tr><th><h2 style="margin-bottom: -6px;">There is details of created new artist </h2></th><tr>'
-    + '<tr> <td>Name:</td><td> ' + data.name + '</td></tr>'
-    + '<tr><td>Email:</td><td> ' + data.email+'</td></tr>'
-    + '<tr><td>Phone No.: </td><td>' + data.phone_no + '</td></tr>'
-    + '<tr><td>Description: </td><td>' + data.description +'</td></tr>'
+  let messageBody = '<table style="border-collapse: collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;"><tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:130px" src="' + emailConfig.baseUrl + '/wp-content/uploads/2019/10/logo.png"></th></tr>'
+    + '<tr><th colspan="2"  style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">There is details of created new artist </h2></th></tr>'
+    + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.name + '</td></tr>'
+    + '<tr><td style="border: 1px solid #ccc; padding:10px">Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.email+'</td></tr>'
+    + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Phone No.: </td><td style="border: 1px solid #ccc; padding:10px">' + data.phone_no + '</td></tr>'
+    + '<tr><td style="border: 1px solid #ccc; padding:10px">Description: </td><td style="border: 1px solid #ccc; padding:10px">' + data.description +'</td></tr>'
+    + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyammobilepalace@gmail.com</p></td></tr>'
     +'</table>';
 
   let mailOptions = {
     from: emailConfig.from, // sender address
     to: emailConfig.to + ', ' + data.Email, // list of receivers
-    // to: 'info@shyammobile.com, ' + data.email, // list of receivers
     subject: 'New Artist Created', // Subject line
     // text: 'Detail of Created New Artist ' + messageBody, // plain text body
     html: messageBody,// html body
@@ -451,11 +542,6 @@ var sendEmail = (data) => { // async
   transporter.sendMail(mailOptions).then(result => { // await
     console.log('Email send successfull sent: %s', result);
     response = { EmailSend: true, msg: "Successfully send email " };
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    // Preview only available when sending through an Ethereal account
-    // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
   }).catch(err => {
     console.log('Error while sending email : %s', err);
     response = { EmailSend: false, msg: "Fail to send e-mail " + err };
@@ -612,6 +698,7 @@ exports.fetchLikesOfParticularUser = fetchLikesOfParticularUser;
 exports.artistLikingAdminIncrement = artistLikingAdminIncrement;
 exports.fetchTotalLikesOfArtist = fetchTotalLikesOfArtist;
 exports.loginWithOtpInsert = loginWithOtpInsert;
+exports.delProfileArtist = delProfileArtist;
 
 
 

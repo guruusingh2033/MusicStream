@@ -700,7 +700,39 @@
                     }
                 }
             }
-        },        
+        },  
+        "/delProfileArtist": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Delete artist record, based on Id",
+                "description": "",
+                "operationId": "delProfileArtist",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "id",
+                        "description": "Profile id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "Succesfully removed record"
+                    },
+                    "400": {
+                        "description": "Fail to delete record"
+                    }
+                }
+            }
+        },
+        
         "/allUserType2": {
             "get": {
                 "tags": [
