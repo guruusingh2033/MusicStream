@@ -540,16 +540,17 @@ var sendEmailToAdmin = (data) => { // async
     }
   });
 
-  let messageBody = '<p>Hello Admin,</p>' 
-    + '<p>A new artist has requested for approval. Please approve/decline request on Shyam Parivar admin portal.</p>'
-    + '<table style="border-collapse: collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;"><tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:130px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
+  let messageBody = '<table style="font-family:open sans,sans-serif;width:100%;border-collapse:collapse;"><tr><td style="font-weight: 500;font-size:20px">Hello Admin,</td></tr>' 
+    + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;padding-left: 53px;margin:5px 0 15px 0">A new artist has requested for approval. Please approve/decline request on Shyam Parivar admin portal.</span></td></tr></table>'
+    + '<table style="border-collapse:collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;">'
+    + '<tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:270px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
     + '<tr><th colspan="2" style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">Artist details </h2></th></tr>'
     + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.name + '</td></tr>'
     + '<tr><td style="border: 1px solid #ccc; padding:10px">Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.email+'</td></tr>'
     + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Phone No: </td><td style="border: 1px solid #ccc; padding:10px">' + data.phone_no + '</td></tr>'
     + '<tr><td style="border: 1px solid #ccc; padding:10px">Description: </td><td style="border: 1px solid #ccc; padding:10px">' + data.description +'</td></tr>'
-    + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyammobilepalace@gmail.com</p></td></tr>'
-    +'</table>';
+    + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile Palace</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyammobilepalace@gmail.com</p></td></tr>'
+    + '</table>';
 
   let mailOptions = {
     from: emailConfig.from, // sender address
