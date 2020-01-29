@@ -7,7 +7,7 @@ var port = normalizePort(process.env.PORT || '3000');
 
 var server = http.createServer(app);
 // use for random changing local host --- server.listen(5000, "127.0.0.1");
-server.listen(port, "127.0.0.1");
+server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
