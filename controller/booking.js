@@ -145,7 +145,7 @@ const mailHtml = (data,param)=>{
         //     + '<br>Phone No: ' + data[0][0].MobileNo, //? data[0][0].MobileNo : ''        
         text: '<br><br><label><b>Booking request details:</b></label> ' + param.description,//? param.description : '',
        
-         eventDetails : '<table style="border-collapse: collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;"><tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:130px" src="' + emailConfig.baseUrl + '/wp-content/uploads/2019/10/logo.png"></th></tr>'
+        eventDetails: '<table style="border-collapse: collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;"><tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:130px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
          + '<tr><th colspan="2"  style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">Event details</h2></th></tr>'
          + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Artist Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data[2][0].Name + '</td></tr>'
          + '<tr><td style="border: 1px solid #ccc; padding:10px">Artist Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data[2][0].Email + '</td></tr>'

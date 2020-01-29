@@ -124,7 +124,6 @@ var setUserValue = (req) => {
 
 //imagepath used in multer, fileCopy and deleteFile Function
 const imagePath = 'images/registrationImages/'; // live path
-// const imagePath = '../test/images/registrationImages/'; // local path
 // function used in signup function
 // copy file from temporary folder(tempFile) to parmanent folder(registrationImages)
 function fileCopy(req) { //
@@ -290,7 +289,8 @@ var createArtist = (req, res) => {
       }
       else {
         // send email to admin and artist
-        let response = sendEmail(newUser); // await
+        let response = sendEmailToAdmin(newUser); // await
+        let response2 = sendEmailToArtist(newUser); // await
         res.emailMsg = response;
         // Successfully created user, now return user detail
         retriveUser(newUser.email, res, 'createArtist')                 
@@ -401,7 +401,8 @@ const delProfileArtist = async (req, res) => {
         for (let i=0; i< rows[2].length; i++) {
           // delThumbnailPath.push((rows[2][0].ThumbnailPath));
           await deleteArtistMediaImages(rows[2][i].ThumbnailPath);
-          await deleteArtistMediaSong(rows[2][i].FilePath);         
+          await deleteArtistVideos(rows[2][i].FilePath); 
+          await deleteArtistAudios(rows[2][i].FilePath);         
         }        
       }
       if (rows[0].length > 0) {
@@ -410,7 +411,12 @@ const delProfileArtist = async (req, res) => {
           await deleteArtistProfileImages(rows[0][i].UserImage);
         }
       }
-      return res.status(200).json([{ success: 'Record deleted' }])
+      if (rows[4].affectedRows > 0) {
+        return res.status(200).json([{ success: 'Record deleted' }])
+      }
+      else{
+        return res.status(200).json([{ success: 'Record not deleted' }])
+      }      
   });
 }
 
@@ -421,7 +427,6 @@ async function deleteArtistMediaImages(thumbnailPath) {
     const fs = require('fs');
     const path = require('path');
     const directory = 'songs/thumbnail_Images/';  // live path
-    // const directory = '../test/songs/thumbnail_Images/'; // local path
     await fs.readdir(directory, async (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -438,13 +443,12 @@ async function deleteArtistMediaImages(thumbnailPath) {
 }
 
 // function used in delProfileArtist
-// delete file from songs
-async function deleteArtistMediaSong(filePath) {
+// delete file video files
+async function deleteArtistVideos(filePath) {
   if (filePath !== null) {
     const fs = require('fs');
     const path = require('path');
-    const directory = 'songs/'; // live path
-    // const directory = '../test/songs/'; // local path
+    const directory = 'songs/VideoSongs/'; // live path
     await fs.readdir(directory, async (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -458,6 +462,28 @@ async function deleteArtistMediaSong(filePath) {
       }
     });
   }  
+}
+
+// function used in delProfileArtist
+// delete file audio files
+async function deleteArtistAudios(filePath) {
+  if (filePath !== null) {
+    const fs = require('fs');
+    const path = require('path');
+    const directory = 'songs/AudioSongs/'; // live path
+    await fs.readdir(directory, async (err, files) => {
+      if (err) throw err;
+      for (const file of files) {
+        if (file === filePath) {
+          await fs.unlink(path.join(directory, file), err => {
+            if (err) throw err;
+            msg = 'successfully deleted ' + file;
+            console.log('successfully deleted ' + file);
+          });
+        }
+      }
+    });
+  }
 }
 
 // function used in delProfileArtist
@@ -497,7 +523,10 @@ const allUserType2 = (req,res) =>{
 }
 
 
-var sendEmail = (data) => { // async
+var sendEmailToAdmin = (data) => { // async
+  // let keys = [];
+  // keys.push(Object.keys(data));
+  // console.log(keys);  
   // create reusable transporter object using the default SMTP transport
   let transporter = nodemailer.createTransport({
     host: emailConfig.host,
@@ -513,8 +542,10 @@ var sendEmail = (data) => { // async
     }
   });
 
-  let messageBody = '<table style="border-collapse: collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;"><tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:130px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
-    + '<tr><th colspan="2"  style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">There is details of created new artist </h2></th></tr>'
+  let messageBody = '<p>Hello admin</p>' 
+    + '<p>A new artist has requested for approval. Please approve/decline request on Shyam Parivar admin portal.</p>'
+    + '<table style="border-collapse: collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;"><tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:130px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
+    + '<tr><th colspan="2" style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">There is details of created new artist </h2></th></tr>'
     + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.name + '</td></tr>'
     + '<tr><td style="border: 1px solid #ccc; padding:10px">Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.email+'</td></tr>'
     + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Phone No.: </td><td style="border: 1px solid #ccc; padding:10px">' + data.phone_no + '</td></tr>'
@@ -525,7 +556,7 @@ var sendEmail = (data) => { // async
   let mailOptions = {
     from: emailConfig.from, // sender address
     to: emailConfig.to + ', ' + data.Email, // list of receivers
-    subject: 'New Artist Created', // Subject line
+    subject: 'New Artist Request', // Subject line
     // text: 'Detail of Created New Artist ' + messageBody, // plain text body
     html: messageBody,// html body
   };

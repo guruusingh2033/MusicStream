@@ -5,7 +5,6 @@ require('dotenv/config');
 // Variabele used for image uploading, copying and deleting 
 //imagepath used in multer, fileCopy and deleteFile Function
 const imageFolderPath = 'songs/thumbnail_Images/'; // live path
-// const imageFolderPath = '../test/songs/thumbnail_Images/';  // local path
 let tempImageNameStore; // storing image name with foldername like - tempThumbImage/abc.png
 let thumbnailImageName; // storing only image name like - 1571724607849_Capture.png
 /***  Code Start:: Thumb Image Upload  ***/
@@ -44,7 +43,6 @@ var thumbImageUpload = function (req, res) {
 // Variabele used for song uploading, copying and deleting 
 // songFolderPath used in multer, fileCopy and deleteFile Function
 const songFolderPath = 'songs/'; // live path
-// const songFolderPath = '../test/songs/';  // local path
 let songName; // for storing only song name --- 1571724607849.mp3
 let tempSongNameStore; // storing image name with folder name like - tempFile/1571724607849.mp3
 /***  Code Start:: Song Upload  ***/
@@ -138,8 +136,18 @@ function fileCopy(req) {
 function copySongFile(req){
     if (req.body.filePath && tempSongNameStore == req.body.filePath) {
         const fs = require('fs');
+        let extension = req.body.filePath.split('.').pop();
         let source = songFolderPath + req.body.filePath;
-        let destination = songFolderPath + req.body.filePath.replace('tempFile/', '');
+        let destination;
+        const audioFolderPath = 'songs/AudioSongs/'; // live path
+        const videoFolderPath = 'songs/VideoSongs/'; // live path
+        if (extension == 'mp3'){
+            destination = audioFolderPath + req.body.filePath.replace('tempFile/', '');
+        }
+        else{
+            destination = videoFolderPath + req.body.filePath.replace('tempFile/', '');
+        }
+        
         // Copy dsingle file of folder
         fs.copyFile(source, destination, (err) => {
             if (err) throw err;
