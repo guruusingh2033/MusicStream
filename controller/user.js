@@ -290,7 +290,7 @@ var createArtist = (req, res) => {
       else {
         // send email to admin and artist
         let response = sendEmailToAdmin(newUser); // await
-        let response2 = sendEmailToArtist(newUser); // await
+        // let response2 = sendEmailToArtist(newUser); // await
         res.emailMsg = response;
         // Successfully created user, now return user detail
         retriveUser(newUser.email, res, 'createArtist')                 
