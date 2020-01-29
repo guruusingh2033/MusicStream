@@ -390,7 +390,7 @@ const deleteProfile = (req,res) =>{
 }
 // delete each and everything of aritst records and files
 const delProfileArtist = async (req, res) => {
-  await db.query('CALL sp_retriveUserWithID(?); CALL sp_MediaByArtistId(?); CALL sp_ArtitstDeleteProfile(?)', 
+  await db.query('CALL sp_retriveUserWithID(?); CALL sp_MediaByArtistId(?); CALL sp_ArtitstDeleteProfile(?)',
     [req.body.id, req.body.id, req.body.id], async (err, rows) => {
     if (err)
       return res.status(200).json([{ success: 'May be some connection error ', error: err }])
