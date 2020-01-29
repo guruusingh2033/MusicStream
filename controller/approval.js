@@ -57,7 +57,8 @@ var approveToArtist = (req,res)=>{
                 res.status(200).json([{ success: "Artist already approved" }]);
             }   
             else if (rows[1][0].Status == 1 || rows[1][0].ret_value == 2){
-                let response = sendEmail(rows[1][0]); // await
+                let response = sendEmailToAdmin(rows[1][0]); // await
+                let response2 = sendEmailToArtist(rows[1][0]);
                 res.emailMsg = response;
                 res.status(200).json([{ success: "Successfully approved artist", emailMsg: res.emailMsg }]);
             }        
@@ -68,7 +69,7 @@ var approveToArtist = (req,res)=>{
     })
 }
 
-var sendEmail = (data) => { // async
+var sendEmailToAdmin = (data) => { // async
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         host: emailConfig.host,
@@ -84,17 +85,19 @@ var sendEmail = (data) => { // async
         }
     });
 
-    let messageBody = '<img src="' + emailConfig.baseUrl + 'shyamlogo.png"></img>'
-        + '<h2 style="margin-bottom: -6px;">Here is details </h2>'
+    let messageBody = '<p>Hello Admin,</p>' 
+        + '<p> Following artist has been approved.</p>'
+        + '<img src="' + emailConfig.baseUrl + 'shyamlogo.png"></img>'
+        + '<h2 style="margin-bottom: -6px;">Artist details </h2>'
         + 'Name: ' + data.UserName
         + '<br>Password: ' + cryptr.decrypt(data.Password)
         + '<br>Email: ' + data.Email
-        + '<br>Phone No.: ' + data.MobileNo;
+        + '<br>Phone No: ' + data.MobileNo;
 
     let mailOptions = {
         from: emailConfig.from, // sender address
-        to: emailConfig.to + ', ' + data.Email, // list of receivers
-        subject: 'Approval email', // Subject line
+        to: emailConfig.to, // list of receivers
+        subject: 'Artist Approved', // Subject line
         // text: 'Detail of approval' + messageBody, // plain text body
         html: messageBody// html body
     };
@@ -104,11 +107,51 @@ var sendEmail = (data) => { // async
     transporter.sendMail(mailOptions).then(result => { // await
         console.log('Email send successfull sent: %s', result);
         response = { EmailSend: true, msg: "Successfully send email " };
-        // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+    }).catch(err => {
+        console.log('Error while sending email : %s', err);
+        response = { EmailSend: false, msg: "Fail to send e-mail " + err };
+    })
+    return response;
+}
 
-        // Preview only available when sending through an Ethereal account
-        // console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+var sendEmailToArtist = (data) => { // async
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+        host: emailConfig.host,
+        port: emailConfig.port,
+        secure: emailConfig.secure, // true for 465, false for other ports
+        debug: emailConfig.debug,
+        auth: {
+            user: emailConfig.auth.user, //process.env.GMAIL_USER, // generated ethereal user
+            pass: emailConfig.auth.pass //process.env.GMAIL_PASSWORD // generated ethereal password
+        },
+        tls: {
+            rejectUnauthorized: emailConfig.tls.rejectUnauthorized
+        }
+    });
+
+    let messageBody = '<p>Hello '+ data.Name +',</p>'
+        + '<p> Your request as an artist has been approved. Please find your details below.</p>'
+        + '<img src="' + emailConfig.baseUrl + 'shyamlogo.png"></img>'
+        + '<h2 style="margin-bottom: -6px;">Details </h2>'
+        + 'Name: ' + data.UserName
+        + '<br>Password: ' + cryptr.decrypt(data.Password)
+        + '<br>Email: ' + data.Email
+        + '<br>Phone No: ' + data.MobileNo;
+
+    let mailOptions = {
+        from: emailConfig.from, // sender address
+        to: data.Email, // list of receivers
+        subject: 'Welcome to Shyam Parivar', // Subject line
+        // text: 'Detail of approval' + messageBody, // plain text body
+        html: messageBody// html body
+    };
+
+    let response;
+    // send mail with defined transport object
+    transporter.sendMail(mailOptions).then(result => { // await
+        console.log('Email send successfull sent: %s', result);
+        response = { EmailSend: true, msg: "Successfully send email " };
     }).catch(err => {
         console.log('Error while sending email : %s', err);
         response = { EmailSend: false, msg: "Fail to send e-mail " + err };

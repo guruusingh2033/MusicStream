@@ -290,7 +290,6 @@ var createArtist = (req, res) => {
       else {
         // send email to admin and artist
         let response = sendEmailToAdmin(newUser); // await
-        // let response2 = sendEmailToArtist(newUser); // await
         res.emailMsg = response;
         // Successfully created user, now return user detail
         retriveUser(newUser.email, res, 'createArtist')                 
@@ -522,7 +521,6 @@ const allUserType2 = (req,res) =>{
   });
 }
 
-
 var sendEmailToAdmin = (data) => { // async
   // let keys = [];
   // keys.push(Object.keys(data));
@@ -542,20 +540,20 @@ var sendEmailToAdmin = (data) => { // async
     }
   });
 
-  let messageBody = '<p>Hello admin</p>' 
+  let messageBody = '<p>Hello Admin,</p>' 
     + '<p>A new artist has requested for approval. Please approve/decline request on Shyam Parivar admin portal.</p>'
     + '<table style="border-collapse: collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;"><tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:130px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
-    + '<tr><th colspan="2" style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">There is details of created new artist </h2></th></tr>'
+    + '<tr><th colspan="2" style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">Artist details </h2></th></tr>'
     + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.name + '</td></tr>'
     + '<tr><td style="border: 1px solid #ccc; padding:10px">Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.email+'</td></tr>'
-    + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Phone No.: </td><td style="border: 1px solid #ccc; padding:10px">' + data.phone_no + '</td></tr>'
+    + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Phone No: </td><td style="border: 1px solid #ccc; padding:10px">' + data.phone_no + '</td></tr>'
     + '<tr><td style="border: 1px solid #ccc; padding:10px">Description: </td><td style="border: 1px solid #ccc; padding:10px">' + data.description +'</td></tr>'
     + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyammobilepalace@gmail.com</p></td></tr>'
     +'</table>';
 
   let mailOptions = {
     from: emailConfig.from, // sender address
-    to: emailConfig.to + ', ' + data.Email, // list of receivers
+    to: emailConfig.to, // list of receivers
     subject: 'New Artist Request', // Subject line
     // text: 'Detail of Created New Artist ' + messageBody, // plain text body
     html: messageBody,// html body
