@@ -139,8 +139,8 @@ function copySongFile(req){
         let extension = req.body.filePath.split('.').pop();
         let source = songFolderPath + req.body.filePath;
         let destination;
-        const audioFolderPath = 'songs/AudioSongs/'; // live path
-        const videoFolderPath = 'songs/VideoSongs/'; // live path
+        const audioFolderPath = 'songs/audioSongs/'; // live path
+        const videoFolderPath = 'songs/videoSongs/'; // live path
         if (extension == 'mp3'){
             destination = audioFolderPath + req.body.filePath.replace('tempFile/', '');
         }
