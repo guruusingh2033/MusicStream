@@ -22,10 +22,10 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '/images/registrationImages/')));
-app.use(express.static(path.join(__dirname, '/songs/AudioSongs/')));
-app.use(express.static(path.join(__dirname, '/songs/VideoSongs/')));
+app.use(express.static(path.join(__dirname, '/songs/audioSongs/')));
+app.use(express.static(path.join(__dirname, '/songs/videoSongs/')));
 app.use(express.static(path.join(__dirname, '/songs/thumbnail_Images/')));
 app.use(express.static(path.join(__dirname, '/logo/')));
 

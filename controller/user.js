@@ -447,7 +447,7 @@ async function deleteArtistVideos(filePath) {
   if (filePath !== null) {
     const fs = require('fs');
     const path = require('path');
-    const directory = 'songs/VideoSongs/'; // live path
+    const directory = 'songs/videoSongs/'; // live path
     await fs.readdir(directory, async (err, files) => {
       if (err) throw err;
       for (const file of files) {
@@ -469,7 +469,7 @@ async function deleteArtistAudios(filePath) {
   if (filePath !== null) {
     const fs = require('fs');
     const path = require('path');
-    const directory = 'songs/AudioSongs/'; // live path
+    const directory = 'songs/audioSongs/'; // live path
     await fs.readdir(directory, async (err, files) => {
       if (err) throw err;
       for (const file of files) {
