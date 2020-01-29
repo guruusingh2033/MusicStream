@@ -95,11 +95,11 @@ var sendEmailToAdmin = (data) => { // async
     //     + '<br>Phone No: ' + data.MobileNo;
 
     let messageBody = '<table style="font-family:open sans,sans-serif;width:100%;border-collapse:collapse;"><tr><td style="font-weight: 500;font-size:20px">Hello Admin,</td></tr>'
-        + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;padding-left: 53px;margin:5px 0 15px 0">Following artist has been approved.</span></td></tr></table>'
+        + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;margin:5px 0 15px 0">Following artist has been approved.</span></td></tr></table>'
         + '<table style="border-collapse:collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;">'
         + '<tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:270px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
         + '<tr><th colspan="2" style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">Artist details </h2></th></tr>'
-        + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.UserName + '</td></tr>'
+        + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.Name + '</td></tr>'
         + '<tr><td style="border: 1px solid #ccc; padding:10px">Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.Email + '</td></tr>'
         + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Phone No: </td><td style="border: 1px solid #ccc; padding:10px">' + data.MobileNo + '</td></tr>'
         + '<tr><td style="border: 1px solid #ccc; padding:10px">Password: </td><td style="border: 1px solid #ccc; padding:10px">' + cryptr.decrypt(data.Password) + '</td></tr>'
@@ -152,11 +152,11 @@ var sendEmailToArtist = (data) => { // async
     //     + '<br>Phone No: ' + data.MobileNo;
 
     let messageBody = '<table style="font-family:open sans,sans-serif;width:100%;border-collapse:collapse;"><tr><td style="font-weight: 500;font-size:20px">Hello  ' + data.Name +',</td></tr>'
-        + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;padding-left: 53px;margin:5px 0 15px 0">Your request as an artist has been approved. Please find your details below.</span></td></tr></table>'
+        + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;margin:5px 0 15px 0">Your request as an artist has been approved. Please find your details below.</span></td></tr></table>'
         + '<table style="border-collapse:collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;">'
         + '<tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:270px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
         + '<tr><th colspan="2" style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">Artist details </h2></th></tr>'
-        + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.UserName + '</td></tr>'
+        + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.Name + '</td></tr>'
         + '<tr><td style="border: 1px solid #ccc; padding:10px">Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.Email + '</td></tr>'
         + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Phone No: </td><td style="border: 1px solid #ccc; padding:10px">' + data.MobileNo + '</td></tr>'
         + '<tr><td style="border: 1px solid #ccc; padding:10px">Password: </td><td style="border: 1px solid #ccc; padding:10px">' + cryptr.decrypt(data.Password) + '</td></tr>'
