@@ -192,7 +192,7 @@ var sendEmailToUserForgerPassword = (data) => { // async
     + '<br>Shop no. 47, Hisar Road, Bhattu Mandi'
     + '<br>Fatehabad, Haryana 125053'
     + '<br>Mobile Number: +91 - 9254622222 + 91 - 9017822222'
-    + '<br>Email: shyammobilepalace@gmail.com';
+    + '<br>Email: shyamparivar@shyammobile.com';
 
   const subject = 'Password request';
   const mailTo = data.Email;
@@ -553,7 +553,7 @@ var sendEmailToAdmin = (data) => { // async
     + '<tr><td style="border: 1px solid #ccc; padding:10px">Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.email+'</td></tr>'
     + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Phone No: </td><td style="border: 1px solid #ccc; padding:10px">' + data.phone_no + '</td></tr>'
     + '<tr><td style="border: 1px solid #ccc; padding:10px">Description: </td><td style="border: 1px solid #ccc; padding:10px">' + data.description +'</td></tr>'
-    + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile Palace</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyammobilepalace@gmail.com</p></td></tr>'
+    + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile Palace</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyamparivar@shyammobile.com</p></td></tr>'
     + '</table>';
 
   const subject = 'New Artist Request';
