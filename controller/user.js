@@ -6,8 +6,9 @@ const Cryptr = require('cryptr');
 const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
 require('dotenv/config');
 var db = require('./connection');
-var  nodemailer = require("nodemailer");
+// var  nodemailer = require("nodemailer");
 var emailConfig = require('../config/email')
+const emailService = require('../service/emailService');
 
 var signup = function (req, res) {
   const userType = parseInt(req.body.type);
@@ -171,8 +172,10 @@ function retriveUser(email, res, checkApi) {
         rows[0][0].success = "Successfully registred";
     else if (rows[0][0].UserType == 3 && checkApi == 'signup')      
       rows[0][0].success = "Please wait for admin to approve. We will contact you shortly"; 
-    else if (checkApi == 'forgetPassword')
-      rows[0][0].success = "Success forget password";   
+    else if (checkApi == 'forgetPassword'){
+      sendEmailToUserForgerPassword(rows[0][0]);
+      rows[0][0].success = "Success forget password"; 
+    }  
     else if (checkApi == 'createArtist') {
       rows[0][0].success = "Please wait for admin to approve. We will contact you shortly";     
     }        
@@ -180,6 +183,21 @@ function retriveUser(email, res, checkApi) {
       rows[0][0].success = "Successfully edited";
     return res.status(200).json([rows[0][0]]);
   });
+}
+
+var sendEmailToUserForgerPassword = (data) => { // async
+  let messageBody = 'Hi  ' + data.Name + ','
+    + '<br><br>Your password for Shyam Parivar is: ' + cryptr.decrypt(data.Password)
+    + '<br><br>Shyam Mobile Palace'
+    + '<br>Shop no. 47, Hisar Road, Bhattu Mandi'
+    + '<br>Fatehabad, Haryana 125053'
+    + '<br>Mobile Number: +91 - 9254622222 + 91 - 9017822222'
+    + '<br>Email: shyammobilepalace@gmail.com';
+
+  const subject = 'Password request';
+  const mailTo = data.Email;
+  let response = emailService.sendEmail(subject, messageBody, mailTo);
+  return response;
 }
 
 var login = function (req, res) {
@@ -525,20 +543,6 @@ var sendEmailToAdmin = (data) => { // async
   // let keys = [];
   // keys.push(Object.keys(data));
   // console.log(keys);  
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: emailConfig.host,
-    port: emailConfig.port,
-    secure: emailConfig.secure, // true for 465, false for other ports
-    debug: emailConfig.debug,
-    auth: {
-      user: emailConfig.auth.user, //process.env.GMAIL_USER, // generated ethereal user
-      pass: emailConfig.auth.pass //process.env.GMAIL_PASSWORD // generated ethereal password
-    },
-    tls: {
-      rejectUnauthorized: emailConfig.tls.rejectUnauthorized
-    }
-  });
 
   let messageBody = '<table style="font-family:open sans,sans-serif;width:100%;border-collapse:collapse;"><tr><td style="font-weight: 500;font-size:20px">Hello Admin,</td></tr>' 
     + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;margin:5px 0 15px 0">A new artist has requested for approval. Please approve/decline request on Shyam Parivar admin portal.</span></td></tr></table>'
@@ -552,23 +556,9 @@ var sendEmailToAdmin = (data) => { // async
     + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile Palace</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyammobilepalace@gmail.com</p></td></tr>'
     + '</table>';
 
-  let mailOptions = {
-    from: emailConfig.from, // sender address
-    to: emailConfig.to, // list of receivers
-    subject: 'New Artist Request', // Subject line
-    // text: 'Detail of Created New Artist ' + messageBody, // plain text body
-    html: messageBody,// html body
-  };
-
-  let response;
-  // send mail with defined transport object
-  transporter.sendMail(mailOptions).then(result => { // await
-    console.log('Email send successfull sent: %s', result);
-    response = { EmailSend: true, msg: "Successfully send email " };
-  }).catch(err => {
-    console.log('Error while sending email : %s', err);
-    response = { EmailSend: false, msg: "Fail to send e-mail " + err };
-  })
+  const subject = 'New Artist Request';
+  const mailTo = emailConfig.to;
+  let response = emailService.sendEmail(subject, messageBody, mailTo);
   return response;
 }
 

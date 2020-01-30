@@ -1,8 +1,9 @@
 const db = require('./connection');
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('MusicStreammyTotalySecretKey');
-var nodemailer = require("nodemailer");
+// var nodemailer = require("nodemailer");
 var emailConfig = require('../config/email')
+const emailService = require('../service/emailService');
 
 // retun all approved Artist(UserType 3 and Status 1)
 var allApprovedArtist = (req,res)=>{
@@ -70,30 +71,6 @@ var approveToArtist = (req,res)=>{
 }
 
 var sendEmailToAdmin = (data) => { // async
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-        host: emailConfig.host,
-        port: emailConfig.port,
-        secure: emailConfig.secure, // true for 465, false for other ports
-        debug: emailConfig.debug,
-        auth: {
-            user: emailConfig.auth.user, //process.env.GMAIL_USER, // generated ethereal user
-            pass: emailConfig.auth.pass //process.env.GMAIL_PASSWORD // generated ethereal password
-        },
-        tls: {
-            rejectUnauthorized: emailConfig.tls.rejectUnauthorized
-        }
-    });
-
-    // let messageBody = '<p>Hello Admin,</p>' 
-    //     + '<p> Following artist has been approved.</p>'
-    //     + '<img src="' + emailConfig.baseUrl + 'shyamlogo.png"></img>'
-    //     + '<h2 style="margin-bottom: -6px;">Artist details </h2>'
-    //     + 'Name: ' + data.UserName
-    //     + '<br>Password: ' + cryptr.decrypt(data.Password)
-    //     + '<br>Email: ' + data.Email
-    //     + '<br>Phone No: ' + data.MobileNo;
-
     let messageBody = '<table style="font-family:open sans,sans-serif;width:100%;border-collapse:collapse;"><tr><td style="font-weight: 500;font-size:20px">Hello Admin,</td></tr>'
         + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;margin:5px 0 15px 0">Following artist has been approved.</span></td></tr></table>'
         + '<table style="border-collapse:collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;">'
@@ -105,52 +82,13 @@ var sendEmailToAdmin = (data) => { // async
         + '<tr><td style="border: 1px solid #ccc; padding:10px">Password: </td><td style="border: 1px solid #ccc; padding:10px">' + cryptr.decrypt(data.Password) + '</td></tr>'
         + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile Palace</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyammobilepalace@gmail.com</p></td></tr>'
         + '</table>';
-
-    let mailOptions = {
-        from: emailConfig.from, // sender address
-        to: emailConfig.to, // list of receivers
-        subject: 'Artist Approved', // Subject line
-        // text: 'Detail of approval' + messageBody, // plain text body
-        html: messageBody// html body
-    };
-
-    let response;
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions).then(result => { // await
-        console.log('Email send successfull sent: %s', result);
-        response = { EmailSend: true, msg: "Successfully send email " };
-    }).catch(err => {
-        console.log('Error while sending email : %s', err);
-        response = { EmailSend: false, msg: "Fail to send e-mail " + err };
-    })
+    const subject = 'Artist Approved';
+    const mailTo = emailConfig.to;
+    let response = emailService.sendEmail(subject, messageBody, mailTo);
     return response;
 }
 
 var sendEmailToArtist = (data) => { // async
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-        host: emailConfig.host,
-        port: emailConfig.port,
-        secure: emailConfig.secure, // true for 465, false for other ports
-        debug: emailConfig.debug,
-        auth: {
-            user: emailConfig.auth.user, //process.env.GMAIL_USER, // generated ethereal user
-            pass: emailConfig.auth.pass //process.env.GMAIL_PASSWORD // generated ethereal password
-        },
-        tls: {
-            rejectUnauthorized: emailConfig.tls.rejectUnauthorized
-        }
-    });
-
-    // let messageBody = '<p>Hello '+ data.Name +',</p>'
-    //     + '<p> Your request as an artist has been approved. Please find your details below.</p>'
-    //     + '<img src="' + emailConfig.baseUrl + 'shyamlogo.png"></img>'
-    //     + '<h2 style="margin-bottom: -6px;">Details </h2>'
-    //     + 'Name: ' + data.UserName
-    //     + '<br>Password: ' + cryptr.decrypt(data.Password)
-    //     + '<br>Email: ' + data.Email
-    //     + '<br>Phone No: ' + data.MobileNo;
-
     let messageBody = '<table style="font-family:open sans,sans-serif;width:100%;border-collapse:collapse;"><tr><td style="font-weight: 500;font-size:20px">Hello  ' + data.Name +',</td></tr>'
         + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;margin:5px 0 15px 0">Your request as an artist has been approved. Please find your details below.</span></td></tr></table>'
         + '<table style="border-collapse:collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;">'
@@ -162,24 +100,9 @@ var sendEmailToArtist = (data) => { // async
         + '<tr><td style="border: 1px solid #ccc; padding:10px">Password: </td><td style="border: 1px solid #ccc; padding:10px">' + cryptr.decrypt(data.Password) + '</td></tr>'
         + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile Palace</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyammobilepalace@gmail.com</p></td></tr>'
         + '</table>';
-
-    let mailOptions = {
-        from: emailConfig.from, // sender address
-        to: data.Email, // list of receivers
-        subject: 'Welcome to Shyam Parivar', // Subject line
-        // text: 'Detail of approval' + messageBody, // plain text body
-        html: messageBody// html body
-    };
-
-    let response;
-    // send mail with defined transport object
-    transporter.sendMail(mailOptions).then(result => { // await
-        console.log('Email send successfull sent: %s', result);
-        response = { EmailSend: true, msg: "Successfully send email " };
-    }).catch(err => {
-        console.log('Error while sending email : %s', err);
-        response = { EmailSend: false, msg: "Fail to send e-mail " + err };
-    })
+    const subject = 'Welcome to Shyam Parivar';
+    const mailTo = data.Email;
+    let response = emailService.sendEmail(subject, messageBody, mailTo);
     return response;
 }
 

@@ -5,7 +5,7 @@ module.exports = {
     debug: true,
     auth: {
         user: 'info@shyammobile.com', //process.env.GMAIL_USER, // generated ethereal user
-        pass: 'shyaminfo' //process.env.GMAIL_PASSWORD // generated ethereal password
+        pass: 'Yash.gaurav1' //process.env.GMAIL_PASSWORD // generated ethereal password
     },
     tls: {
         rejectUnauthorized: false
