@@ -20,35 +20,7 @@ var signup = function (req, res) {
     // case 3: insertArtist(req, res); break;
     default: return res.status(200).json([{ success: 'Invalid userType, Fail to signup' }])
   }
-  // function for creating user in DB
-  // createUser(req, res);
 };
-
-// creating user in DB
-// var createUser = (req, res) => {
-//   // Set values of user
-//   var newUser = setUserValue(req);
-//   // Inserting user details in DB
-//   db.query('INSERT INTO tblUsers (Name, Password, Email,  Usertype, Userimage, Status , MobileNo, Description, UserName) values (?,?,?,?,?,?,?,?,?)',
-//     [newUser.name, newUser.password, newUser.email, newUser.type, newUser.image, newUser.status, newUser.phone_no, newUser.description, newUser.userName],
-//     function (err) {
-//       if (err) {
-//         // Check for dupicate email
-//         if (err.code === 'ER_DUP_ENTRY')
-//           return res.status(200).json([{ success: 'An account with this email address already exists.' }])
-//         else
-//           return res.status(200).json([{ success: 'Fail to signup', error:err }])
-//       }
-//       else {
-//         /* copy last uploaded image in permanent folder(registrationImages) and 
-//          remove images from temporary folder(tempFile) */
-//         fileCopy(req)
-//         // Successfully created user, now return user detail
-//         retriveUser(newUser.email, res)
-//       }
-//     }
-//   );
-// };
 
 function insertUser(req, res){
   //setValue here for insertion
@@ -73,31 +45,6 @@ function insertUser(req, res){
     }
   );
 }
-
-// function insertArtist(req, res) {
-//   //setValue here for insertion
-//   const artistFields = setUserValue(req);
-//   // Inserting artist details in DB 
-//   db.query('CALL sp_insertArtist(?,?,?,?,?,?,?,?,?)',
-//     [artistFields.name, artistFields.password, artistFields.email, artistFields.phone_no, artistFields.image,  artistFields.description, artistFields.userName, artistFields.type, artistFields.status],
-//     function (err, rows) {
-//       if (err) {
-//         // Check for dupicate email
-//         if (err.code === 'ER_DUP_ENTRY')
-//           return res.status(200).json([{ success: 'An account with this email address already exists.' }])
-//         else
-//           return res.status(200).json([{ success: 'Fail to signup', error: err }])
-//       }
-//       else if (rows.affectedRows != 0) {
-//         fileCopy(req);
-//         // Successfully signup artist, now return user detail
-//         retriveUser(artistFields.email, res, 'signup')
-//       } else
-//         return res.status(200).json([{ success: 'Fail to signup', error: err }])
-//     }
-//   );
-// }
-
 
 // function used in createUser and createArtist method
 // getting value from request.body and setting in object
@@ -409,10 +356,10 @@ const deleteProfile = (req,res) =>{
   db.query('CALL sp_retriveUserWithID(?); CALL sp_DeleteProfile(?)', [req.body.id, req.body.id], (err, rows)=>{
     if(err)
       return res.status(200).json([{ success: 'May be some connection error ', error: err }])
-    else if (rows[0].length > 0){
+    if (rows[0].length > 0){
       deleteFileService.deleteUserProfileImages(rows[0][0].UserImage);
     }
-    else if (rows[2].affectedRows > 0)      
+    if (rows[2].affectedRows > 0)      
       return res.status(200).json([{ success: 'Record Deleted Successfully ' }])
     else
       return res.status(200).json([{ success: 'Fail to delete record, Id should be valid' }])
@@ -446,96 +393,6 @@ const delProfileArtist = async (req, res) => {
       }      
   });
 }
-
-// function used in delProfileArtist
-// delete file from thumbnail_Images
-// async function deleteArtistMediaImages(thumbnailPath) {
-//   if (thumbnailPath !== null){
-//     const fs = require('fs');
-//     const path = require('path');
-//     const directory = 'songs/thumbnail_Images/';  // live path
-//     await fs.readdir(directory, async (err, files) => {
-//       if (err) throw err;
-//       for (const file of files) {
-//         if (file === thumbnailPath){
-//           await fs.unlink(path.join(directory, file), err => {
-//             if (err) throw err;
-//             msg = 'successfully deleted ' + file;
-//             console.log('successfully deleted ' + file);
-//           });
-//         }        
-//       }
-//     });
-//   }  
-// }
-
-// function used in delProfileArtist
-// delete file video files
-// async function deleteArtistVideos(filePath) {
-//   if (filePath !== null) {
-//     const fs = require('fs');
-//     const path = require('path');
-//     const directory = 'songs/videoSongs/'; // live path
-//     await fs.readdir(directory, async (err, files) => {
-//       if (err) throw err;
-//       for (const file of files) {
-//         if (file === filePath) {
-//           await fs.unlink(path.join(directory, file), err => {
-//             if (err) throw err;
-//             msg = 'successfully deleted ' + file;
-//             console.log('successfully deleted ' + file);
-//           });
-//         }
-//       }
-//     });
-//   }  
-// }
-
-// function used in delProfileArtist
-// delete file audio files
-// async function deleteArtistAudios(filePath) {
-//   if (filePath !== null) {
-//     const fs = require('fs');
-//     const path = require('path');
-//     const directory = 'songs/audioSongs/'; // live path
-//     await fs.readdir(directory, async (err, files) => {
-//       if (err) throw err;
-//       for (const file of files) {
-//         if (file === filePath) {
-//           await fs.unlink(path.join(directory, file), err => {
-//             if (err) throw err;
-//             msg = 'successfully deleted ' + file;
-//             console.log('successfully deleted ' + file);
-//           });
-//         }
-//       }
-//     });
-//   }
-// }
-
-// // function used in delProfileArtist
-// // delete file from images/registrationImages
-// async function deleteArtistProfileImages(userImage) {
-//   if (userImage !== null)
-//   {
-//     const fs = require('fs');
-//     const path = require('path');
-//     const directory = imagePath;
-//     await fs.readdir(directory, async (err, files) => {
-//       if (err) throw err;
-//       for (const file of files) {
-//         if (file === userImage){
-//           await fs.unlink(path.join(directory, file), err => {
-//             if (err) throw err;
-//             msg = 'successfully deleted ' + file;
-//             console.log('successfully deleted ' + file);
-//           });
-//         }
-//       }
-//     });
-//   }
-  
-// }
 
 // get all user having type 2
 const allUserType2 = (req,res) =>{
