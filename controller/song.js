@@ -105,7 +105,7 @@ var createSong = (req, res) => {
 var deleteMediaArtIdMedId = function (req, res) {
     const tblMedia_Id = req.body.tblMedia_Id; // get id from body
     const artistId = req.body.artistId; // get id body
-    db.query('CALL sp_getMediaByMediaId(?); CALL sp_delMediaArtIdMedId(?,?)', [tblMedia_Id, artistId], 
+    db.query('CALL sp_getMediaByMediaId(?); CALL sp_delMediaArtIdMedId(?,?)', [tblMedia_Id, tblMedia_Id, artistId], 
     async (err, rows) => {
         if (err) {
             res.status(200).json([{ success: 'Fail to delete, ArtistId and tableId should be valid', error: err }]);           
