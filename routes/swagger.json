@@ -17,16 +17,12 @@
             "description": "Operations about create user/artist, login, forget password",
             "externalDocs": {
                 "description": "Find out more about MusicStream",
-                "url": "http://api.shyammobile.com/swagger/"
+                "url": "http://185.149.112.29:3000/swagger/"
             }
         },
         {
             "name": "User",
-            "description": "Operations about get user/artist, edit, delete",
-            "externalDocs": {
-                "description": "Find out more",
-                "url": "http://api.shyammobile.com/swagger/"
-            }
+            "description": "Operations about get user/artist, edit, delete"
         },
         {
             "name": "Song",
