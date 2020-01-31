@@ -490,6 +490,94 @@
                 }
             }
         },
+        "/loginWithSocialMediaAccount": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login with social media account",
+                "description": "Insert into db login detail if not exists",
+                "operationId": "loginWithSocialMediaAccount",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "name",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "email",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "image",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
+                        "name": "type",
+                        "description": "2- for user, 3- for artist",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                2,
+                                3
+                            ],
+                            "default": 2
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "status",
+                        "description": "1- apprvoed, 2- not approved",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                1,
+                                2
+                            ],
+                            "default": 2
+                        }
+                    },
+                    {
+                        "in": "formData",
+                        "name": "userName",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully created user, responsed json Array",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Fail to create user"
+                    },
+                    "409": {
+                        "description": "Duplicate entry"
+                    }
+                }
+            }
+        },
         
         
         "/user": {

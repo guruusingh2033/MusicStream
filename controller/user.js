@@ -560,6 +560,31 @@ const loginWithOtpInsert = (req, res) =>{
   );
 }
 
+const loginWithSocialMediaAccount = (req, res) => {
+  const userFields = setUserValue(req);
+  // Inserting user details in DB 
+  db.query('CALL sp_InsertLoginWithSocialMediaAccount(?,?,?,?,?,?)',
+    [
+      userFields.name, 
+      userFields.email, 
+      userFields.image,
+      userFields.type,
+      userFields.status,
+      userFields.userName
+    ],
+    function (err, rows) {
+      if (err) {
+        return res.status(200).json([{ success: 'Fail to insert', error: err }])
+      }
+      if (rows[0][0].Id) {
+        return res.status(200).json([rows[0][0]])
+      } else {
+        return res.status(200).json([{ success: 'Not inserted', error: err }])
+      }
+    }
+  );
+}
+
 exports.signup = signup;
 exports.login = login;
 exports.forgetPassword = forgetPassword;
@@ -579,6 +604,7 @@ exports.artistLikingAdminIncrement = artistLikingAdminIncrement;
 exports.fetchTotalLikesOfArtist = fetchTotalLikesOfArtist;
 exports.loginWithOtpInsert = loginWithOtpInsert;
 exports.delProfileArtist = delProfileArtist;
+exports.loginWithSocialMediaAccount = loginWithSocialMediaAccount;
 
 
 

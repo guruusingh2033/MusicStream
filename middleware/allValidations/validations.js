@@ -379,6 +379,20 @@ const loginWithOtpInsert = async (req, res, next) => {
     }
 }
 
+const email = async (req, res, next) => {
+    let v = new Validator(req.body, {
+        email: 'required|email',
+    });
+    const matched = await v.check();
+    if (!matched) {
+        req.status = 422;
+        req.body = v.errors;
+        v.errors.success = "Validation error";        
+        res.status(422).send([v.errors]);
+    } else {
+        next();
+    }
+}
 
 exports.signUp                      = signUp;
 exports.login                       = login;
@@ -402,3 +416,4 @@ exports.insertArtistLike = insertArtistLike;
 exports.userIdArtitstId = userIdArtitstId;
 exports.artistLikingAdminIncrement = artistLikingAdminIncrement;
 exports.loginWithOtpInsert = loginWithOtpInsert;
+exports.email = email;
