@@ -9,6 +9,7 @@ var db = require('./connection');
 // var  nodemailer = require("nodemailer");
 var emailConfig = require('../config/email')
 const emailService = require('../service/emailService');
+const deleteFileService = require('../service/deleteFilesService');
 
 var signup = function (req, res) {
   const userType = parseInt(req.body.type);
@@ -59,7 +60,7 @@ function insertUser(req, res){
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
+          return res.status(200).json([{ success: 'May email/phone no. already exists.' }])
         else
           return res.status(200).json([{ success: 'Fail to signup', error: err }])
       }
@@ -301,7 +302,7 @@ var createArtist = (req, res) => {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY') 
-          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.'}])
+          return res.status(200).json([{ success: 'May email/phone no. already exists.'}])
         else
           return res.status(200).json([{ success: 'Fail to signup', error:err}])
       }
@@ -340,7 +341,7 @@ function updateUser(req, res){
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
+          return res.status(200).json([{ success: 'May email/phone no. already exists.' }])
         else
           return res.status(200).json([{ success: 'Fail to update', error: err }])
       }
@@ -378,7 +379,7 @@ function updateArtist(req, res) {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
+          return res.status(200).json([{ success: 'May email/phone no. already exists.' }])
         else
           return res.status(200).json([{ success: 'Fail to update', error: err }])
       }
@@ -408,24 +409,22 @@ const deleteProfile = (req,res) =>{
 }
 // delete each and everything of aritst records and files
 const delProfileArtist = async (req, res) => {
-  await db.query('CALL sp_retriveUserWithID(?); CALL sp_MediaByArtistId(?); CALL sp_ArtitstDeleteProfile(?)',
+  await db.query('CALL sp_retriveUserWithID(?); CALL sp_MediaByArtistId(?);  CALL sp_ArtitstDeleteProfile(?)',
     [req.body.id, req.body.id, req.body.id], async (err, rows) => {
     if (err)
       return res.status(200).json([{ success: 'May be some connection error ', error: err }])
-      // let delThumbnailPath = [];  
      
       if (rows[2].length > 0){      
         for (let i=0; i< rows[2].length; i++) {
-          // delThumbnailPath.push((rows[2][0].ThumbnailPath));
-          await deleteArtistMediaImages(rows[2][i].ThumbnailPath);
-          await deleteArtistVideos(rows[2][i].FilePath); 
-          await deleteArtistAudios(rows[2][i].FilePath);         
+          await deleteFileService.deleteArtistMediaImages(rows[2][i].ThumbnailPath);
+          await deleteFileService.deleteArtistVideos(rows[2][i].FilePath); 
+          await deleteFileService.deleteArtistAudios(rows[2][i].FilePath);         
         }        
       }
       if (rows[0].length > 0) {
         for (let i = 0; i < rows[0].length; i++) {
           // delThumbnailPath.push((rows[2][0].ThumbnailPath));
-          await deleteArtistProfileImages(rows[0][i].UserImage);
+          await deleteFileService.deleteArtistProfileImages(rows[0][i].UserImage);
         }
       }
       if (rows[4].affectedRows > 0) {
@@ -439,93 +438,93 @@ const delProfileArtist = async (req, res) => {
 
 // function used in delProfileArtist
 // delete file from thumbnail_Images
-async function deleteArtistMediaImages(thumbnailPath) {
-  if (thumbnailPath !== null){
-    const fs = require('fs');
-    const path = require('path');
-    const directory = 'songs/thumbnail_Images/';  // live path
-    await fs.readdir(directory, async (err, files) => {
-      if (err) throw err;
-      for (const file of files) {
-        if (file === thumbnailPath){
-          await fs.unlink(path.join(directory, file), err => {
-            if (err) throw err;
-            msg = 'successfully deleted ' + file;
-            console.log('successfully deleted ' + file);
-          });
-        }        
-      }
-    });
-  }  
-}
+// async function deleteArtistMediaImages(thumbnailPath) {
+//   if (thumbnailPath !== null){
+//     const fs = require('fs');
+//     const path = require('path');
+//     const directory = 'songs/thumbnail_Images/';  // live path
+//     await fs.readdir(directory, async (err, files) => {
+//       if (err) throw err;
+//       for (const file of files) {
+//         if (file === thumbnailPath){
+//           await fs.unlink(path.join(directory, file), err => {
+//             if (err) throw err;
+//             msg = 'successfully deleted ' + file;
+//             console.log('successfully deleted ' + file);
+//           });
+//         }        
+//       }
+//     });
+//   }  
+// }
 
 // function used in delProfileArtist
 // delete file video files
-async function deleteArtistVideos(filePath) {
-  if (filePath !== null) {
-    const fs = require('fs');
-    const path = require('path');
-    const directory = 'songs/videoSongs/'; // live path
-    await fs.readdir(directory, async (err, files) => {
-      if (err) throw err;
-      for (const file of files) {
-        if (file === filePath) {
-          await fs.unlink(path.join(directory, file), err => {
-            if (err) throw err;
-            msg = 'successfully deleted ' + file;
-            console.log('successfully deleted ' + file);
-          });
-        }
-      }
-    });
-  }  
-}
+// async function deleteArtistVideos(filePath) {
+//   if (filePath !== null) {
+//     const fs = require('fs');
+//     const path = require('path');
+//     const directory = 'songs/videoSongs/'; // live path
+//     await fs.readdir(directory, async (err, files) => {
+//       if (err) throw err;
+//       for (const file of files) {
+//         if (file === filePath) {
+//           await fs.unlink(path.join(directory, file), err => {
+//             if (err) throw err;
+//             msg = 'successfully deleted ' + file;
+//             console.log('successfully deleted ' + file);
+//           });
+//         }
+//       }
+//     });
+//   }  
+// }
 
 // function used in delProfileArtist
 // delete file audio files
-async function deleteArtistAudios(filePath) {
-  if (filePath !== null) {
-    const fs = require('fs');
-    const path = require('path');
-    const directory = 'songs/audioSongs/'; // live path
-    await fs.readdir(directory, async (err, files) => {
-      if (err) throw err;
-      for (const file of files) {
-        if (file === filePath) {
-          await fs.unlink(path.join(directory, file), err => {
-            if (err) throw err;
-            msg = 'successfully deleted ' + file;
-            console.log('successfully deleted ' + file);
-          });
-        }
-      }
-    });
-  }
-}
+// async function deleteArtistAudios(filePath) {
+//   if (filePath !== null) {
+//     const fs = require('fs');
+//     const path = require('path');
+//     const directory = 'songs/audioSongs/'; // live path
+//     await fs.readdir(directory, async (err, files) => {
+//       if (err) throw err;
+//       for (const file of files) {
+//         if (file === filePath) {
+//           await fs.unlink(path.join(directory, file), err => {
+//             if (err) throw err;
+//             msg = 'successfully deleted ' + file;
+//             console.log('successfully deleted ' + file);
+//           });
+//         }
+//       }
+//     });
+//   }
+// }
 
-// function used in delProfileArtist
-// delete file from images/registrationImages
-async function deleteArtistProfileImages(userImage) {
-  if (userImage !== null)
-  {
-    const fs = require('fs');
-    const path = require('path');
-    const directory = imagePath;
-    await fs.readdir(directory, async (err, files) => {
-      if (err) throw err;
-      for (const file of files) {
-        if (file === userImage){
-          await fs.unlink(path.join(directory, file), err => {
-            if (err) throw err;
-            msg = 'successfully deleted ' + file;
-            console.log('successfully deleted ' + file);
-          });
-        }
-      }
-    });
-  }
+// // function used in delProfileArtist
+// // delete file from images/registrationImages
+// async function deleteArtistProfileImages(userImage) {
+//   if (userImage !== null)
+//   {
+//     const fs = require('fs');
+//     const path = require('path');
+//     const directory = imagePath;
+//     await fs.readdir(directory, async (err, files) => {
+//       if (err) throw err;
+//       for (const file of files) {
+//         if (file === userImage){
+//           await fs.unlink(path.join(directory, file), err => {
+//             if (err) throw err;
+//             msg = 'successfully deleted ' + file;
+//             console.log('successfully deleted ' + file);
+//           });
+//         }
+//       }
+//     });
+//   }
   
-}
+// }
 
 // get all user having type 2
 const allUserType2 = (req,res) =>{
@@ -547,7 +546,7 @@ var sendEmailToAdmin = (data) => { // async
   let messageBody = '<table style="font-family:open sans,sans-serif;width:100%;border-collapse:collapse;"><tr><td style="font-weight: 500;font-size:20px">Hello Admin,</td></tr>' 
     + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;margin:5px 0 15px 0">A new artist has requested for approval. Please approve/decline request on Shyam Parivar admin portal.</span></td></tr></table>'
     + '<table style="border-collapse:collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;">'
-    + '<tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:270px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
+    + '<tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:200px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
     + '<tr><th colspan="2" style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">Artist details </h2></th></tr>'
     + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px">Name:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.name + '</td></tr>'
     + '<tr><td style="border: 1px solid #ccc; padding:10px">Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data.email+'</td></tr>'
@@ -581,7 +580,7 @@ function editProfilebyAdmin(req, res) {
       if (err) {
         // Check for dupicate email
         if (err.code === 'ER_DUP_ENTRY')
-          return res.status(200).json([{ success: 'May userName/email/phone no. already exists.' }])
+          return res.status(200).json([{ success: 'May email/phone no. already exists.' }])
         else
           return res.status(200).json([{ success: 'Not updated', error: err }])
       }

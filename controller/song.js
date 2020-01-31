@@ -1,6 +1,7 @@
 const multer = require('multer'); // for uploading files
 const db = require('./connection');
 require('dotenv/config');
+const deleteFileService = require('../service/deleteFilesService');
 
 // Variabele used for image uploading, copying and deleting 
 //imagepath used in multer, fileCopy and deleteFile Function
@@ -104,12 +105,21 @@ var createSong = (req, res) => {
 var deleteMediaArtIdMedId = function (req, res) {
     const tblMedia_Id = req.body.tblMedia_Id; // get id from body
     const artistId = req.body.artistId; // get id body
-    db.query('CALL sp_delMediaArtIdMedId(?,?)', [tblMedia_Id, artistId], (err, rows) => {
-        if (!err && rows.affectedRows != 0) {
+    db.query('CALL sp_getMediaByMediaId(?); CALL sp_delMediaArtIdMedId(?,?)', [tblMedia_Id, artistId], 
+    async (err, rows) => {
+        if (err) {
+            res.status(200).json([{ success: 'Fail to delete, ArtistId and tableId should be valid', error: err }]);           
+        }
+        if (rows[0].length > 0) {
+            for (let i = 0; i < rows[0].length; i++) {
+                await deleteFileService.deleteArtistMediaImages(rows[0][i].ThumbnailPath);
+                await deleteFileService.deleteArtistVideos(rows[0][i].FilePath);
+                await deleteFileService.deleteArtistAudios(rows[0][i].FilePath);
+            }
+        }       
+        if (rows[2].affectedRows > 0){
             res.status(200).json([{ success: 'Record deleted sucessfully' }])
         }
-        else
-            res.status(200).json([{ success: 'Fail to delete, ArtistId and tableId should be valid', error: err }]);
     });
 };
 
