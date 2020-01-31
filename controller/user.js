@@ -335,8 +335,16 @@ function updateUser(req, res){
   const userFields = setUserValue(req);
   const id = req.body.id;
   // Inserting user details in DB 
-  db.query('CALL sp_updateUser(?,?,?,?,?,?,?)',
-    [userFields.name, userFields.password, userFields.email, userFields.phone_no, userFields.userName, id, userFields.type],
+  db.query('CALL sp_updateUser(?,?,?,?,?,?,?,?)',
+    [
+      userFields.name, 
+      userFields.password, 
+      userFields.email, 
+      userFields.phone_no, 
+      userFields.userName, id, 
+      userFields.type, 
+      userFields.image
+    ],
     function (err, rows) {
       if (err) {
         // Check for dupicate email
@@ -398,10 +406,13 @@ function updateArtist(req, res) {
 
 // delete profile with id 
 const deleteProfile = (req,res) =>{
-  db.query('CALL sp_DeleteProfile(?)', [req.body.id], (err, rows)=>{
+  db.query('CALL sp_retriveUserWithID(?); CALL sp_DeleteProfile(?)', [req.body.id, req.body.id], (err, rows)=>{
     if(err)
       return res.status(200).json([{ success: 'May be some connection error ', error: err }])
-    else if (rows.affectedRows != 0)
+    else if (rows[0].length > 0){
+      deleteFileService.deleteUserProfileImages(rows[0][0].UserImage);
+    }
+    else if (rows[2].affectedRows > 0)      
       return res.status(200).json([{ success: 'Record Deleted Successfully ' }])
     else
       return res.status(200).json([{ success: 'Fail to delete record, Id should be valid' }])
@@ -422,10 +433,10 @@ const delProfileArtist = async (req, res) => {
         }        
       }
       if (rows[0].length > 0) {
-        for (let i = 0; i < rows[0].length; i++) {
+        // for (let i = 0; i < rows[0].length; i++) {
           // delThumbnailPath.push((rows[2][0].ThumbnailPath));
-          await deleteFileService.deleteArtistProfileImages(rows[0][i].UserImage);
-        }
+          await deleteFileService.deleteArtistProfileImages(rows[0][0].UserImage);
+        // }
       }
       if (rows[4].affectedRows > 0) {
         return res.status(200).json([{ success: 'Record deleted' }])
