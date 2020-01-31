@@ -104,7 +104,7 @@ const mailHtml = (data,param)=>{
     return {                
         eventDetails: '<table style="font-family:open sans,sans-serif;width:100%;border-collapse:collapse;"><tr><td style="font-weight: 500;font-size:20px">Hello Admin,</td></tr>'
             + '<tr><td style="margin-bottom:10px;font-weight: 400;font-size:16px"><span style="display: block;margin:5px 0 15px 0">Following detail of booking event</span></td></tr></table>'
-            + '<table style="border-collapse: collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;"><tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 10px;"> <img style="width:130px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
+            + '<table style="border-collapse: collapse;max-width: 600px;margin: 0 auto;width:100%;font-family:open sans,sans-serif;"><tr><th colspan="2" style="background:#f3f3f3;border: 1px solid #ccc;padding: 6px 10px 0px 10px;"> <img style="width:130px" src="' + emailConfig.baseUrl + 'shyamlogo.png"></th></tr>'
             + '<tr><th colspan="2"  style="border: 1px solid #ccc; padding:10px"><h2 style="margin:0; font-size: 18px;color:#4a4a4a">Event details</h2></th></tr>'
             + '<tr style="background:#f3f3f3"> <td style="border: 1px solid #ccc; padding:10px;width:50%;">Artist Name:</td><td style="border: 1px solid #ccc; padding:10px;width:50%;"> ' + data[2][0].Name + '</td></tr>'
             + '<tr><td style="border: 1px solid #ccc; padding:10px">Artist Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + data[2][0].Email + '</td></tr>'
@@ -119,7 +119,7 @@ const mailHtml = (data,param)=>{
             + '<tr><td style="border: 1px solid #ccc; padding:10px">Email:</td><td style="border: 1px solid #ccc; padding:10px"> ' + param.email + '</td></tr>'
             + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Phone No: </td><td style="border: 1px solid #ccc; padding:10px">' + data[0][0].MobileNo + '</td></tr>'
             + '<tr style="background:#f3f3f3"><td style="border: 1px solid #ccc; padding:10px">Booking request details: </td><td style="border: 1px solid #ccc; padding:10px">' + param.description + '</td></tr>'
-            + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyamparivar@shyammobile.com</p></td></tr>'
+            + '<tr><td colspan="2" style="text-align: center;border: 1px solid #ccc; padding:10px"><b style="color:#c97328">Shyam Mobile Palace</b><br><p style="margin: 0;">Shop no. 47, Hisar Road, Bhattu Mandi, </p><p style="margin: 0;">Fatehabad, Haryana 125053<p><p style="margin: 10px 0;"><strong style="color:#c97328">Mobile Number:</strong> +91-9254622222 +91-9017822222</p><p style="margin: 0;"><strong style="color:#c97328">Email:</strong> shyamparivar@shyammobile.com</p></td></tr>'
            + '</table>'
     }
 }
