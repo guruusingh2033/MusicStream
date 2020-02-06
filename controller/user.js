@@ -400,7 +400,7 @@ const allUserType2 = (req,res) =>{
     if (err)
       return res.status(200).json([{ success: 'Fail to get all users type 2', error: err }]);
     if (rows[0].length == 0)
-      return res.status(200).json([{ success: 'Table is empty', tblUserId: 'Table is empty' }]);
+      return res.status(200).json([{ success: 'Table is empty', tblUsers_ID: 'Table is empty' }]);
     rows[0][0].success = 'Successfully get all users';
     return res.status(200).json(rows[0]);
   });
