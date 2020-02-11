@@ -428,7 +428,7 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "Insertlogin With Otp values",
+                "summary": "Insert login With Otp values",
                 "description": "",
                 "operationId": "loginWithOtpInsert",
                 "produces": [
@@ -1848,6 +1848,37 @@
                 "responses": {
                     "200": {
                         "description": "0/1  (0-dislike, 1-like)"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/countLikeCommentByMedidId": {
+            "post": {
+                "tags": [
+                    "Comments"
+                ],
+                "summary": "Fetch count of comment and likes based on media id",
+                "description": "",
+                "operationId": "countLikeCommentByMedidId",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "mediaId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "number of likes and comments"
                     },
                     "500": {
                         "description": "Internal server error"

@@ -71,6 +71,7 @@ module.exports = function(app) {
   // comment api
   app.post('/addComment', validation.userIdMediaId, comment.addComment); 
   app.post('/fetchComment', validation.mediaId, comment.fetchComment);
+  app.post('/countLikeCommentByMedidId', validation.mediaId, comment.countLikeCommentByMedidId);
 
   // Booking api
   app.post('/insertBooking', validation.booking, booking.insertBooking);
