@@ -512,6 +512,13 @@
                     },
                     {
                         "in": "formData",
+                        "name": "password",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "formData",
                         "name": "email",
                         "description": "",
                         "required": true,
@@ -560,7 +567,7 @@
                         "description": "",
                         "required": false,
                         "type": "string"
-                    }
+                    }                    
                 ],
                 "responses": {
                     "200": {

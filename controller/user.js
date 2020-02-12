@@ -134,8 +134,13 @@ function retriveUser(email, res, checkApi) {
 }
 
 var sendEmailToUserForgerPassword = (data) => { // async
+  let password;
+  if(data.Password != null || data.Password != '')
+    password = cryptr.decrypt(data.Password); 
+  else
+    password = "";
   let messageBody = 'Hi  ' + data.Name + ','
-    + '<br><br>Your password for Shyam Parivar is: ' + cryptr.decrypt(data.Password)
+    + '<br><br>Your password for Shyam Parivar is: ' + password
     + '<br><br>Shyam Mobile Palace'
     + '<br>Shop no. 47, Hisar Road, Bhattu Mandi'
     + '<br>Fatehabad, Haryana 125053'
@@ -563,9 +568,10 @@ const loginWithOtpInsert = (req, res) =>{
 const loginWithSocialMediaAccount = (req, res) => {
   const userFields = setUserValue(req);
   // Inserting user details in DB 
-  db.query('CALL sp_InsertLoginWithSocialMediaAccount(?,?,?,?,?,?)',
+  db.query('CALL sp_InsertLoginWithSocialMediaAccount(?,?,?,?,?,?,?)',
     [
       userFields.name, 
+      userFields.password,      
       userFields.email, 
       userFields.image,
       userFields.type,
