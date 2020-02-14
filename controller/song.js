@@ -299,7 +299,8 @@ const noOfAudioNoOfVideo = (req, res)=>{
         if (err)
             return res.status(200).json([{ success: 'Fail to get records', error: err }]);
         if (rows[0].length == 0)
-            return res.status(200).json([{ success: 'Table is empty' }]);
+            return res.status(200).json([{"noOfAudio": 0, "noOfVideo": 0, success: 'Table is empty' }]);
+
         rows[0][0].success = 'Successfully get number of audio and video';
         return res.status(200).json(rows[0]);
     });
