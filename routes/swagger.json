@@ -1236,7 +1236,7 @@
                     "Song"
                 ],
                 "summary": "Get all audio song",
-                "description": "Return all audio songs with artist Name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ",
+                "description": "Return all audio songs with artist Name",
                 "operationId": "getAllAudioSong",
                 "produces": [
                     "application/json",
@@ -1261,7 +1261,7 @@
                     "Song"
                 ],
                 "summary": "Get all video song",
-                "description": "Return all video songs with artist Name                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ",
+                "description": "Return all video songs with artist Name",
                 "operationId": "getAllVideoSong",
                 "produces": [
                     "application/json",
@@ -1286,7 +1286,7 @@
                     "Song"
                 ],
                 "summary": "Get all audio song, passing artist id",
-                "description": "Return all audio songs with artist name by passing artist id                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ",
+                "description": "Return all audio songs with artist name by passing artist id",
                 "operationId": "getSingleSong",
                 "produces": [
                     "application/json",
@@ -1320,7 +1320,7 @@
                     "Song"
                 ],
                 "summary": "Get all video song, pass artist id",
-                "description": "Return all video songs with artist name by passing artist id                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ",
+                "description": "Return all video songs with artist name by passing artist id",
                 "operationId": "allVideosWithArtistId",
                 "produces": [
                     "application/json",
@@ -1354,7 +1354,7 @@
                     "Song"
                 ],
                 "summary": "Get all artist with thier number of songs ",
-                "description": "Return all artist with thier number of songs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ",
+                "description": "Return all artist with thier number of songs",
                 "operationId": "allArtist",
                 "produces": [
                     "application/json",
@@ -1400,6 +1400,28 @@
                         "schema": {
                             "$ref": "#/definitions/Song"
                         }
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
+        "/noOfAudioNoOfVideo": {
+            "get": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "Get count audio and videos",
+                "description": "",
+                "operationId": "noOfAudioNoOfVideo",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, noOfAudio and noOfVideo"
                     },
                     "400": {
                         "description": "Fail to retreive record"
