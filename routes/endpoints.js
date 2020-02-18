@@ -52,6 +52,8 @@ module.exports = function(app) {
   app.get('/allArtist', song.allArtist); // return all artist with there No of Song and also no of videos
   app.post('/countMediaArtId', validation.artistId, song.countMediaArtId); // return counting of videos and song based on artist Id
   app.get('/noOfAudioNoOfVideo', song.noOfAudioNoOfVideo);
+  // used for Searching at frontend
+  app.get('/dataOfUserAndMediaForSearching', song.dataOfUserAndMediaForSearching)  // get all data of tbluser and tblmedia where status = 1 
   
   // Approval api
   app.get('/allApprovedArtist', approval.allApprovedArtist); // return all aproved artist (usertype 3)
@@ -80,7 +82,7 @@ module.exports = function(app) {
   app.post('/fetchAllBooking', booking.fetchAllBooking); // get detail of booking and artist
   app.post('/deleteBooking', booking.deleteBooking);
   app.post('/editBooking', validation.bookingId, validation.booking, booking.editBooking); 
-  app.post('/bookNowEvent',booking.bookNowEvent); 
+  app.post('/bookNowEvent',booking.bookNowEvent);   
 };
 
 

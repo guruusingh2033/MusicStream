@@ -1429,6 +1429,28 @@
                 }
             }
         },
+        "/dataOfUserAndMediaForSearching": {
+            "get": {
+                "tags": [
+                    "Song"
+                ],
+                "summary": "Get all data of media and user where status = 1, for frontend searching ",
+                "description": "",
+                "operationId": "dataOfUserAndMediaForSearching",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, json array"
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
 
         "/allApprovedArtist": {
             "get": {

@@ -306,6 +306,19 @@ const noOfAudioNoOfVideo = (req, res)=>{
     });
 }
 
+const dataOfUserAndMediaForSearching = (req,res)=>{
+    db.query('CALL sp_DataOfUserAndMediaForSearching()', [], (err, rows)=>{
+        if(err)
+            return res.status(200).json([{ success: 'Fail to get records', error: err }]);
+        if(rows[0].length == 0)
+            return res.status(200).json([{ tblUsers_ID: 'Table is empty' }]);
+        else{
+            rows[0][0].success = 'Successfully get records of user and media';
+            return res.status(200).json(rows[0]);
+        }            
+    })
+}
+
 exports.songUploadMulter = songUploadMulter;
 exports.songUpload = songUpload;
 exports.songInsert = songInsert;
@@ -319,3 +332,4 @@ exports.countMediaArtId = countMediaArtId;
 exports.allVideosArtist = allVideosArtist;
 exports.allVideosWithArtistId = allVideosWithArtistId;
 exports.noOfAudioNoOfVideo = noOfAudioNoOfVideo;
+exports.dataOfUserAndMediaForSearching = dataOfUserAndMediaForSearching;
