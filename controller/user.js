@@ -18,7 +18,7 @@ var signup = function (req, res) {
     // case 1: insertUser(req, res); break;
     case 2: insertUser(req, res); break;
     // case 3: insertArtist(req, res); break;
-    default: return res.status(200).json([{ success: 'Invalid userType, Fail to signup' }])
+    default: return res.status(200).json([{ success: 'Invalid type, Fail to signup' }])
   }
 };
 

@@ -5,9 +5,10 @@ var signUp = async (req, res, next) => {
     let v;
     if (req.body.type == 3) {
         v = new Validator(req.body, {
-            image: 'required',
             email: 'required|email',
-            password: 'required'
+            password: 'required',
+            type:'required | integer|min:1',
+            status:'required | integer|min:1'
         });
     } else {
         v = new Validator(req.body, {
@@ -81,8 +82,8 @@ var artist = async (req, res, next) => {
         name: 'required',
         phone_no: 'required|integer|min:1',
         description: 'required',
-        status: 'required',
-        type: 'required'
+        status: 'required|integer|min:1',
+        type: 'required|integer|min:1'
     });
     const matched = await v.check();
     if (!matched) {
