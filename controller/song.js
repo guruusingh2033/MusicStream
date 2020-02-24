@@ -235,16 +235,16 @@ var artistAllAudioSong = (req, res) => {
             return res.status(200).json([{ success: 'Fail to get single artist songs', error: err }]);
         if (rows[0].length == 0)
             return res.status(200).json([{ success: 'No data found' }]);
-        
-        addSuccess(rows)       
+        const message = 'Successfully get single artist songs';
+        addSuccess(rows, message)       
         return res.status(200).json(rows[0]);        
     });
 };
 
 // add success with all array of object element
-function addSuccess(rows){
+function addSuccess(rows, message){
     for (i = 0; i <= rows.length; i++) {
-        rows[0][i].success = 'Successfully get single artist songs';
+        rows[0][i].success = message;
     }
 }
 /** Code End:: get single songs and artist **/
@@ -297,7 +297,8 @@ const allVideosWithArtistId = (req, res) => {
             return res.status(200).json([{ success: 'Fail to get single artist videos', error: err }]);
         if (rows[0].length == 0)
             return res.status(200).json([{ success: 'No data found'}]);
-        rows[0][0].success = 'Successfully get single artist videos';
+        const message = 'Successfully get single artist videos';
+        addSuccess(rows, message) 
         return res.status(200).json(rows[0]);
     });
 };
