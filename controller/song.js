@@ -235,6 +235,7 @@ var artistAllAudioSong = (req, res) => {
             return res.status(200).json([{ success: 'Fail to get single artist songs', error: err }]);
         if (rows[0].length == 0)
             return res.status(200).json([{ success: 'No data found' }]);
+
         const message = 'Successfully get single artist songs';
         addSuccess(rows, message)       
         return res.status(200).json(rows[0]);        
@@ -243,7 +244,7 @@ var artistAllAudioSong = (req, res) => {
 
 // add success with all array of object element
 function addSuccess(rows, message){
-    for (i = 0; i <= rows.length; i++) {
+    for (i = 0; i < rows[0].length; i++) {
         rows[0][i].success = message;
     }
 }
