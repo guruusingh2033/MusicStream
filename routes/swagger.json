@@ -1039,6 +1039,28 @@
                 }
             }
         },
+        "/countOfUserArtist": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "get number of artist(usertype 3), number of user(usertype 2), number of pending Artist(status 2, usertype 3), Number of Approved Artist(status 3, , usertype 3) ",
+                "description": "",
+                "operationId": "countOfUserArtist",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success, responsed json Array"
+                    },
+                    "400": {
+                        "description": "Fail to retreive record"
+                    }
+                }
+            }
+        },
 
         "/songsPost": {
             "post": {

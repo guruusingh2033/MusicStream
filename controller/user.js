@@ -180,7 +180,7 @@ var forgetPassword = (req, res) => {
 var allUsers = (req, res) => {
   db.query('CALL sp_AllUsers()', [], function (err, rows) {
     if (err)
-      return res.status(400).json([{ success: 'Fail to get all users', error:err }]);
+      return res.status(200).json([{ success: 'Fail to get all users', error:err }]);
     if (rows.length == 0)
       return res.status(200).json([{ success: 'Table is empty'}]);
     rows[0][0].success = 'Successfully get all users';
@@ -591,6 +591,17 @@ const loginWithSocialMediaAccount = (req, res) => {
   );
 }
 
+const countOfUserArtist = (req,res)=>{
+  db.query('CALL sp_CountOfUserArtist()', [], function (err, rows) {
+    if (err)
+      return res.status(200).json([{ success: 'Fail to get records', error: err }]);
+    if (rows.length == 0)
+      return res.status(200).json([{ success: 'No record found' }]);
+    rows[0][0].success = 'Successfully get records';
+    return res.status(200).json(rows[0]);
+  });
+}
+
 exports.signup = signup;
 exports.login = login;
 exports.forgetPassword = forgetPassword;
@@ -611,6 +622,7 @@ exports.fetchTotalLikesOfArtist = fetchTotalLikesOfArtist;
 exports.loginWithOtpInsert = loginWithOtpInsert;
 exports.delProfileArtist = delProfileArtist;
 exports.loginWithSocialMediaAccount = loginWithSocialMediaAccount;
+exports.countOfUserArtist = countOfUserArtist;
 
 
 
