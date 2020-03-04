@@ -39,7 +39,7 @@ module.exports = function(app) {
   app.post('/insertArtistLike', validation.insertArtistLike, user.insertArtistLike);
   app.post('/fetchLikesOfParticularUser', validation.userIdArtitstId, user.fetchLikesOfParticularUser);
   app.post('/fetchTotalLikesOfArtist', validation.artistId, user.fetchTotalLikesOfArtist);
-  app.get('/countOfUserArtist', user.countOfUserArtist);
+  app.get('/countOfUserArtist', user.countOfUserArtist); // get count of artist(type 3), user(type 2),  pending(status 2) Artist, Approved(status 1) Artist
 
   // Song Apis 
   app.post('/songsPost', song.songUploadMulter.single('song'), song.songUpload);

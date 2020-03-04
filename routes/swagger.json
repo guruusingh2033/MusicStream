@@ -1044,7 +1044,7 @@
                 "tags": [
                     "User"
                 ],
-                "summary": "get number of artist(usertype 3), number of user(usertype 2), number of pending Artist(status 2, usertype 3), Number of Approved Artist(status 3, , usertype 3) ",
+                "summary": "get number of artist(usertype 3), number of user(usertype 2), number of pending Artist(status 2, usertype 3), Number of Approved Artist(status 3, usertype 3) ",
                 "description": "",
                 "operationId": "countOfUserArtist",
                 "produces": [
