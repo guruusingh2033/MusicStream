@@ -1774,7 +1774,7 @@
                     "Liking"
                 ],
                 "summary": "If user and media exist in Liking then update like value else insert like value",
-                "description": "",
+                "description": "like- 1, dislike - 0",
                 "operationId": "likeDislike",
                 "produces": [
                     "application/json",
@@ -1798,7 +1798,7 @@
                     {
                         "in": "formData",
                         "name": "like",
-                        "description": "",
+                        "description": "like-1, dislike - 0",
                         "required": true,
                         "type": "integer"
                     }
@@ -1836,6 +1836,37 @@
                     {
                         "in": "formData",
                         "name": "mediaId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "0/1  (0-dislike, 1-like)"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/artistListLikesByUser": {
+            "post": {
+                "tags": [
+                    "Liking"
+                ],
+                "summary": "Fetch artist list who has liked by this user, pass user id",
+                "description": "",
+                "operationId": "artistListLikesByUser",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "formData",
+                        "name": "userId",
                         "description": "",
                         "required": true,
                         "type": "integer"

@@ -71,6 +71,7 @@ module.exports = function(app) {
   // Liking api
   app.post('/likeDislike', validation.userIdMediaId, like.addLikeDislike); 
   app.post('/fetchLikeDislike', validation.userIdMediaId, like.fetchLikeDislike); 
+  app.post('/artistListLikesByUser', validation.userId, like.artistListLikeByUser); // list of artist who has liked by the user 
 
   // comment api
   app.post('/addComment', validation.userIdMediaId, comment.addComment); 
